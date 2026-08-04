@@ -36,18 +36,23 @@ export async function GET(request: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      data: doctors.map((doctor) => ({
-        id: doctor.id,
-        name: `Dr. ${doctor.user.firstName} ${doctor.user.lastName}`,
-        firstName: doctor.user.firstName,
-        lastName: doctor.user.lastName,
-        specialization: doctor.specialization,
-        fee: Number(doctor.consultationFee),
-        rating: doctor.averageRating,
-        reviews: doctor.totalReviews,
-        acceptingNewPatients: doctor.acceptingNewPatients,
-        avatar: doctor.user.avatar,
-      })),
+      data: doctors.map((doctor) => {
+        const fn = doctor.user.firstName ?? "";
+        const ln = doctor.user.lastName ?? "";
+        const fullName = [fn, ln].filter(Boolean).join(" ").trim() || "Doctor";
+        return {
+          id: doctor.id,
+          name: `Dr. ${fullName}`,
+          firstName: fn,
+          lastName: ln,
+          specialization: doctor.specialization,
+          fee: Number(doctor.consultationFee),
+          rating: doctor.averageRating,
+          reviews: doctor.totalReviews,
+          acceptingNewPatients: doctor.acceptingNewPatients,
+          avatar: doctor.user.avatar,
+        };
+      }),
     });
   } catch (error) {
     console.error("GET /api/doctors error:", error);

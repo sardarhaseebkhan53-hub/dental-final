@@ -19,9 +19,15 @@ model User {
   id                String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   email             String     @unique @db.VarChar(255)
   emailVerified     DateTime?
-  hashedPassword    String     @db.VarChar(255)
-  firstName         String     @db.VarChar(100)
-  lastName          String     @db.VarChar(100)
+  // hashedPassword is nullable because OAuth (Google) users don't have one —
+  // they sign in via their provider instead of a password.
+  hashedPassword    String?    @db.VarChar(255)
+  // firstName / lastName are nullable so the PrismaAdapter can provision a
+  // user record on first Google/Facebook login (where only email + name are
+  // available). We split the display name into first/last in a signIn callback.
+  firstName         String?    @db.VarChar(100)
+  lastName          String?    @db.VarChar(100)
+  name              String?    @db.VarChar(200) // fallback display name from OAuth
   phone             String?    @db.VarChar(20)
   avatar            String?
   role              UserRole   @default(PATIENT)
