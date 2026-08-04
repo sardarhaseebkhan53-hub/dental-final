@@ -1,4 +1,5 @@
 import NextAuth, { type NextAuthResult } from "next-auth";
+import type { Provider } from "next-auth/providers";
 import Credentials from "next-auth/providers/credentials";
 import Google from "next-auth/providers/google";
 import { PrismaAdapter } from "@auth/prisma-adapter";
@@ -11,7 +12,7 @@ import type { UserRole } from "@/types/prisma-enums";
 // Providers
 // ─────────────────────────────────────────────────────────────────────────────
 
-const providers = [
+const providers: Provider[] = [
   Credentials({
     name: "credentials",
     credentials: {
@@ -136,7 +137,9 @@ const nextAuth: NextAuthResult = NextAuth({
             name: user.name ?? null,
             role: "PATIENT",
             status: "ACTIVE",
-            emailVerified: user.emailVerified ?? new Date(),
+            emailVerified:
+              (user as { emailVerified?: Date | null }).emailVerified ??
+              new Date(),
           },
         });
       } catch (err) {
