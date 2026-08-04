@@ -39,17 +39,23 @@ and reception dashboards, and a full admin panel.
 2. Set up environment variables:
 
    ```bash
-   cp .env.example .env
+   cp .env.example .env.local
    ```
 
-   Edit `.env` and set **at least**:
+   Edit `.env.local` and set **at least**:
 
    - `DATABASE_URL` — your online PostgreSQL connection string
      (e.g. `postgresql://USER:PASSWORD@ep-xxx-pooler.us-east-1.aws.neon.tech/db?sslmode=require`)
    - `AUTH_SECRET` — generate one with `openssl rand -base64 32`
 
-   > Note: the Prisma CLI reads `.env` (not `.env.local`). `prisma.config.ts`
-   > loads `dotenv` automatically.
+   > Note: `next dev` loads `.env.local` (and `.env`) automatically. The
+   > Prisma CLI reads `.env` — `prisma.config.ts` loads `dotenv` for you, or
+   > run `cp .env.example .env` in addition if you use the CLI directly.
+
+   > Dev convenience: if `AUTH_SECRET` is not set, `next dev` falls back to a
+   > built-in development-only secret (`src/lib/auth.config.ts`), so the app
+   > boots without the `MissingSecret` error. Production builds still require
+   > a real `AUTH_SECRET`.
 
 3. Set up the database schema and seed data:
 

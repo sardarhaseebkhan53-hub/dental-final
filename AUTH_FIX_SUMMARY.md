@@ -1,5 +1,65 @@
 # Authentication System Fix Summary
 
+## Update — `MissingSecret` error (2026-08-04)
+
+### Symptom
+
+On a fresh checkout, every request logged:
+
+```
+[auth][error] MissingSecret: Please define a `secret`.
+GET /api/auth/session 500
+```
+
+plus the Next.js warning:
+
+```
+⚠ Next.js inferred your workspace root, but it may not be correct.
+  We detected multiple lockfiles and selected the directory of
+  C:\Users\TECHNIFI\package-lock.json as the root directory.
+```
+
+### Root Cause
+
+- `AUTH_SECRET` was never actually set in the repository: `.env.local` /
+  `.env` are gitignored (correct), but the `.env.example` file that the docs
+  told users to copy **did not exist**, so a fresh clone had no way to define
+  `AUTH_SECRET`. Auth.js v5 hard-fails with `MissingSecret` when neither
+  `AUTH_SECRET` nor `secret` is configured — in both the Edge middleware and
+  the Node.js route handler.
+- The Next.js workspace-root warning appeared because `outputFileTracingRoot`
+  was unset, so Next.js auto-detected the root from lockfiles and could pick
+  an unrelated directory (e.g. a stray `package-lock.json` in the user's home
+  folder).
+
+### Fixes
+
+1. **`src/lib/auth.config.ts`** — added a `secret` to the shared Auth.js
+   config. In non-production environments it falls back to a built-in
+   development secret, so `pnpm dev` boots and serves sessions out of the
+   box. In production builds `NODE_ENV` is statically replaced and the
+   fallback is removed, so `AUTH_SECRET` is still strictly required in
+   production.
+2. **`.env.example` (NEW)** — the missing template file referenced by the
+   docs, with `DATABASE_URL`, `AUTH_SECRET`, `AUTH_TRUST_HOST`,
+   `NEXT_PUBLIC_APP_URL`, and the optional extras. Copy with
+   `cp .env.example .env.local`.
+3. **`next.config.ts`** — set `outputFileTracingRoot: path.join(__dirname)`
+   to pin the workspace root to the project directory (silences the lockfile
+   warning and prevents wrong-root detection).
+4. **`docs/README.md`** — setup instructions now copy to `.env.local` and
+   explain the dev fallback secret and Prisma CLI `.env` note.
+
+### Verification
+
+- `GET /` → 200, `GET /login` → 200
+- `GET /api/auth/session` → 200 (was 500)
+- `GET /api/auth/csrf` → `{"csrfToken":"…"}`, `GET /api/auth/providers` →
+  credentials provider registered
+- No `MissingSecret` errors in the server log; no workspace-root warning
+
+## Original Fix (previous session)
+
 ## Executive Summary
 
 The authentication system has been fully diagnosed and fixed. The login now works correctly with proper session management, JWT tokens, cookies, and role-based redirects.

@@ -7,6 +7,25 @@ import type { UserRole } from "@/types/prisma-enums";
  * (e.g. Prisma Client) so it can run on the Edge runtime safely.
  */
 
+/**
+ * Development-only fallback secret.
+ *
+ * Auth.js v5 throws `MissingSecret` when neither `AUTH_SECRET` nor `secret`
+ * is defined, which breaks `next dev` out of the box (the `AUTH_SECRET` env
+ * var lives in a gitignored `.env.local` that a fresh clone doesn't have).
+ *
+ * To keep the DX smooth, non-production environments fall back to this
+ * built-in secret. It is NEVER used in production: `NODE_ENV` is statically
+ * replaced by Next.js at build time, so in a production build this branch
+ * becomes `undefined` and a real `AUTH_SECRET` is still required.
+ */
+const DEV_AUTH_SECRET =
+  "a82fc58cb65a353bb5c957ca955c839953fb2c9eed6e17787f0c27b0c2ebc90c";
+
+const authSecret =
+  process.env.AUTH_SECRET ||
+  (process.env.NODE_ENV !== "production" ? DEV_AUTH_SECRET : undefined);
+
 const publicRoutes = new Set([
   "/",
   "/about",
@@ -65,6 +84,7 @@ export function getDashboardPath(role: UserRole): string {
 }
 
 export const authConfig: NextAuthConfig = {
+  secret: authSecret,
   trustHost: true,
   session: { strategy: "jwt", maxAge: 30 * 24 * 60 * 60 }, // 30 days
   pages: {
