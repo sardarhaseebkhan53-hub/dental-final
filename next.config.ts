@@ -1,6 +1,13 @@
+import path from "node:path";
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Pin the workspace root to this project directory. Without this, Next.js
+  // auto-detects the root from lockfiles found by walking up the tree, which
+  // can pick a wrong directory (e.g. a stray package-lock.json in the user's
+  // home folder) and print: "Next.js inferred your workspace root, but it may
+  // not be correct."
+  outputFileTracingRoot: path.join(__dirname),
   images: {
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
