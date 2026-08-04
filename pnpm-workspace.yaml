@@ -1,0 +1,12 @@
+# pnpm workspace & build-script policy
+# Allows essential native/postinstall build scripts to run (pnpm v10 blocks
+# dependency build scripts by default). Required for @prisma/client
+# generation, sharp native bindings, and esbuild on Vercel builds.
+onlyBuiltDependencies:
+  - "@prisma/client"
+  - "@prisma/engines"
+  - "@prisma/runtime"
+  - prisma
+  - esbuild
+  - sharp
+  - unrs-resolver

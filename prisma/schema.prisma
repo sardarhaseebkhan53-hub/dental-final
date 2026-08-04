@@ -1,0 +1,1386 @@
+// Serene Dental Platform - Complete Database Schema
+// PostgreSQL with Prisma ORM
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// AUTHENTICATION & AUTHORIZATION
+// ═══════════════════════════════════════════════════════════════════════
+
+model User {
+  id                String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email             String     @unique @db.VarChar(255)
+  emailVerified     DateTime?
+  hashedPassword    String     @db.VarChar(255)
+  firstName         String     @db.VarChar(100)
+  lastName          String     @db.VarChar(100)
+  phone             String?    @db.VarChar(20)
+  avatar            String?
+  role              UserRole   @default(PATIENT)
+  status            UserStatus @default(ACTIVE)
+  twoFactorEnabled  Boolean    @default(false)
+  twoFactorSecret   String?
+  lastLoginAt       DateTime?
+  lastLoginIp       String?
+  loginAttempts     Int        @default(0)
+  lockedUntil       DateTime?
+  passwordChangedAt DateTime?
+  rememberMeToken   String?
+  preferences       Json       @default("{}")
+  createdAt         DateTime   @default(now())
+  updatedAt         DateTime   @updatedAt
+
+  // Relations
+  patient          Patient?
+  doctor           Doctor?
+  staff            Staff?
+  sessions         Session[]
+  accounts         Account[]
+  passwordResets   PasswordReset[]
+  auditLogs        AuditLog[]
+  notifications    Notification[]
+  activityLogs     ActivityLog[]
+  documents        Document[]
+  createdBlogPosts BlogPost[]      @relation("BlogAuthor")
+  reviews          Review[]
+
+  @@index([email])
+  @@index([role])
+  @@index([status])
+  @@map("users")
+}
+
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  DOCTOR
+  STAFF
+  RECEPTIONIST
+  PATIENT
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  PENDING_VERIFICATION
+}
+
+model Account {
+  id                String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String  @db.Uuid
+  type              String  @db.VarChar(50)
+  provider          String  @db.VarChar(50)
+  providerAccountId String  @db.VarChar(255)
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String? @db.VarChar(50)
+  scope             String? @db.VarChar(500)
+  id_token          String? @db.Text
+  session_state     String? @db.VarChar(255)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  sessionToken String   @unique @db.VarChar(500)
+  userId       String   @db.Uuid
+  expires      DateTime
+  userAgent    String?
+  ipAddress    String?
+  createdAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String   @db.VarChar(255)
+  token      String   @unique @db.VarChar(500)
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model PasswordReset {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  token     String   @unique @db.VarChar(500)
+  expires   DateTime
+  used      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([token])
+  @@index([userId])
+  @@map("password_resets")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// RBAC - ROLES & PERMISSIONS
+// ═══════════════════════════════════════════════════════════════════════
+
+model Permission {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String   @unique @db.VarChar(100)
+  resource    String   @db.VarChar(50)
+  action      String   @db.VarChar(50)
+  description String?
+  createdAt   DateTime @default(now())
+
+  roles RolePermission[]
+
+  @@index([resource, action])
+  @@map("permissions")
+}
+
+model RolePermission {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  role         UserRole
+  permissionId String   @db.Uuid
+
+  permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+  @@unique([role, permissionId])
+  @@index([role])
+  @@index([permissionId])
+  @@map("role_permissions")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// PATIENTS
+// ═══════════════════════════════════════════════════════════════════════
+
+model Patient {
+  id                String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId            String      @unique @db.Uuid
+  patientNumber     String      @unique @db.VarChar(20)
+  dateOfBirth       DateTime    @db.Date
+  gender            Gender
+  bloodGroup        BloodGroup?
+  address           Json // { street, city, state, zip, country }
+  emergencyContact  Json? // { name, relationship, phone, email }
+  insuranceProvider String?     @db.VarChar(200)
+  insuranceNumber   String?     @db.VarChar(100)
+  insuranceExpiry   DateTime?
+  allergies         String[]
+  medications       String[]
+  medicalConditions String[]
+  dentalHistory     Json? // { previousTreatments, lastVisit, concerns }
+  notes             String?
+  consentGiven      Boolean     @default(false)
+  consentDate       DateTime?
+  hipaaAcknowledged Boolean     @default(false)
+  portalAccess      Boolean     @default(true)
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
+
+  user           User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments   Appointment[]
+  medicalRecords MedicalRecord[]
+  prescriptions  Prescription[]
+  treatments     TreatmentPlan[]
+  payments       Payment[]
+  invoices       Invoice[]
+  documents      Document[]      @relation("PatientDocuments")
+  communications Communication[]
+
+  @@index([patientNumber])
+  @@index([userId])
+  @@map("patients")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+  PREFER_NOT_TO_SAY
+}
+
+enum BloodGroup {
+  A_POSITIVE
+  A_NEGATIVE
+  B_POSITIVE
+  B_NEGATIVE
+  AB_POSITIVE
+  AB_NEGATIVE
+  O_POSITIVE
+  O_NEGATIVE
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// DOCTORS
+// ═══════════════════════════════════════════════════════════════════════
+
+model Doctor {
+  id                   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId               String   @unique @db.Uuid
+  doctorNumber         String   @unique @db.VarChar(20)
+  specialization       String   @db.VarChar(200)
+  qualifications       Json[] // [{ degree, institution, year }]
+  licenseNumber        String   @db.VarChar(100)
+  licenseExpiry        DateTime @db.Date
+  experience           Int // years
+  bio                  String?
+  consultationFee      Decimal  @db.Decimal(10, 2)
+  followUpFee          Decimal  @db.Decimal(10, 2)
+  telemedicineFee      Decimal? @db.Decimal(10, 2)
+  languages            String[]
+  acceptingNewPatients Boolean  @default(true)
+  averageRating        Float    @default(0)
+  totalReviews         Int      @default(0)
+  departmentId         String?  @db.Uuid
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department     Department?      @relation(fields: [departmentId], references: [id])
+  schedules      DoctorSchedule[]
+  appointments   Appointment[]
+  treatmentPlans TreatmentPlan[]
+  prescriptions  Prescription[]
+  medicalRecords MedicalRecord[]
+  reviews        Review[]
+
+  @@index([doctorNumber])
+  @@index([userId])
+  @@index([specialization])
+  @@index([departmentId])
+  @@map("doctors")
+}
+
+model DoctorSchedule {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  doctorId     String    @db.Uuid
+  dayOfWeek    DayOfWeek
+  startTime    String    @db.VarChar(5) // "09:00"
+  endTime      String    @db.VarChar(5) // "17:00"
+  breakStart   String?   @db.VarChar(5)
+  breakEnd     String?   @db.VarChar(5)
+  slotDuration Int       @default(30) // minutes
+  isActive     Boolean   @default(true)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  doctor Doctor @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@unique([doctorId, dayOfWeek])
+  @@index([doctorId])
+  @@map("doctor_schedules")
+}
+
+enum DayOfWeek {
+  MONDAY
+  TUESDAY
+  WEDNESDAY
+  THURSDAY
+  FRIDAY
+  SATURDAY
+  SUNDAY
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// STAFF
+// ═══════════════════════════════════════════════════════════════════════
+
+model Staff {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String   @unique @db.Uuid
+  staffNumber  String   @unique @db.VarChar(20)
+  position     String   @db.VarChar(200)
+  departmentId String?  @db.Uuid
+  hireDate     DateTime @db.Date
+  salary       Decimal? @db.Decimal(10, 2)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  user       User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  department Department? @relation(fields: [departmentId], references: [id])
+
+  @@index([staffNumber])
+  @@index([userId])
+  @@index([departmentId])
+  @@map("staff")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// DEPARTMENTS
+// ═══════════════════════════════════════════════════════════════════════
+
+model Department {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String   @unique @db.VarChar(200)
+  slug        String   @unique @db.VarChar(200)
+  description String?
+  icon        String?
+  isActive    Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  doctors  Doctor[]
+  staff    Staff[]
+  services Service[]
+
+  @@index([slug])
+  @@map("departments")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SERVICES & TREATMENTS
+// ═══════════════════════════════════════════════════════════════════════
+
+model Service {
+  id               String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name             String          @db.VarChar(200)
+  slug             String          @unique @db.VarChar(200)
+  description      String          @db.Text
+  shortDescription String          @db.VarChar(300)
+  icon             String?
+  image            String?
+  price            Decimal         @db.Decimal(10, 2)
+  priceRange       Json? // { min, max, currency }
+  duration         Int // minutes
+  departmentId     String?         @db.Uuid
+  category         ServiceCategory
+  isActive         Boolean         @default(true)
+  isFeatured       Boolean         @default(false)
+  sortOrder        Int             @default(0)
+  metaTitle        String?         @db.VarChar(200)
+  metaDescription  String?         @db.VarChar(500)
+  keywords         String[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  department     Department?     @relation(fields: [departmentId], references: [id])
+  treatmentPlans TreatmentPlan[]
+  appointments   Appointment[]
+
+  @@index([slug])
+  @@index([category])
+  @@index([isActive])
+  @@index([departmentId])
+  @@map("services")
+}
+
+enum ServiceCategory {
+  GENERAL
+  COSMETIC
+  ORTHODONTICS
+  PEDIATRIC
+  SURGERY
+  EMERGENCY
+  PREVENTIVE
+  RESTORATIVE
+}
+
+model TreatmentPlan {
+  id                String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patientId         String          @db.Uuid
+  doctorId          String          @db.Uuid
+  serviceId         String          @db.Uuid
+  title             String          @db.VarChar(200)
+  description       String          @db.Text
+  diagnosis         String          @db.Text
+  status            TreatmentStatus @default(PLANNED)
+  startDate         DateTime?
+  endDate           DateTime?
+  estimatedCost     Decimal         @db.Decimal(10, 2)
+  actualCost        Decimal?        @db.Decimal(10, 2)
+  sessions          Int             @default(1)
+  completedSessions Int             @default(0)
+  notes             String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  patient    Patient     @relation(fields: [patientId], references: [id])
+  doctor     Doctor      @relation(fields: [doctorId], references: [id])
+  service    Service     @relation(fields: [serviceId], references: [id])
+  procedures Procedure[]
+
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([status])
+  @@index([serviceId])
+  @@map("treatment_plans")
+}
+
+enum TreatmentStatus {
+  PLANNED
+  IN_PROGRESS
+  ON_HOLD
+  COMPLETED
+  CANCELLED
+}
+
+model Procedure {
+  id              String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  treatmentPlanId String          @db.Uuid
+  name            String          @db.VarChar(200)
+  description     String?
+  toothNumber     String?         @db.VarChar(10)
+  status          ProcedureStatus @default(PENDING)
+  scheduledDate   DateTime?
+  completedDate   DateTime?
+  cost            Decimal?        @db.Decimal(10, 2)
+  notes           String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  treatmentPlan TreatmentPlan @relation(fields: [treatmentPlanId], references: [id])
+
+  @@index([treatmentPlanId])
+  @@map("procedures")
+}
+
+enum ProcedureStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// APPOINTMENTS
+// ═══════════════════════════════════════════════════════════════════════
+
+model Appointment {
+  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  appointmentNumber  String            @unique @db.VarChar(20)
+  patientId          String            @db.Uuid
+  doctorId           String            @db.Uuid
+  serviceId          String?           @db.Uuid
+  date               DateTime          @db.Date
+  startTime          String            @db.VarChar(5) // "09:00"
+  endTime            String            @db.VarChar(5) // "09:30"
+  type               AppointmentType   @default(IN_PERSON)
+  status             AppointmentStatus @default(SCHEDULED)
+  reason             String?
+  notes              String?
+  cancellationReason String?
+  reminderSent       Boolean           @default(false)
+  followUpRequired   Boolean           @default(false)
+  followUpDate       DateTime?
+  isWalkIn           Boolean           @default(false)
+  queuePosition      Int?
+  checkInTime        DateTime?
+  checkOutTime       DateTime?
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+
+  patient Patient  @relation(fields: [patientId], references: [id])
+  doctor  Doctor   @relation(fields: [doctorId], references: [id])
+  service Service? @relation(fields: [serviceId], references: [id])
+
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([date])
+  @@index([status])
+  @@index([serviceId])
+  @@index([appointmentNumber])
+  @@map("appointments")
+}
+
+enum AppointmentType {
+  IN_PERSON
+  TELEMEDICINE
+  FOLLOW_UP
+  EMERGENCY
+  WALK_IN
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  CHECKED_IN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+  RESCHEDULED
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// MEDICAL RECORDS
+// ═══════════════════════════════════════════════════════════════════════
+
+model MedicalRecord {
+  id             String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patientId      String     @db.Uuid
+  doctorId       String     @db.Uuid
+  type           RecordType
+  title          String     @db.VarChar(200)
+  content        String     @db.Text
+  diagnosis      String?
+  icdCode        String?    @db.VarChar(20)
+  attachments    Json[] // [{ name, url, type, size }]
+  vitalSigns     Json? // { bp, pulse, temperature, weight, height }
+  dentalChart    Json? // { teeth: [{ number, status, notes }] }
+  isConfidential Boolean    @default(false)
+  createdAt      DateTime   @default(now())
+  updatedAt      DateTime   @updatedAt
+
+  patient Patient @relation(fields: [patientId], references: [id])
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([type])
+  @@map("medical_records")
+}
+
+enum RecordType {
+  CONSULTATION
+  EXAMINATION
+  PROCEDURE
+  LAB_RESULT
+  IMAGING
+  REFERRAL
+  DISCHARGE_SUMMARY
+  PROGRESS_NOTE
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// PRESCRIPTIONS
+// ═══════════════════════════════════════════════════════════════════════
+
+model Prescription {
+  id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patientId          String             @db.Uuid
+  doctorId           String             @db.Uuid
+  prescriptionNumber String             @unique @db.VarChar(20)
+  medications        Json // [{ name, dosage, frequency, duration, instructions, quantity, refills }]
+  diagnosis          String             @db.Text
+  notes              String?
+  status             PrescriptionStatus @default(ACTIVE)
+  validUntil         DateTime?
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  patient Patient @relation(fields: [patientId], references: [id])
+  doctor  Doctor  @relation(fields: [doctorId], references: [id])
+
+  @@index([patientId])
+  @@index([doctorId])
+  @@index([prescriptionNumber])
+  @@map("prescriptions")
+}
+
+enum PrescriptionStatus {
+  ACTIVE
+  COMPLETED
+  CANCELLED
+  EXPIRED
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// PAYMENTS & BILLING
+// ═══════════════════════════════════════════════════════════════════════
+
+model Payment {
+  id              String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  paymentNumber   String        @unique @db.VarChar(20)
+  patientId       String        @db.Uuid
+  amount          Decimal       @db.Decimal(10, 2)
+  currency        String        @default("USD") @db.VarChar(3)
+  method          PaymentMethod
+  status          PaymentStatus @default(PENDING)
+  stripePaymentId String?
+  transactionId   String?
+  description     String?
+  metadata        Json?
+  paidAt          DateTime?
+  refundedAt      DateTime?
+  refundAmount    Decimal?      @db.Decimal(10, 2)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  patient Patient  @relation(fields: [patientId], references: [id])
+  invoice Invoice?
+
+  @@index([patientId])
+  @@index([paymentNumber])
+  @@index([status])
+  @@map("payments")
+}
+
+enum PaymentMethod {
+  CASH
+  CREDIT_CARD
+  DEBIT_CARD
+  INSURANCE
+  BANK_TRANSFER
+  ONLINE
+  MOBILE_PAYMENT
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+  CANCELLED
+}
+
+model Invoice {
+  id            String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  invoiceNumber String        @unique @db.VarChar(20)
+  patientId     String        @db.Uuid
+  paymentId     String?       @unique @db.Uuid
+  subtotal      Decimal       @db.Decimal(10, 2)
+  tax           Decimal       @default(0) @db.Decimal(10, 2)
+  discount      Decimal       @default(0) @db.Decimal(10, 2)
+  total         Decimal       @db.Decimal(10, 2)
+  status        InvoiceStatus @default(DRAFT)
+  dueDate       DateTime      @db.Date
+  items         Json // [{ description, quantity, unitPrice, amount, tax }]
+  notes         String?
+  couponCode    String?
+  issuedAt      DateTime?
+  paidAt        DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  patient Patient  @relation(fields: [patientId], references: [id])
+  payment Payment? @relation(fields: [paymentId], references: [id])
+
+  @@index([patientId])
+  @@index([invoiceNumber])
+  @@index([status])
+  @@map("invoices")
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+  REFUNDED
+}
+
+model Coupon {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  code          String       @unique @db.VarChar(50)
+  description   String?
+  discountType  DiscountType
+  discountValue Decimal      @db.Decimal(10, 2)
+  minAmount     Decimal?     @db.Decimal(10, 2)
+  maxDiscount   Decimal?     @db.Decimal(10, 2)
+  usageLimit    Int?
+  usedCount     Int          @default(0)
+  validFrom     DateTime     @db.Date
+  validUntil    DateTime     @db.Date
+  isActive      Boolean      @default(true)
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+
+  @@index([code])
+  @@map("coupons")
+}
+
+enum DiscountType {
+  PERCENTAGE
+  FIXED_AMOUNT
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CMS - BLOG
+// ═══════════════════════════════════════════════════════════════════════
+
+model BlogPost {
+  id              String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title           String     @db.VarChar(300)
+  slug            String     @unique @db.VarChar(300)
+  excerpt         String     @db.VarChar(500)
+  content         String     @db.Text
+  featuredImage   String?
+  authorId        String     @db.Uuid
+  categoryId      String     @db.Uuid
+  status          PostStatus @default(DRAFT)
+  publishedAt     DateTime?
+  scheduledAt     DateTime?
+  metaTitle       String?    @db.VarChar(200)
+  metaDescription String?    @db.VarChar(500)
+  keywords        String[]
+  viewCount       Int        @default(0)
+  readingTime     Int        @default(5)
+  isFeatured      Boolean    @default(false)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  author   User          @relation("BlogAuthor", fields: [authorId], references: [id])
+  category BlogCategory  @relation(fields: [categoryId], references: [id])
+  tags     BlogPostTag[]
+
+  @@index([slug])
+  @@index([status])
+  @@index([authorId])
+  @@index([categoryId])
+  @@map("blog_posts")
+}
+
+enum PostStatus {
+  DRAFT
+  PUBLISHED
+  SCHEDULED
+  ARCHIVED
+}
+
+model BlogCategory {
+  id          String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String     @unique @db.VarChar(100)
+  slug        String     @unique @db.VarChar(100)
+  description String?
+  posts       BlogPost[]
+
+  @@index([slug])
+  @@map("blog_categories")
+}
+
+model BlogTag {
+  id    String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name  String        @unique @db.VarChar(100)
+  slug  String        @unique @db.VarChar(100)
+  posts BlogPostTag[]
+
+  @@index([slug])
+  @@map("blog_tags")
+}
+
+model BlogPostTag {
+  postId String @db.Uuid
+  tagId  String @db.Uuid
+
+  post BlogPost @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  BlogTag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@index([tagId])
+  @@map("blog_post_tags")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// CMS - PAGES & SECTIONS
+// ═══════════════════════════════════════════════════════════════════════
+
+model Page {
+  id              String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title           String     @db.VarChar(300)
+  slug            String     @unique @db.VarChar(300)
+  content         String?    @db.Text
+  template        String     @default("default") @db.VarChar(100)
+  status          PageStatus @default(DRAFT)
+  metaTitle       String?    @db.VarChar(200)
+  metaDescription String?    @db.VarChar(500)
+  isSystem        Boolean    @default(false)
+  publishedAt     DateTime?
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+
+  sections PageSection[]
+
+  @@index([slug])
+  @@index([status])
+  @@map("pages")
+}
+
+enum PageStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+model PageSection {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pageId    String   @db.Uuid
+  type      String   @db.VarChar(50) // hero, features, cta, text, image, gallery, etc.
+  title     String?  @db.VarChar(300)
+  content   Json // Dynamic content based on section type
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  page Page @relation(fields: [pageId], references: [id], onDelete: Cascade)
+
+  @@index([pageId])
+  @@map("page_sections")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// GALLERY & MEDIA
+// ═══════════════════════════════════════════════════════════════════════
+
+model Gallery {
+  id          String          @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  title       String          @db.VarChar(200)
+  description String?
+  category    GalleryCategory
+  image       String
+  thumbnail   String?
+  alt         String?
+  sortOrder   Int             @default(0)
+  isActive    Boolean         @default(true)
+  metadata    Json? // { width, height, size, format }
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+
+  @@index([category])
+  @@map("gallery")
+}
+
+enum GalleryCategory {
+  CLINIC
+  TEAM
+  TECHNOLOGY
+  BEFORE_AFTER
+  TREATMENTS
+}
+
+model Media {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String   @db.VarChar(200)
+  fileUrl    String   @db.VarChar(500)
+  fileType   String   @db.VarChar(50)
+  fileSize   Int // bytes
+  mimeType   String   @db.VarChar(100)
+  alt        String?  @db.VarChar(200)
+  caption    String?
+  folder     String?  @db.VarChar(200)
+  uploadedBy String?  @db.Uuid
+  metadata   Json? // { width, height, duration }
+  createdAt  DateTime @default(now())
+
+  @@index([fileType])
+  @@index([folder])
+  @@index([uploadedBy])
+  @@map("media")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// REVIEWS & TESTIMONIALS
+// ═══════════════════════════════════════════════════════════════════════
+
+model Review {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId      String       @db.Uuid
+  doctorId    String?      @db.Uuid
+  rating      Int // 1-5
+  title       String?      @db.VarChar(200)
+  content     String       @db.Text
+  source      ReviewSource @default(DIRECT)
+  status      ReviewStatus @default(PENDING)
+  isVerified  Boolean      @default(false)
+  isFeatured  Boolean      @default(false)
+  response    String? // Admin response
+  respondedAt DateTime?
+  createdAt   DateTime     @default(now())
+  updatedAt   DateTime     @updatedAt
+
+  user   User    @relation(fields: [userId], references: [id])
+  doctor Doctor? @relation(fields: [doctorId], references: [id])
+
+  @@index([userId])
+  @@index([doctorId])
+  @@index([status])
+  @@index([rating])
+  @@map("reviews")
+}
+
+enum ReviewSource {
+  DIRECT
+  GOOGLE
+  YELP
+  FACEBOOK
+}
+
+enum ReviewStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Testimonial {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patientName String   @db.VarChar(200)
+  content     String   @db.Text
+  rating      Int      @default(5)
+  image       String?
+  isActive    Boolean  @default(true)
+  isFeatured  Boolean  @default(false)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([isActive])
+  @@map("testimonials")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// FAQ
+// ═══════════════════════════════════════════════════════════════════════
+
+model FAQ {
+  id        String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  question  String      @db.VarChar(500)
+  answer    String      @db.Text
+  category  FAQCategory
+  sortOrder Int         @default(0)
+  isActive  Boolean     @default(true)
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+
+  @@index([category])
+  @@map("faqs")
+}
+
+enum FAQCategory {
+  GENERAL
+  TREATMENTS
+  BILLING
+  INSURANCE
+  EMERGENCY
+  FIRST_VISIT
+  APPOINTMENTS
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// COMMUNICATIONS & CONTACT
+// ═══════════════════════════════════════════════════════════════════════
+
+model ContactMessage {
+  id         String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String        @db.VarChar(200)
+  email      String        @db.VarChar(255)
+  phone      String?       @db.VarChar(20)
+  subject    String        @db.VarChar(300)
+  message    String        @db.Text
+  status     MessageStatus @default(NEW)
+  priority   Priority      @default(NORMAL)
+  assignedTo String?       @db.Uuid
+  repliedAt  DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
+
+  @@index([status])
+  @@index([createdAt])
+  @@index([assignedTo])
+  @@map("contact_messages")
+}
+
+model Communication {
+  id        String               @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patientId String               @db.Uuid
+  type      CommunicationType
+  channel   CommunicationChannel
+  subject   String?              @db.VarChar(300)
+  content   String               @db.Text
+  status    CommunicationStatus  @default(SENT)
+  sentAt    DateTime             @default(now())
+  readAt    DateTime?
+  metadata  Json?
+  createdAt DateTime             @default(now())
+
+  patient Patient @relation(fields: [patientId], references: [id])
+
+  @@index([patientId])
+  @@index([type])
+  @@map("communications")
+}
+
+enum MessageStatus {
+  NEW
+  READ
+  IN_PROGRESS
+  RESOLVED
+  ARCHIVED
+}
+
+enum Priority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum CommunicationType {
+  APPOINTMENT_REMINDER
+  FOLLOW_UP
+  MARKETING
+  TRANSACTIONAL
+  NEWSLETTER
+  EMERGENCY
+}
+
+enum CommunicationChannel {
+  EMAIL
+  SMS
+  PUSH
+  IN_APP
+  WHATSAPP
+}
+
+enum CommunicationStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  READ
+  FAILED
+  CANCELLED
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════════════════════════════════════
+
+model Notification {
+  id        String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String           @db.Uuid
+  type      NotificationType
+  title     String           @db.VarChar(300)
+  message   String           @db.Text
+  link      String?          @db.VarChar(500)
+  isRead    Boolean          @default(false)
+  readAt    DateTime?
+  metadata  Json?
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([isRead])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  APPOINTMENT
+  PAYMENT
+  PRESCRIPTION
+  SYSTEM
+  REMINDER
+  ALERT
+  MESSAGE
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// DOCUMENTS
+// ═══════════════════════════════════════════════════════════════════════
+
+model Document {
+  id          String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  patientId   String?          @db.Uuid
+  uploadedBy  String           @db.Uuid
+  name        String           @db.VarChar(300)
+  fileUrl     String           @db.VarChar(500)
+  fileType    String           @db.VarChar(50)
+  fileSize    Int
+  category    DocumentCategory
+  description String?
+  isSecure    Boolean          @default(false)
+  expiresAt   DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  patient  Patient? @relation("PatientDocuments", fields: [patientId], references: [id])
+  uploader User     @relation(fields: [uploadedBy], references: [id])
+
+  @@index([patientId])
+  @@index([category])
+  @@index([uploadedBy])
+  @@map("documents")
+}
+
+enum DocumentCategory {
+  MEDICAL_RECORD
+  INSURANCE
+  CONSENT_FORM
+  IDENTITY
+  PRESCRIPTION
+  LAB_RESULT
+  IMAGING
+  INVOICE
+  RECEIPT
+  OTHER
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SYSTEM - SETTINGS & CONFIGURATION
+// ═══════════════════════════════════════════════════════════════════════
+
+model Setting {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  key         String   @unique @db.VarChar(200)
+  value       Json
+  category    String   @db.VarChar(100)
+  description String?
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([category])
+  @@map("settings")
+}
+
+model Branding {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  logo           String?
+  logoDark       String?
+  favicon        String?
+  primaryColor   String   @default("#0D7377") @db.VarChar(7)
+  secondaryColor String   @default("#D4A574") @db.VarChar(7)
+  accentColor    String   @default("#14A3A8") @db.VarChar(7)
+  fontFamily     String   @default("Plus Jakarta Sans") @db.VarChar(100)
+  customCss      String?  @db.Text
+  socialLinks    Json? // { facebook, instagram, twitter, linkedin, youtube }
+  contactInfo    Json? // { phone, email, address, hours }
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("branding")
+}
+
+model EmailTemplate {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String   @unique @db.VarChar(200)
+  subject   String   @db.VarChar(300)
+  body      String   @db.Text
+  variables String[]
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("email_templates")
+}
+
+model SMSTemplate {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name      String   @unique @db.VarChar(200)
+  body      String   @db.VarChar(1600)
+  variables String[]
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sms_templates")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SYSTEM - LOGS & AUDIT
+// ═══════════════════════════════════════════════════════════════════════
+
+model AuditLog {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  action    String   @db.VarChar(50)
+  entity    String   @db.VarChar(50)
+  entityId  String?  @db.Uuid
+  details   Json?
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([entity])
+  @@index([action])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model ActivityLog {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String   @db.Uuid
+  action    String   @db.VarChar(100)
+  details   String?
+  metadata  Json?
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("activity_logs")
+}
+
+model SecurityLog {
+  id        String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String?          @db.Uuid
+  event     String           @db.VarChar(100)
+  severity  SecuritySeverity
+  ipAddress String?
+  userAgent String?
+  details   Json?
+  createdAt DateTime         @default(now())
+
+  @@index([event])
+  @@index([severity])
+  @@index([createdAt])
+  @@index([userId])
+  @@map("security_logs")
+}
+
+enum SecuritySeverity {
+  INFO
+  WARNING
+  DANGER
+  CRITICAL
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SYSTEM - NEWSLETTER
+// ═══════════════════════════════════════════════════════════════════════
+
+model Newsletter {
+  id             String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email          String           @unique @db.VarChar(255)
+  name           String?          @db.VarChar(200)
+  status         NewsletterStatus @default(ACTIVE)
+  source         String?          @db.VarChar(100)
+  confirmedAt    DateTime?
+  unsubscribedAt DateTime?
+  createdAt      DateTime         @default(now())
+
+  @@index([status])
+  @@map("newsletters")
+}
+
+enum NewsletterStatus {
+  PENDING
+  ACTIVE
+  UNSUBSCRIBED
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SYSTEM - BACKUP
+// ═══════════════════════════════════════════════════════════════════════
+
+model Backup {
+  id          String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  filename    String       @db.VarChar(300)
+  fileSize    Int
+  type        BackupType
+  status      BackupStatus @default(IN_PROGRESS)
+  location    String       @db.VarChar(500)
+  notes       String?
+  createdAt   DateTime     @default(now())
+  completedAt DateTime?
+
+  @@index([type])
+  @@index([status])
+  @@map("backups")
+}
+
+enum BackupType {
+  FULL
+  INCREMENTAL
+  DATABASE
+  FILES
+}
+
+enum BackupStatus {
+  IN_PROGRESS
+  COMPLETED
+  FAILED
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SEO & ANALYTICS
+// ═══════════════════════════════════════════════════════════════════════
+
+model SEOSettings {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pagePath       String   @unique @db.VarChar(500)
+  title          String?  @db.VarChar(200)
+  description    String?  @db.VarChar(500)
+  keywords       String[]
+  ogImage        String?
+  ogTitle        String?  @db.VarChar(200)
+  ogDescription  String?  @db.VarChar(500)
+  canonicalUrl   String?  @db.VarChar(500)
+  robots         String?  @db.VarChar(100)
+  structuredData Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([pagePath])
+  @@map("seo_settings")
+}
+
+model PageView {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  path      String   @db.VarChar(500)
+  userId    String?  @db.Uuid
+  sessionId String?  @db.VarChar(100)
+  referrer  String?  @db.VarChar(500)
+  userAgent String?
+  ipAddress String?
+  country   String?  @db.VarChar(100)
+  city      String?  @db.VarChar(100)
+  device    String?  @db.VarChar(50)
+  browser   String?  @db.VarChar(50)
+  duration  Int? // seconds
+  createdAt DateTime @default(now())
+
+  @@index([path])
+  @@index([createdAt])
+  @@index([userId])
+  @@map("page_views")
+}
+
+// ═══════════════════════════════════════════════════════════════════════
+// SYSTEM - INTEGRATIONS
+// ═══════════════════════════════════════════════════════════════════════
+
+model Integration {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name       String    @unique @db.VarChar(200)
+  type       String    @db.VarChar(50)
+  config     Json
+  isActive   Boolean   @default(true)
+  lastSyncAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  @@index([type])
+  @@map("integrations")
+}
+
+model APIKey {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name        String    @db.VarChar(200)
+  key         String    @unique @db.VarChar(500)
+  hashedKey   String    @db.VarChar(500)
+  permissions String[]
+  expiresAt   DateTime?
+  lastUsedAt  DateTime?
+  isActive    Boolean   @default(true)
+  createdBy   String    @db.Uuid
+  createdAt   DateTime  @default(now())
+
+  @@index([key])
+  @@index([createdBy])
+  @@map("api_keys")
+}
