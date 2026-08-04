@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { GeistSans } from "geist/font/sans";
 import { GeistMono } from "geist/font/mono";
 import { ToastProvider } from "@/components/ui/toast-provider";
+import { Providers } from "@/components/providers";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -71,6 +72,7 @@ export default function RootLayout({
         <meta name="theme-color" content="#0F766E" />
       </head>
       <body className="min-h-screen bg-background font-sans antialiased">
+        <Providers>
         {/* Skip to content for accessibility */}
         <a
           href="#main-content"
@@ -80,6 +82,7 @@ export default function RootLayout({
         </a>
         {children}
         <ToastProvider />
+        </Providers>
       </body>
     </html>
   );
