@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     });
 
     // Best-effort welcome email — never block registration on email delivery.
-    sendWelcomeEmail(user.email, user.firstName).catch(() => {});
+    sendWelcomeEmail(user.email, user.firstName ?? "there").catch(() => {});
 
     return NextResponse.json(
       {
