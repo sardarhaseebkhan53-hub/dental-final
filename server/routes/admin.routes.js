@@ -72,4 +72,23 @@ router.put("/users/:id", adminOnly, c.updateUser);
 // Profile (own account)
 router.put("/profile", requireAuth, c.updateProfile);
 
+// SEO settings
+router.get("/seo", adminOnly, c.listSEO);
+router.get("/seo/:pagePath", staff, c.getSEO);
+router.post("/seo", adminOnly, c.createSEO);
+router.put("/seo/:id", adminOnly, c.updateSEO);
+router.delete("/seo/:id", adminOnly, c.deleteSEO);
+
+// SMTP settings
+router.get("/smtp", adminOnly, c.getSMTP);
+router.put("/smtp", adminOnly, c.updateSMTP);
+router.post("/smtp/test", adminOnly, c.testSMTP);
+
+// Analytics
+router.get("/analytics", adminOnly, c.getAnalytics);
+
+// Backup & restore
+router.post("/backup", adminOnly, c.createBackup);
+router.post("/restore", adminOnly, c.restoreBackup);
+
 module.exports = router;

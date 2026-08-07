@@ -90,6 +90,24 @@
         });
       }));
     });
+
+    // Blog
+    SD.data.get("blog").then((posts) => {
+      const wrap = document.getElementById("homeBlog");
+      if (!wrap) return;
+      const fmt = (d) => d ? new Date(d).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" }) : "";
+      wrap.innerHTML = posts.slice(0, 3).map((p) =>
+        '<article class="blog-card reveal">' +
+          '<div class="thumb"><a href="/blog/' + p.slug + '"><img src="' + (p.featuredImage || "/images/blog-1.svg") + '" alt="' + SD.escapeHtml(p.title) + '" loading="lazy"></a></div>' +
+          '<div class="body">' +
+            '<div class="meta"><span>' + fmt(p.publishedAt) + '</span><span>•</span><span>' + (p.readingTime || 5) + ' min read</span></div>' +
+            '<h3><a href="/blog/' + p.slug + '">' + SD.escapeHtml(p.title) + '</a></h3>' +
+            '<p>' + SD.escapeHtml(p.excerpt || "") + '</p>' +
+            '<a class="blog-link" href="/blog/' + p.slug + '">Read article →</a>' +
+          "</div>" +
+        "</article>").join("");
+      SD.initReveal();
+    });
   });
 
   function stars(n) {

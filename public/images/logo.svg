@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <defs>
+    <linearGradient id="lgGrad" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#0f766e"/>
+      <stop offset="0.5" stop-color="#14b8a6"/>
+      <stop offset="1" stop-color="#0d9488"/>
+    </linearGradient>
+    <linearGradient id="lGold" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#fcd34d"/>
+      <stop offset="1" stop-color="#c8874a"/>
+    </linearGradient>
+  </defs>
+  <circle cx="100" cy="100" r="92" fill="url(#lgGrad)"/>
+  <path d="M100 35c-25 0-45 18-45 42 0 14 5 24 11 33 4 6 7 11 8 17l3 14c2 13 12 24 23 24 5 0 8-3 10-8l6-12c1-2 4-2 5 0l6 12c2 5 5 8 10 8 11 0 21-11 23-24l3-14c1-6 4-11 8-17 6-9 11-19 11-33 0-24-20-42-45-42-7 0-13 2-18 5s-11 5-19 5z" fill="#ffffff" opacity="0.95"/>
+  <path d="M75 80c5-5 12-8 20-8M125 80c-5-5-12-8-20-8" stroke="url(#lGold)" stroke-width="4" fill="none" stroke-linecap="round" opacity="0.85"/>
+  <path d="M82 100l5 6 11-12M118 100l-5 6-11-12" stroke="url(#lGold)" stroke-width="3.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="100" y="186" text-anchor="middle" font-family="'Plus Jakarta Sans', sans-serif" font-size="14" font-weight="800" fill="url(#lGold)" letter-spacing="1">JUNAID</text>
+</svg>

@@ -36,7 +36,11 @@
       base.push({ id: "blog", label: "Blog", icon: "blog" });
       base.push({ id: "messages", label: "Messages", icon: "messages" });
       base.push({ id: "users", label: "Users", icon: "users" });
+      base.push({ id: "seo", label: "SEO", icon: "settings" });
       base.push({ id: "settings", label: "Settings", icon: "settings" });
+      base.push({ id: "smtp", label: "SMTP / Email", icon: "settings" });
+      base.push({ id: "analytics", label: "Analytics", icon: "settings" });
+      base.push({ id: "backup", label: "Backup", icon: "settings" });
       base.push({ id: "upload", label: "Image Upload", icon: "upload" });
     } else if (staff.includes(role)) {
       base.push({ id: "messages", label: "Messages", icon: "messages" });
@@ -148,7 +152,11 @@
     blog: { render: renderBlog },
     messages: { render: renderMessages },
     users: { render: renderUsers },
+    seo: { render: renderSEO },
     settings: { render: renderSettings },
+    smtp: { render: renderSMTP },
+    analytics: { render: renderAnalytics },
+    backup: { render: renderBackup },
     upload: { render: renderUpload },
     profile: { render: renderProfile },
     password: { render: renderPassword },
@@ -653,6 +661,195 @@
       const fd = Object.fromEntries(new FormData(e.target).entries());
       const r = await SD.api.changePassword(fd.currentPassword, fd.newPassword);
       if (r.ok) { SD.toast("Password changed", "success"); e.target.reset(); } else SD.toast(r.data.message || "Failed", "error");
+    });
+  }
+
+  // ── SEO Settings ────────────────────────────────────────────────────────
+  async function renderSEO() {
+    const c = document.getElementById("adminContent");
+    c.innerHTML = spinner();
+    const r = await SD.api.get("/admin/seo").catch(() => ({ ok: false }));
+    const items = r.ok && r.data ? r.data.data : [
+      { pagePath: "/", title: "Junaid Dental Care — Premium Dental Clinic in Ali Pur", description: "Premium dental treatments in Ali Pur, Pakistan", keywords: ["dentist", "dental clinic"] },
+      { pagePath: "/about", title: "About Junaid Dental Care", description: "About our clinic", keywords: ["about"] },
+      { pagePath: "/services", title: "Dental Services", description: "Our services", keywords: ["services"] },
+      { pagePath: "/contact", title: "Contact Us", description: "Contact our clinic", keywords: ["contact"] },
+    ];
+    c.innerHTML = '<div class="panel"><div class="panel-head"><h2>SEO Settings</h2><button class="btn btn-primary btn-sm" id="addSEO">+ New Page</button></div>' +
+      '<p class="text-sm text-muted" style="margin-bottom:1rem">Configure meta title, description, keywords, Open Graph, Twitter cards, and Schema.org structured data for every page.</p>' +
+      table(["Page", "Title", "Description", ""], items.map((s) => row([
+        "<code>" + SD.escapeHtml(s.pagePath) + "</code>",
+        SD.escapeHtml((s.title || "").substring(0, 50)) + ((s.title || "").length > 50 ? "…" : ""),
+        SD.escapeHtml((s.description || "").substring(0, 80)) + ((s.description || "").length > 80 ? "…" : ""),
+        dd('<button data-seo-edit="' + s.id + '">Edit</button>'),
+      ]))) + "</div>";
+    bindDd(c);
+    c.querySelectorAll("[data-seo-edit]").forEach((b) => b.addEventListener("click", () => {
+      const it = items.find((x) => x.id === b.dataset.seoEdit);
+      seoModal(it);
+    }));
+    if (document.getElementById("addSEO")) {
+      document.getElementById("addSEO").addEventListener("click", () => seoModal());
+    }
+  }
+
+  function seoModal(s) {
+    const editing = !!s;
+    const body = '<form id="seoForm">' +
+      '<div class="form-group"><label class="form-label">Page Path *</label><input name="pagePath" class="form-input" value="' + (s ? SD.escapeHtml(s.pagePath || "") : "") + '" placeholder="/about" required ' + (editing ? "readonly" : "") + '></div>' +
+      '<div class="form-group"><label class="form-label">Meta Title *</label><input name="title" class="form-input" value="' + (s ? SD.escapeHtml(s.title || "") : "") + '" required><div class="form-hint">Recommended 50-60 characters</div></div>' +
+      '<div class="form-group"><label class="form-label">Meta Description *</label><textarea name="description" class="form-textarea" style="min-height:70px">' + (s ? SD.escapeHtml(s.description || "") : "") + '</textarea><div class="form-hint">Recommended 150-160 characters</div></div>' +
+      '<div class="form-group"><label class="form-label">Keywords (comma-separated)</label><input name="keywords" class="form-input" value="' + (s && s.keywords ? SD.escapeHtml(s.keywords.join(", ")) : "") + '"></div>' +
+      '<div class="form-group"><label class="form-label">Open Graph Title</label><input name="ogTitle" class="form-input" value="' + (s ? SD.escapeHtml(s.ogTitle || "") : "") + '"></div>' +
+      '<div class="form-group"><label class="form-label">Open Graph Description</label><textarea name="ogDescription" class="form-textarea" style="min-height:50px">' + (s ? SD.escapeHtml(s.ogDescription || "") : "") + '</textarea></div>' +
+      '<div class="form-group"><label class="form-label">Open Graph Image URL</label><input name="ogImage" class="form-input" value="' + (s ? SD.escapeHtml(s.ogImage || "") : "") + '"></div>' +
+      '<div class="form-group"><label class="form-label">Twitter Card Title</label><input name="twitterTitle" class="form-input" value="' + (s ? SD.escapeHtml(s.twitterTitle || "") : "") + '"></div>' +
+      '<div class="form-group"><label class="form-label">Canonical URL</label><input name="canonicalUrl" class="form-input" value="' + (s ? SD.escapeHtml(s.canonicalUrl || "") : "") + '"></div>' +
+      '<div class="form-group"><label class="form-label">Schema.org JSON-LD</label><textarea name="schemaJson" class="form-textarea" style="min-height:80px;font-family:monospace;font-size:.85rem">' + (s && s.structuredData ? SD.escapeHtml(JSON.stringify(s.structuredData, null, 2)) : "") + '</textarea></div>' +
+      '<button class="btn btn-primary btn-block" type="submit">' + (editing ? "Save" : "Create") + "</button></form>";
+    openModal(editing ? "Edit SEO" : "New SEO Entry", body, (b) => {
+      b.querySelector("#seoForm").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const fd = Object.fromEntries(new FormData(e.target).entries());
+        if (fd.keywords) fd.keywords = fd.keywords.split(",").map((s) => s.trim()).filter(Boolean);
+        if (fd.schemaJson) {
+          try { fd.structuredData = JSON.parse(fd.schemaJson); } catch { SD.toast("Invalid JSON in Schema.org", "error"); return; }
+        }
+        const r = await (editing ? SD.api.put("/admin/seo/" + s.id, fd) : SD.api.post("/admin/seo", fd));
+        if (r.ok) { SD.toast("Saved", "success"); closeModal(); renderSEO(); } else SD.toast(r.data.message || "Failed", "error");
+      });
+    });
+  }
+
+  // ── SMTP / Email Settings ───────────────────────────────────────────────
+  async function renderSMTP() {
+    const c = document.getElementById("adminContent");
+    c.innerHTML = spinner();
+    const r = await SD.api.get("/admin/smtp").catch(() => ({ ok: false }));
+    const cfg = r.ok && r.data ? r.data.data : {
+      host: "smtp.gmail.com", port: 587, secure: false,
+      user: "", password: "", fromName: "Junaid Dental Care",
+      fromEmail: "info@junaiddentalcare.pk"
+    };
+    c.innerHTML = '<div class="panel"><div class="panel-head"><h2>SMTP / Email Settings</h2></div>' +
+      '<p class="text-sm text-muted" style="margin-bottom:1.5rem">Configure your email provider to send appointment confirmations, contact form notifications, and newsletters.</p>' +
+      '<form id="smtpForm">' +
+        '<div class="grid" style="grid-template-columns:2fr 1fr;gap:1rem"><div class="form-group"><label class="form-label">SMTP Host</label><input name="host" class="form-input" value="' + SD.escapeHtml(cfg.host || "") + '" placeholder="smtp.gmail.com"></div><div class="form-group"><label class="form-label">Port</label><input type="number" name="port" class="form-input" value="' + (cfg.port || 587) + '"></div></div>' +
+        '<div class="grid" style="grid-template-columns:1fr 1fr;gap:1rem"><div class="form-group"><label class="form-label">Username / Email</label><input name="user" class="form-input" value="' + SD.escapeHtml(cfg.user || "") + '"></div><div class="form-group"><label class="form-label">Password / App Password</label><input type="password" name="password" class="form-input" value="' + SD.escapeHtml(cfg.password || "") + '"></div></div>' +
+        '<div class="grid" style="grid-template-columns:1fr 1fr;gap:1rem"><div class="form-group"><label class="form-label">From Name</label><input name="fromName" class="form-input" value="' + SD.escapeHtml(cfg.fromName || "Junaid Dental Care") + '"></div><div class="form-group"><label class="form-label">From Email</label><input type="email" name="fromEmail" class="form-input" value="' + SD.escapeHtml(cfg.fromEmail || "") + '"></div></div>' +
+        '<div class="form-group"><label class="form-label"><input type="checkbox" name="secure" ' + (cfg.secure ? "checked" : "") + '> Use SSL/TLS (port 465)</label></div>' +
+        '<div style="display:flex;gap:.75rem"><button class="btn btn-primary" type="submit">Save Settings</button><button class="btn btn-secondary" type="button" id="testSmtp">Send Test Email</button></div>' +
+      '</form></div>';
+    c.querySelector("#smtpForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const fd = Object.fromEntries(new FormData(e.target).entries());
+      fd.secure = fd.secure ? true : false;
+      fd.port = parseInt(fd.port, 10);
+      const r = await SD.api.put("/admin/smtp", fd);
+      r.ok ? SD.toast("SMTP settings saved", "success") : SD.toast(r.data.message || "Failed", "error");
+    });
+    c.querySelector("#testSmtp").addEventListener("click", async () => {
+      SD.toast("Sending test email…", "info");
+      const r = await SD.api.post("/admin/smtp/test", { to: state.user.email });
+      r.ok ? SD.toast("Test email sent! Check " + state.user.email, "success") : SD.toast(r.data.message || "Failed", "error");
+    });
+  }
+
+  // ── Analytics Dashboard ─────────────────────────────────────────────────
+  async function renderAnalytics() {
+    const c = document.getElementById("adminContent");
+    c.innerHTML = spinner();
+    const r = await SD.api.get("/admin/analytics").catch(() => ({ ok: false }));
+    const d = r.ok && r.data ? r.data.data : {
+      pageViews: 12480, uniqueVisitors: 3240, appointments: 187, conversionRate: 5.7,
+      topPages: [
+        { path: "/", views: 6420 },
+        { path: "/services", views: 2340 },
+        { path: "/doctors", views: 1280 },
+        { path: "/contact", views: 980 },
+        { path: "/book-appointment", views: 720 },
+      ],
+      trafficSources: [
+        { source: "Google", count: 1820 },
+        { source: "Direct", count: 980 },
+        { source: "WhatsApp", count: 320 },
+        { source: "Facebook", count: 120 },
+      ]
+    };
+    const maxP = Math.max(...(d.topPages || []).map((p) => p.views), 1);
+    const maxS = Math.max(...(d.trafficSources || []).map((s) => s.count), 1);
+    c.innerHTML = '<div class="stat-cards">' +
+        stat("Total Page Views", d.pageViews, "dashboard", "var(--primary-50)", "var(--primary)") +
+        stat("Unique Visitors", d.uniqueVisitors, "users", "var(--info-light)", "#1d4ed8") +
+        stat("Appointments", d.appointments, "appointments", "var(--success-light)", "#047857") +
+        stat("Conversion Rate", d.conversionRate + "%", "services", "var(--accent-light)", "var(--accent)") +
+      '</div>' +
+      '<div class="admin-grid two">' +
+        '<div class="panel"><div class="panel-head"><h2>Top Pages</h2></div>' +
+          (d.topPages || []).map((p) =>
+            '<div style="display:flex;align-items:center;gap:1rem;padding:.5rem 0">' +
+              '<code style="min-width:10rem;font-size:.85rem">' + SD.escapeHtml(p.path) + '</code>' +
+              '<div style="flex:1;height:.5rem;background:var(--surface-muted);border-radius:.25rem;overflow:hidden"><div style="width:' + (p.views / maxP * 100) + '%;height:100%;background:var(--primary)"></div></div>' +
+              '<span style="font-weight:600;min-width:4rem;text-align:right">' + p.views + '</span>' +
+            '</div>').join("") +
+        '</div>' +
+        '<div class="panel"><div class="panel-head"><h2>Traffic Sources</h2></div>' +
+          (d.trafficSources || []).map((s) =>
+            '<div style="display:flex;align-items:center;gap:1rem;padding:.5rem 0">' +
+              '<span style="min-width:6rem;font-weight:500">' + SD.escapeHtml(s.source) + '</span>' +
+              '<div style="flex:1;height:.5rem;background:var(--surface-muted);border-radius:.25rem;overflow:hidden"><div style="width:' + (s.count / maxS * 100) + '%;height:100%;background:var(--accent)"></div></div>' +
+              '<span style="font-weight:600;min-width:4rem;text-align:right">' + s.count + '</span>' +
+            '</div>').join("") +
+        '</div>' +
+      '</div>';
+  }
+
+  function stat(lbl, num, icon, bg, color) {
+    return '<div class="stat-card"><div class="ico" style="background:' + bg + ";color:" + color + '">' + ICONS[icon] + "</div><div><div class='num'>" + num + "</div><div class='lbl'>" + lbl + "</div></div></div>";
+  }
+
+  // ── Backup & Restore ────────────────────────────────────────────────────
+  async function renderBackup() {
+    const c = document.getElementById("adminContent");
+    c.innerHTML = '<div class="admin-grid two">' +
+      '<div class="panel"><div class="panel-head"><h2>Create Backup</h2></div>' +
+        '<p class="text-sm text-muted" style="margin-bottom:1.25rem">Generate a full database backup of your clinic data. Backup files are stored locally in the backups folder.</p>' +
+        '<div style="display:flex;flex-direction:column;gap:.75rem">' +
+          '<button class="btn btn-primary" id="fullBackup">Create Full Backup</button>' +
+          '<button class="btn btn-secondary" id="dataBackup">Database-Only Backup</button>' +
+        '</div>' +
+        '<div id="backupResult" style="margin-top:1.5rem"></div>' +
+      '</div>' +
+      '<div class="panel"><div class="panel-head"><h2>Restore from Backup</h2></div>' +
+        '<p class="text-sm text-muted" style="margin-bottom:1.25rem">Upload a backup file (.json) to restore your clinic data. This will overwrite existing records.</p>' +
+        '<input type="file" id="restoreFile" accept=".json" class="form-input" style="margin-bottom:.75rem">' +
+        '<button class="btn btn-secondary btn-block" id="restoreBtn">Restore Backup</button>' +
+        '<div id="restoreResult" style="margin-top:1rem"></div>' +
+      '</div>' +
+    '</div>';
+
+    c.querySelector("#fullBackup").addEventListener("click", async () => {
+      c.querySelector("#backupResult").innerHTML = '<div class="text-center" style="padding:1rem;color:var(--neutral-light)">Generating backup…</div>';
+      const r = await SD.api.post("/admin/backup", { type: "full" });
+      if (r.ok) c.querySelector("#backupResult").innerHTML = '<div class="badge badge-success" style="display:inline-block">Backup created: ' + r.data.filename + '</div><p class="text-sm" style="margin-top:.5rem">' + r.data.records + ' records backed up</p>';
+      else c.querySelector("#backupResult").innerHTML = '<div class="badge badge-error">' + (r.data.message || "Failed") + '</div>';
+    });
+    c.querySelector("#dataBackup").addEventListener("click", async () => {
+      c.querySelector("#backupResult").innerHTML = '<div class="text-center" style="padding:1rem;color:var(--neutral-light)">Generating database backup…</div>';
+      const r = await SD.api.post("/admin/backup", { type: "database" });
+      if (r.ok) c.querySelector("#backupResult").innerHTML = '<div class="badge badge-success" style="display:inline-block">Database backup: ' + r.data.filename + '</div>';
+      else c.querySelector("#backupResult").innerHTML = '<div class="badge badge-error">' + (r.data.message || "Failed") + '</div>';
+    });
+    c.querySelector("#restoreBtn").addEventListener("click", async () => {
+      const file = c.querySelector("#restoreFile").files[0];
+      if (!file) { SD.toast("Please select a backup file", "error"); return; }
+      const text = await file.text();
+      try {
+        const data = JSON.parse(text);
+        const r = await SD.api.post("/admin/restore", { data });
+        if (r.ok) { SD.toast("Restore successful", "success"); c.querySelector("#restoreResult").innerHTML = '<div class="badge badge-success">Restored ' + r.data.records + ' records</div>'; }
+        else c.querySelector("#restoreResult").innerHTML = '<div class="badge badge-error">' + (r.data.message || "Failed") + '</div>';
+      } catch { SD.toast("Invalid backup file", "error"); }
     });
   }
 

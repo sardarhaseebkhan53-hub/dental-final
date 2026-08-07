@@ -3,7 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Admin Login | Serene Dental</title>
+  <title>Admin Login | Junaid Dental Care</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
@@ -14,23 +15,26 @@
   <div class="auth-shell">
     <div class="auth-card card" style="padding:2.5rem">
       <a class="logo" href="/" style="margin-bottom:1.75rem;display:flex">
-        <span class="logo-icon" id="adminLogo"></span>
-        <span class="logo-text"><span class="brand">Serene <span>Dental</span></span><span class="tag">Admin Panel</span></span>
+        <span class="logo-icon" style="padding:0;overflow:hidden"><img src="/images/logo.svg" alt="JDC" style="width:100%;height:100%"></span>
+        <span class="logo-text"><span class="brand">Junaid <span>Dental Care</span></span><span class="tag">Admin Panel</span></span>
       </a>
       <h1 class="section-title" style="margin-bottom:.25rem">Admin Login</h1>
       <p class="text-muted text-sm" style="margin-bottom:1.75rem">Sign in to manage your clinic.</p>
       <form id="adminLoginForm">
-        <div class="form-group"><label class="form-label">Email address</label><input type="email" name="email" class="form-input" required value="admin@serenedental.com"></div>
+        <div class="form-group"><label class="form-label">Email address</label><input type="email" name="email" class="form-input" required value="admin@junaiddentalcare.pk"></div>
         <div class="form-group"><label class="form-label">Password</label><input type="password" name="password" class="form-input" required></div>
         <button class="btn btn-primary btn-lg btn-block" type="submit" id="adminLoginBtn">Log In</button>
       </form>
+      <div style="margin-top:1.25rem;padding:1rem;background:var(--surface-alt);border-radius:var(--radius-lg);font-size:.78rem;color:var(--neutral-mid)">
+        <strong>Default credentials:</strong><br>
+        <code>admin@junaiddentalcare.pk</code> / <code>Admin@123</code>
+      </div>
       <p class="text-center text-sm text-muted" style="margin-top:1.5rem"><a href="/" style="color:var(--primary)">← Back to website</a></p>
     </div>
   </div>
   <script src="/js/api.js"></script>
   <script src="/js/main.js"></script>
   <script>
-    document.getElementById("adminLogo").innerHTML = SD.toothSVG();
     document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
       e.preventDefault();
       const btn = document.getElementById("adminLoginBtn");

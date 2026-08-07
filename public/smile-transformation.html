@@ -1,0 +1,110 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Smile Transformations | Junaid Dental Care</title>
+  <meta name="description" content="Browse real before and after smile transformations from Junaid Dental Care. See results from our cosmetic dentistry, orthodontics, and implant treatments.">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/css/home.css">
+</head>
+<body>
+  <div data-header></div>
+  <main>
+    <section class="page-hero">
+      <div class="container">
+        <div class="ph-inner">
+          <div class="ph-breadcrumb"><a href="/">Home</a> <span>›</span> <span>Smile Gallery</span> <span>›</span> <span>Before & After</span></div>
+          <span class="eyebrow">Smile Transformations</span>
+          <h1 class="display-2">Real Results, Real Smiles</h1>
+          <p>See the life-changing transformations our patients have experienced at Junaid Dental Care. Every smile below was crafted by our specialist team using the latest techniques in cosmetic and restorative dentistry.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="ba-grid" id="baGrid"></div>
+      </div>
+    </section>
+
+    <section class="section section-alt">
+      <div class="container">
+        <div class="section-head reveal">
+          <span class="eyebrow">Our Approach</span>
+          <h2 class="section-title">How We Create Your Perfect Smile</h2>
+          <p>Every smile transformation begins with a comprehensive consultation and a personalised treatment plan.</p>
+        </div>
+        <div class="journey-grid">
+          <div class="journey-step card reveal">
+            <div class="step-num">1</div>
+            <h3>Consultation</h3>
+            <p>We listen to your goals, examine your teeth, and discuss all options — clearly and honestly.</p>
+          </div>
+          <div class="journey-step card reveal reveal-delay-1">
+            <div class="step-num">2</div>
+            <h3>Digital Preview</h3>
+            <p>Using Digital Smile Design, we show you a preview of your new smile before treatment starts.</p>
+          </div>
+          <div class="journey-step card reveal reveal-delay-2">
+            <div class="step-num">3</div>
+            <h3>Treatment</h3>
+            <p>Our specialists work with precision and care, using premium materials and the latest techniques.</p>
+          </div>
+          <div class="journey-step card reveal reveal-delay-3">
+            <div class="step-num">4</div>
+            <h3>Follow-up</h3>
+            <p>After-care and maintenance to ensure your beautiful new smile lasts a lifetime.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="cta-band reveal">
+          <h2>Your Transformation Awaits</h2>
+          <p>Book a free cosmetic consultation and see what's possible. We'll show you a preview of your new smile before any treatment begins.</p>
+          <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+            <a class="btn btn-accent btn-xl" href="/book-appointment">Book Free Consultation</a>
+            <a class="btn btn-secondary btn-xl" href="https://wa.me/923125028812">WhatsApp Us</a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div data-footer></div>
+  <script src="/js/api.js"></script>
+  <script src="/js/demo.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    (function () {
+      const cases = [
+        { before: "/images/before-1.svg", after: "/images/after-1.svg", title: "Smile Makeover with Veneers", desc: "Cosmetic dentistry • 6 porcelain veneers • Dr. Ayesha Khan" },
+        { before: "/images/before-2.svg", after: "/images/after-2.svg", title: "Orthodontic Alignment", desc: "18 months of clear aligner therapy • Dr. Hassan Raza" },
+        { before: "/images/before-1.svg", after: "/images/after-1.svg", title: "Full Mouth Restoration", desc: "Combination of implants and crowns • Dr. Junaid Ahmed" },
+        { before: "/images/before-2.svg", after: "/images/after-2.svg", title: "Gap Closure", desc: "Composite bonding • 2 visits • Dr. Ayesha Khan" },
+        { before: "/images/before-1.svg", after: "/images/after-1.svg", title: "Whitening Transformation", desc: "In-office professional whitening • 8 shades brighter" },
+        { before: "/images/before-2.svg", after: "/images/after-2.svg", title: "Crowded Teeth Correction", desc: "Traditional braces • 14 months • Dr. Hassan Raza" },
+      ];
+      const wrap = document.getElementById("baGrid");
+      wrap.innerHTML = cases.map((c) =>
+        '<div class="ba-card reveal">' +
+          '<div class="ba-images">' +
+            '<div class="ba-img"><img src="' + c.before + '" alt="Before" loading="lazy"></div>' +
+            '<div class="ba-img"><img src="' + c.after + '" alt="After" loading="lazy"></div>' +
+          '</div>' +
+          '<div class="ba-info">' +
+            '<h3>' + c.title + '</h3>' +
+            '<p>' + c.desc + '</p>' +
+          '</div>' +
+        '</div>').join("");
+      if (window.SD && SD.initReveal) SD.initReveal();
+    })();
+  </script>
+</body>
+</html>

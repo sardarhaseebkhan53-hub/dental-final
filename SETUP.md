@@ -1,4 +1,4 @@
-# 🦷 Serene Dental — First-Time Setup
+# 🦷 Junaid Dental Care — First-Time Setup
 
 This guide gets the HTML/CSS/JS + Express + PostgreSQL + Prisma build running
 from a fresh clone. Two things must exist first: **Node.js 20+** and a
@@ -15,8 +15,8 @@ from a fresh clone. Two things must exist first: **Node.js 20+** and a
 Then create a database for the app:
 
 ```bash
-sudo -u postgres psql -c "CREATE USER serene WITH PASSWORD 'serene123';"
-sudo -u postgres psql -c "CREATE DATABASE serene_dental OWNER serene;"
+sudo -u postgres psql -c "CREATE USER junaid WITH PASSWORD 'junaid123';"
+sudo -u postgres psql -c "CREATE DATABASE junaid_dental OWNER junaid;"
 ```
 
 > Note: the schema uses `gen_random_uuid()`, which is built into PostgreSQL 13+.
@@ -33,7 +33,7 @@ Then edit `.env` and fill in:
 
 ```ini
 # PostgreSQL connection string
-DATABASE_URL="postgresql://serene:serene123@localhost:5432/serene_dental?schema=public"
+DATABASE_URL="postgresql://junaid:junaid123@localhost:5432/junaid_dental?schema=public"
 
 # Strong secret for JWT (generate one with the command below)
 JWT_SECRET="generate-me"
@@ -72,11 +72,11 @@ npm run db:seed
 ```
 
 This creates the admin account plus sample departments, services, doctors,
-testimonials, FAQs, gallery items, blog posts, and branding settings.
+testimonials, FAQs, gallery items, blog posts, branding settings, and SEO defaults.
 
-| Email                    | Password    | Role        |
-|--------------------------|-------------|-------------|
-| `admin@serenedental.com` | `Admin@123` | SUPER_ADMIN |
+| Email                            | Password    | Role        |
+|----------------------------------|-------------|-------------|
+| `admin@junaiddentalcare.pk`      | `Admin@123` | SUPER_ADMIN |
 
 ## 6. Start the server
 
@@ -91,6 +91,22 @@ Open **http://localhost:3000**.
 
 ---
 
+## Clinic Information (pre-filled)
+
+The seed data and website content are pre-populated with Junaid Dental Care's information from Google Maps:
+
+- **Name:** Junaid Dental Care
+- **Address:** J5WM+643, Lehtrar Road, near Old Bank Stop, Ali Pur, Islamabad Capital Territory 45600, Pakistan
+- **Phone:** +92 312 5028812
+- **Email:** info@junaiddentalcare.pk
+- **Hours:** Mon-Sat 8:00 AM – 9:00 PM
+- **Google Rating:** 4.6/5 (487+ reviews)
+- **Google Maps:** https://maps.app.goo.gl/sim1qA4wDdpcMovK7
+
+You can change all of this from the Admin Panel → Settings.
+
+---
+
 ## Troubleshooting
 
 | Problem | Fix |
@@ -99,7 +115,7 @@ Open **http://localhost:3000**.
 | `Can't reach database server` | Check `DATABASE_URL` in `.env` — host, port, and credentials. |
 | `Environment variable not found: DATABASE_URL` | Make sure you created `.env` from `.env.example`. |
 | `@prisma/client did not initialize yet` | Run `npm run db:generate` (or re-run `npm install`). |
-| Login says "Invalid credentials" | Run `npm run db:seed` to create the admin user, then use `admin@serenedental.com` / `Admin@123`. |
+| Login says "Invalid credentials" | Run `npm run db:seed` to create the admin user, then use `admin@junaiddentalcare.pk` / `Admin@123`. |
 | Port 3000 already in use | Change `PORT` in `.env`. |
 
 ## Useful commands
