@@ -19,7 +19,7 @@
 
     // Try the single-service endpoint, fall back to the list.
     SD.api.service(slug).then((r) => {
-      if (r.ok && r.data) { fill(r.data); return; }
+      if (r.ok && r.data && r.data.data) { fill(r.data.data); return; }
       SD.data.get("services").then((list) => {
         const s = (list || []).find((x) => x.slug === slug);
         if (s) fill(s);
