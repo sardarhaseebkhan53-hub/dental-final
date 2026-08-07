@@ -15,8 +15,8 @@ window.SD = window.SD || {};
     hours: { weekday: "8:00 AM - 9:00 PM", saturday: "9:00 AM - 6:00 PM", sunday: "Closed (Emergency Only)" },
     rating: 4.6,
     founded: 2015,
-    googleMaps: "https://maps.app.goo.gl/sim1qA4wDdpcMovK7",
-    coordinates: { lat: 33.6455048, lng: 73.1802099 }
+    googleMaps: "https://maps.app.goo.gl/J9DzSYyFtrsJFhTr6",
+    coordinates: { lat: 33.6455004, lng: 73.1827848 }
   };
 
   const NAV = [
