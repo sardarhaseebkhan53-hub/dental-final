@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create Account | Serene Dental</title>
+  <meta name="description" content="Create your Serene Dental patient account.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-card card" style="padding:2.5rem">
+      <a class="logo" href="/" style="margin-bottom:1.75rem;display:flex">
+        <span class="logo-icon" id="regLogoIcon"></span>
+        <span class="logo-text"><span class="brand">Serene <span>Dental</span></span><span class="tag">Patient Portal</span></span>
+      </a>
+      <h1 class="section-title" style="margin-bottom:.25rem">Create your account</h1>
+      <p class="text-muted text-sm" style="margin-bottom:1.75rem">Join Serene Dental for easy online booking and care.</p>
+      <form id="registerForm">
+        <div class="grid" style="grid-template-columns:1fr 1fr;gap:1rem">
+          <div class="form-group"><label class="form-label">First name</label><input type="text" name="firstName" class="form-input" required></div>
+          <div class="form-group"><label class="form-label">Last name</label><input type="text" name="lastName" class="form-input" required></div>
+        </div>
+        <div class="form-group"><label class="form-label">Email address</label><input type="email" name="email" class="form-input" required></div>
+        <div class="form-group"><label class="form-label">Phone</label><input type="tel" name="phone" class="form-input"></div>
+        <div class="form-group"><label class="form-label">Password</label>
+          <input type="password" name="password" class="form-input" required>
+          <div class="form-hint">At least 8 characters with an uppercase letter and a number.</div>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block" type="submit" id="regBtn">Create Account</button>
+      </form>
+      <p class="text-center text-sm text-muted" style="margin-top:1.5rem">Already have an account? <a href="/login" style="color:var(--primary);font-weight:600">Log in</a></p>
+    </div>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/auth.js"></script>
+  <script>document.getElementById("regLogoIcon").innerHTML = SD.toothSVG();</script>
+</body>
+</html>

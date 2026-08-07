@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Login | Serene Dental</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body>
+  <div class="auth-shell">
+    <div class="auth-card card" style="padding:2.5rem">
+      <a class="logo" href="/" style="margin-bottom:1.75rem;display:flex">
+        <span class="logo-icon" id="adminLogo"></span>
+        <span class="logo-text"><span class="brand">Serene <span>Dental</span></span><span class="tag">Admin Panel</span></span>
+      </a>
+      <h1 class="section-title" style="margin-bottom:.25rem">Admin Login</h1>
+      <p class="text-muted text-sm" style="margin-bottom:1.75rem">Sign in to manage your clinic.</p>
+      <form id="adminLoginForm">
+        <div class="form-group"><label class="form-label">Email address</label><input type="email" name="email" class="form-input" required value="admin@serenedental.com"></div>
+        <div class="form-group"><label class="form-label">Password</label><input type="password" name="password" class="form-input" required></div>
+        <button class="btn btn-primary btn-lg btn-block" type="submit" id="adminLoginBtn">Log In</button>
+      </form>
+      <p class="text-center text-sm text-muted" style="margin-top:1.5rem"><a href="/" style="color:var(--primary)">← Back to website</a></p>
+    </div>
+  </div>
+  <script src="/js/api.js"></script>
+  <script src="/js/main.js"></script>
+  <script>
+    document.getElementById("adminLogo").innerHTML = SD.toothSVG();
+    document.getElementById("adminLoginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById("adminLoginBtn");
+      const fd = new FormData(e.target);
+      btn.disabled = true; btn.textContent = "Logging in…";
+      const r = await SD.api.login(fd.get("email"), fd.get("password")).catch(() => ({ ok: false, data: { message: "Network error." } }));
+      if (r.ok && r.data && r.data.data && r.data.data.token) {
+        SD.setToken(r.data.data.token); SD.setUser(r.data.data.user);
+        const role = r.data.data.user.role;
+        const staff = ["SUPER_ADMIN","ADMIN","STAFF","RECEPTIONIST","DOCTOR"];
+        if (!staff.includes(role)) { SD.clearToken(); SD.clearUser(); SD.toast("This portal is for staff only.", "error"); btn.disabled=false; btn.textContent="Log In"; return; }
+        SD.toast("Welcome back!", "success");
+        setTimeout(() => { window.location.href = "/admin"; }, 600);
+      } else {
+        SD.toast((r.data && r.data.message) || "Login failed.", "error");
+        btn.disabled = false; btn.textContent = "Log In";
+      }
+    });
+  </script>
+</body>
+</html>
