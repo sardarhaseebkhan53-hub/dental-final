@@ -1,0 +1,515 @@
+{
+  "stats": {
+    "yearsExperience": 9,
+    "patientsServed": 12000,
+    "satisfactionRate": 98,
+    "specialists": 6,
+    "totalReviews": 487,
+    "services": 12,
+    "patients": 0
+  },
+  "services": [
+    {
+      "id": "s1",
+      "name": "General Dentistry",
+      "slug": "general-dentistry",
+      "shortDescription": "Comprehensive check-ups, cleanings, and preventive care for the whole family.",
+      "description": "From routine check-ups and professional cleanings to detailed examinations, our general dentistry keeps your whole family's oral health on track. We use modern diagnostic tools and gentle techniques to detect issues early and keep your smile healthy for life.",
+      "price": 1500,
+      "duration": 30,
+      "category": "GENERAL",
+      "icon": "stethoscope",
+      "department": {
+        "name": "General Dentistry"
+      },
+      "isFeatured": true,
+      "image": "/images/service-general.svg"
+    },
+    {
+      "id": "s2",
+      "name": "Cosmetic Dentistry",
+      "slug": "cosmetic-dentistry",
+      "shortDescription": "Veneers, bonding, and complete smile makeovers.",
+      "description": "Transform your smile with porcelain veneers, tooth bonding, and complete smile makeovers tailored to your facial features. We craft natural-looking results that boost your confidence and last for years.",
+      "price": 8500,
+      "duration": 60,
+      "category": "COSMETIC",
+      "icon": "sparkles",
+      "department": {
+        "name": "Cosmetic Dentistry"
+      },
+      "isFeatured": true,
+      "image": "/images/service-cosmetic.svg"
+    },
+    {
+      "id": "s3",
+      "name": "Orthodontics & Braces",
+      "slug": "orthodontics",
+      "shortDescription": "Traditional braces and clear aligners for a straighter smile.",
+      "description": "We offer modern orthodontic solutions including traditional metal braces, ceramic braces, and clear aligners to correct alignment and bite issues for teenagers and adults. Free orthodontic consultation included.",
+      "price": 45000,
+      "duration": 45,
+      "category": "ORTHODONTICS",
+      "icon": "align-center",
+      "department": {
+        "name": "Orthodontics"
+      },
+      "isFeatured": true,
+      "image": "/images/service-ortho.svg"
+    },
+    {
+      "id": "s4",
+      "name": "Dental Implants",
+      "slug": "dental-implants",
+      "shortDescription": "Permanent, natural-looking tooth replacement.",
+      "description": "Restore missing teeth with premium titanium implants that look, feel, and function like natural teeth. Our implant specialists use guided surgery for precise, comfortable placement and beautiful long-lasting results.",
+      "price": 85000,
+      "duration": 90,
+      "category": "SURGERY",
+      "icon": "anchor",
+      "department": {
+        "name": "Oral Surgery"
+      },
+      "isFeatured": true,
+      "image": "/images/service-implant.svg"
+    },
+    {
+      "id": "s5",
+      "name": "Teeth Whitening",
+      "slug": "teeth-whitening",
+      "shortDescription": "Brighten your smile by several shades in a single visit.",
+      "description": "Professional in-office whitening that lifts years of stains safely and effectively in about an hour. We also offer take-home kits for maintenance.",
+      "price": 6500,
+      "duration": 60,
+      "category": "COSMETIC",
+      "icon": "sun",
+      "department": {
+        "name": "Cosmetic Dentistry"
+      },
+      "isFeatured": true,
+      "image": "/images/service-whitening.svg"
+    },
+    {
+      "id": "s6",
+      "name": "Pediatric Dentistry",
+      "slug": "pediatric-dentistry",
+      "shortDescription": "Gentle, fun dental care for children of all ages.",
+      "description": "A friendly, fear-free environment that helps children build healthy habits for life. Our pediatric team is trained to make every visit calm, educational, and even fun.",
+      "price": 1200,
+      "duration": 30,
+      "category": "PEDIATRIC",
+      "icon": "baby",
+      "department": {
+        "name": "Pediatric Dentistry"
+      },
+      "isFeatured": true,
+      "image": "/images/service-pediatric.svg"
+    },
+    {
+      "id": "s7",
+      "name": "Emergency Care",
+      "slug": "emergency-care",
+      "shortDescription": "Same-day relief for dental emergencies — call us anytime.",
+      "description": "Toothaches, broken teeth, knocked-out teeth, and urgent dental issues handled fast. We keep same-day emergency slots open and provide immediate care for acute pain and trauma.",
+      "price": 2500,
+      "duration": 30,
+      "category": "EMERGENCY",
+      "icon": "siren",
+      "department": {
+        "name": "General Dentistry"
+      },
+      "isFeatured": true,
+      "image": "/images/service-emergency.svg"
+    },
+    {
+      "id": "s8",
+      "name": "Root Canal Therapy",
+      "slug": "root-canal-therapy",
+      "shortDescription": "Save damaged teeth with modern, gentle endodontics.",
+      "description": "Comfortable root canal treatment using rotary endodontic technology to relieve pain and preserve your natural tooth. Most treatments completed in a single visit.",
+      "price": 12000,
+      "duration": 90,
+      "category": "RESTORATIVE",
+      "icon": "activity",
+      "department": {
+        "name": "Endodontics"
+      },
+      "isFeatured": false,
+      "image": "/images/service-rootcanal.svg"
+    },
+    {
+      "id": "s9",
+      "name": "Periodontal Treatment",
+      "slug": "periodontal-treatment",
+      "shortDescription": "Expert care for healthy gums and prevention of gum disease.",
+      "description": "Scaling, root planing, and gum therapy to treat and prevent periodontal (gum) disease. Healthy gums are the foundation of a beautiful smile.",
+      "price": 4500,
+      "duration": 60,
+      "category": "PREVENTIVE",
+      "icon": "shield",
+      "department": {
+        "name": "Periodontics"
+      },
+      "isFeatured": false,
+      "image": "/images/service-periodontal.svg"
+    },
+    {
+      "id": "s10",
+      "name": "Wisdom Tooth Extraction",
+      "slug": "wisdom-tooth-extraction",
+      "shortDescription": "Safe and gentle removal of impacted wisdom teeth.",
+      "description": "Specialist surgical extraction of impacted or problematic wisdom teeth using modern sedation techniques. Minimal discomfort, fast recovery.",
+      "price": 8000,
+      "duration": 60,
+      "category": "SURGERY",
+      "icon": "anchor",
+      "department": {
+        "name": "Oral Surgery"
+      },
+      "isFeatured": false,
+      "image": "/images/service-emergency.svg"
+    },
+    {
+      "id": "s11",
+      "name": "Dental Crowns & Bridges",
+      "slug": "dental-crowns-bridges",
+      "shortDescription": "Custom-made crowns and bridges to restore damaged or missing teeth.",
+      "description": "Premium zirconia and porcelain crowns and bridges hand-crafted for a perfect fit and natural appearance. Restores strength, function, and beauty.",
+      "price": 15000,
+      "duration": 60,
+      "category": "RESTORATIVE",
+      "icon": "shield",
+      "department": {
+        "name": "Restorative Dentistry"
+      },
+      "isFeatured": false,
+      "image": "/images/service-cosmetic.svg"
+    },
+    {
+      "id": "s12",
+      "name": "Dental Fillings",
+      "slug": "dental-fillings",
+      "shortDescription": "Tooth-colored composite fillings for cavities and minor repairs.",
+      "description": "Natural-looking composite fillings that match your tooth shade perfectly. Stop decay and restore your tooth's function in a single visit.",
+      "price": 2000,
+      "duration": 30,
+      "category": "RESTORATIVE",
+      "icon": "activity",
+      "department": {
+        "name": "General Dentistry"
+      },
+      "isFeatured": false,
+      "image": "/images/service-general.svg"
+    }
+  ],
+  "doctors": [
+    {
+      "id": "d1",
+      "name": "Dr. Junaid Ahmed",
+      "specialization": "Principal Dentist & Implantologist",
+      "experience": 12,
+      "department": "General Dentistry",
+      "avatar": "/images/doc-1.jpg",
+      "consultationFee": 2000,
+      "bio": "Dr. Junaid Ahmed is the founder and principal dentist at Junaid Dental Care. With over 12 years of experience, he specializes in dental implants, full-mouth rehabilitation, and complex restorative cases. He completed his BDS from a leading Pakistani dental college and continues advanced training internationally.",
+      "averageRating": 4.9,
+      "totalReviews": 187,
+      "languages": [
+        "Urdu",
+        "English",
+        "Punjabi"
+      ]
+    },
+    {
+      "id": "d2",
+      "name": "Dr. Ayesha Khan",
+      "specialization": "Cosmetic & Restorative Dentist",
+      "experience": 8,
+      "department": "Cosmetic Dentistry",
+      "avatar": "/images/doc-2.jpg",
+      "consultationFee": 1800,
+      "bio": "Dr. Ayesha Khan brings an artistic eye and gentle touch to cosmetic dentistry. She is known for stunning smile makeovers, porcelain veneers, and natural-looking restorations that patients love.",
+      "averageRating": 4.8,
+      "totalReviews": 142,
+      "languages": [
+        "Urdu",
+        "English"
+      ]
+    },
+    {
+      "id": "d3",
+      "name": "Dr. Hassan Raza",
+      "specialization": "Orthodontist",
+      "experience": 9,
+      "department": "Orthodontics",
+      "avatar": "/images/doc-3.svg",
+      "consultationFee": 2000,
+      "bio": "Dr. Hassan Raza is our specialist orthodontist, expert in traditional braces, ceramic braces, and clear aligner therapy. He creates personalised treatment plans for patients of all ages.",
+      "averageRating": 4.9,
+      "totalReviews": 96,
+      "languages": [
+        "Urdu",
+        "English",
+        "Punjabi"
+      ]
+    },
+    {
+      "id": "d4",
+      "name": "Dr. Sana Malik",
+      "specialization": "Pediatric Dentist",
+      "experience": 6,
+      "department": "Pediatric Dentistry",
+      "avatar": "/images/doc-4.svg",
+      "consultationFee": 1500,
+      "bio": "Dr. Sana Malik is loved by children and parents alike. She creates a warm, fun atmosphere that makes every child's dental visit a positive experience, building healthy habits for life.",
+      "averageRating": 4.9,
+      "totalReviews": 78,
+      "languages": [
+        "Urdu",
+        "English"
+      ]
+    },
+    {
+      "id": "d5",
+      "name": "Dr. Bilal Sheikh",
+      "specialization": "Oral Surgeon",
+      "experience": 10,
+      "department": "Oral Surgery",
+      "avatar": "/images/doc-1.jpg",
+      "consultationFee": 2500,
+      "bio": "Dr. Bilal Sheikh is a skilled oral and maxillofacial surgeon specializing in complex extractions, wisdom tooth surgery, and dental implant placement.",
+      "averageRating": 4.8,
+      "totalReviews": 64,
+      "languages": [
+        "Urdu",
+        "English"
+      ]
+    },
+    {
+      "id": "d6",
+      "name": "Dr. Maria Aslam",
+      "specialization": "Endodontist",
+      "experience": 7,
+      "department": "Endodontics",
+      "avatar": "/images/doc-2.jpg",
+      "consultationFee": 2000,
+      "bio": "Dr. Maria Aslam specializes in root canal therapy and endodontic microsurgery, using the latest rotary technology to provide virtually painless treatments.",
+      "averageRating": 4.9,
+      "totalReviews": 52,
+      "languages": [
+        "Urdu",
+        "English",
+        "Pashto"
+      ]
+    }
+  ],
+  "testimonials": [
+    {
+      "id": "t1",
+      "patientName": "Ahmed Raza",
+      "content": "I had my dental implants done at Junaid Dental Care and the experience was outstanding. Dr. Junaid was patient, professional, and the results are amazing. Highly recommended for anyone in Ali Pur area!",
+      "rating": 5,
+      "isFeatured": true
+    },
+    {
+      "id": "t2",
+      "patientName": "Fatima Shah",
+      "content": "My kids used to be scared of dentists. Dr. Sana made them so comfortable — now they actually look forward to their check-ups. The clinic is clean, modern, and the staff is wonderful.",
+      "rating": 5,
+      "isFeatured": true
+    },
+    {
+      "id": "t3",
+      "patientName": "Muhammad Imran",
+      "content": "Got my braces done here last year. Dr. Hassan and his team were fantastic. My teeth are perfectly aligned now. Very reasonable pricing compared to other clinics in Islamabad.",
+      "rating": 5,
+      "isFeatured": true
+    },
+    {
+      "id": "t4",
+      "patientName": "Saima Akhtar",
+      "content": "Emergency toothache on a Friday night — they took my call and saw me first thing Saturday morning. True professionals. Forever grateful to Dr. Ayesha for the painless root canal.",
+      "rating": 5
+    },
+    {
+      "id": "t5",
+      "patientName": "Tariq Mehmood",
+      "content": "Best dental clinic in the area. I came in for a cleaning and ended up getting my whole family's dental care here. Transparent pricing, no hidden fees, and the WhatsApp booking is super convenient.",
+      "rating": 5
+    },
+    {
+      "id": "t6",
+      "patientName": "Nida Yasir",
+      "content": "My smile makeover with veneers exceeded my expectations. Dr. Ayesha truly has an artist's eye. I smile with confidence now — thank you Junaid Dental Care!",
+      "rating": 5
+    },
+    {
+      "id": "t7",
+      "patientName": "Zubair Ali",
+      "content": "Wisdom tooth extraction was something I was dreading, but Dr. Bilal made it completely painless. The clinic is spotless, equipment is modern, and the staff is caring. 5 stars!",
+      "rating": 5
+    },
+    {
+      "id": "t8",
+      "patientName": "Rabia Khan",
+      "content": "Affordable, professional, and trustworthy. The clinic is conveniently located near Old Bank Stop in Ali Pur. Easy to find, easy parking, easy appointments via WhatsApp.",
+      "rating": 4
+    }
+  ],
+  "faqs": [
+    {
+      "id": "f1",
+      "question": "How often should I visit the dentist?",
+      "answer": "For most patients, we recommend a check-up and professional cleaning every six months. Regular visits help us detect issues early, before they become painful or expensive to treat.",
+      "category": "FIRST_VISIT"
+    },
+    {
+      "id": "f2",
+      "question": "Do you offer payment plans or installment options?",
+      "answer": "Yes! We understand dental treatments can be a significant investment. We offer flexible installment plans for major treatments like implants, braces, and full-mouth rehabilitation. Ask our front desk for details.",
+      "category": "BILLING"
+    },
+    {
+      "id": "f3",
+      "question": "What should I do in a dental emergency?",
+      "answer": "Call us immediately at +92 312 5028812 or message us on WhatsApp. We keep same-day emergency slots open and provide immediate care for severe toothache, broken teeth, knocked-out teeth, and other urgent dental issues.",
+      "category": "EMERGENCY"
+    },
+    {
+      "id": "f4",
+      "question": "Are the treatments painful?",
+      "answer": "We use modern local anesthesia and gentle techniques so most treatments are virtually pain-free. For anxious patients, we also offer sedation options. Our team is trained to make every visit as comfortable as possible.",
+      "category": "TREATMENTS"
+    },
+    {
+      "id": "f5",
+      "question": "How much does a first consultation cost?",
+      "answer": "Your first comprehensive consultation is just PKR 1,500 and includes a full oral examination, treatment plan, and X-rays if needed. New patients also receive 15% off their first treatment.",
+      "category": "BILLING"
+    },
+    {
+      "id": "f6",
+      "question": "How do I book an appointment?",
+      "answer": "You can book in three easy ways: (1) Online through our website, (2) Call us at +92 312 5028812, or (3) Send us a message on WhatsApp. We confirm every booking within 1 hour during clinic hours.",
+      "category": "APPOINTMENTS"
+    },
+    {
+      "id": "f7",
+      "question": "Do you treat children?",
+      "answer": "Absolutely. Dr. Sana Malik is our dedicated pediatric dentist with years of experience making children feel comfortable and safe. We welcome patients of all ages, from toddlers to grandparents.",
+      "category": "GENERAL"
+    },
+    {
+      "id": "f8",
+      "question": "What insurance plans do you accept?",
+      "answer": "We accept most major insurance plans in Pakistan. We also provide all necessary documentation for reimbursement. Contact us with your policy details and we'll verify your coverage before your visit.",
+      "category": "INSURANCE"
+    },
+    {
+      "id": "f9",
+      "question": "Where is Junaid Dental Care located?",
+      "answer": "We're located on Lehtrar Road, near Old Bank Stop in Ali Pur, just 15 minutes from Islamabad. Easy to find on Google Maps and there's plenty of parking available outside the clinic.",
+      "category": "FIRST_VISIT"
+    },
+    {
+      "id": "f10",
+      "question": "How long do dental implants last?",
+      "answer": "With proper care, dental implants can last a lifetime. We use premium titanium implants from internationally certified manufacturers and provide detailed aftercare instructions to maximise longevity.",
+      "category": "TREATMENTS"
+    }
+  ],
+  "gallery": [
+    {
+      "id": "g1",
+      "title": "Welcome to Junaid Dental Care",
+      "description": "Our modern reception area in Ali Pur",
+      "category": "CLINIC",
+      "image": "/images/gallery-reception.jpg"
+    },
+    {
+      "id": "g2",
+      "title": "State-of-the-Art Treatment Suite",
+      "description": "Premium equipment for comfortable care",
+      "category": "CLINIC",
+      "image": "/images/gallery-treatment.jpg"
+    },
+    {
+      "id": "g3",
+      "title": "Digital X-Ray & 3D Imaging",
+      "description": "Modern diagnostic technology",
+      "category": "TECHNOLOGY",
+      "image": "/images/gallery-tech.jpg"
+    },
+    {
+      "id": "g4",
+      "title": "Smile Makeover Result",
+      "description": "Cosmetic dentistry transformation",
+      "category": "BEFORE_AFTER",
+      "image": "/images/gallery-smile.jpg"
+    },
+    {
+      "id": "g5",
+      "title": "Our Caring Team",
+      "description": "The Junaid Dental Care family",
+      "category": "TEAM",
+      "image": "/images/gallery-team.jpg"
+    },
+    {
+      "id": "g6",
+      "title": "Gentle, Personalised Care",
+      "description": "Every patient is family",
+      "category": "TREATMENTS",
+      "image": "/images/gallery-care.jpg"
+    }
+  ],
+  "blog": [
+    {
+      "id": "b1",
+      "title": "10 Everyday Habits That Keep Your Teeth Healthy",
+      "slug": "10-everyday-habits-healthy-teeth",
+      "excerpt": "Simple, science-backed habits that protect your smile between visits — straight from the Junaid Dental Care team.",
+      "content": "<p>Great oral health starts at home. Here are ten simple habits our dentists recommend to keep your teeth and gums in top shape between visits.</p><h3>1. Brush Twice a Day</h3><p>Use fluoride toothpaste and brush for at least two minutes, morning and night. Replace your toothbrush every 3 months.</p><h3>2. Floss Daily</h3><p>Flossing removes plaque from between your teeth where your brush can't reach. Just once a day makes a huge difference.</p><h3>3. Limit Sugary Snacks</h3><p>Bacteria in your mouth feed on sugar and produce acid that erodes enamel. Choose fruits, nuts, and cheese for healthier snacks.</p><h3>4. Drink More Water</h3><p>Water rinses away food particles and keeps your mouth hydrated. Pakistani cities can be hot — keep a water bottle handy.</p><h3>5. Don't Skip Your Check-ups</h3><p>Visit Junaid Dental Care every six months. Early detection saves you pain, time, and money.</p><p>For personalised advice, book a consultation with our team. We're here to help you keep a healthy smile for life.</p>",
+      "readingTime": 4,
+      "publishedAt": null,
+      "category": {
+        "name": "Dental Care"
+      },
+      "author": {
+        "name": "Dr. Junaid Ahmed"
+      },
+      "featuredImage": "/images/blog-1.svg"
+    },
+    {
+      "id": "b2",
+      "title": "What to Expect During Your First Visit to Junaid Dental Care",
+      "slug": "first-visit-junaid-dental-care",
+      "excerpt": "A complete walkthrough of your first appointment at our Ali Pur clinic — from check-in to your personalised care plan.",
+      "content": "<p>Walking into a dental clinic for the first time can feel daunting. At Junaid Dental Care, we go out of our way to make your first visit welcoming, comfortable, and informative. Here's what to expect.</p><h3>1. Warm Welcome</h3><p>Our front desk team will greet you, confirm your details, and help with any paperwork. Tea or water is always offered.</p><h3>2. Comprehensive Examination</h3><p>Dr. Junaid or one of our specialists will perform a thorough examination of your teeth, gums, and bite. Digital X-rays may be taken if needed.</p><h3>3. Personalised Treatment Plan</h3><p>You'll receive a clear, written treatment plan with transparent pricing. No pressure, no surprises.</p><h3>4. Same-Day Treatment (Optional)</h3><p>If you're comfortable and time allows, we can often start simple treatments (like cleaning) on your very first visit.</p><p>Ready to book? Call us at +92 312 5028812 or use our online form. We look forward to welcoming you.</p>",
+      "readingTime": 3,
+      "publishedAt": null,
+      "category": {
+        "name": "Dental Care"
+      },
+      "author": {
+        "name": "Dr. Ayesha Khan"
+      },
+      "featuredImage": "/images/blog-2.svg"
+    },
+    {
+      "id": "b3",
+      "title": "Braces vs Clear Aligners: Which Is Right for You?",
+      "slug": "braces-vs-clear-aligners",
+      "excerpt": "Our orthodontist explains the differences between traditional braces and clear aligners to help you make the right choice.",
+      "content": "<p>One of the most common questions we get at Junaid Dental Care is: <em>should I get braces or clear aligners?</em> The answer depends on your case, lifestyle, and budget. Here's an honest comparison.</p><h3>Traditional Metal Braces</h3><p><strong>Best for:</strong> Complex alignment issues, severe crowding, bite correction, younger patients.<br><strong>Pros:</strong> Most affordable, highly effective, work for all cases.<br><strong>Cons:</strong> Visible, dietary restrictions, more frequent visits.</p><h3>Clear Aligners (Invisalign-style)</h3><p><strong>Best for:</strong> Mild to moderate alignment, adults who want discretion.<br><strong>Pros:</strong> Nearly invisible, removable for eating, fewer clinic visits.<br><strong>Cons:</strong> Higher cost, requires discipline (22 hrs/day), not for complex cases.</p><h3>What We Recommend</h3><p>Book a free orthodontic consultation with Dr. Hassan Raza. He'll examine your teeth, show you a 3D simulation of your potential results, and recommend the option that fits your case and budget.</p>",
+      "readingTime": 5,
+      "publishedAt": null,
+      "category": {
+        "name": "Orthodontics"
+      },
+      "author": {
+        "name": "Dr. Hassan Raza"
+      },
+      "featuredImage": "/images/blog-3.svg"
+    }
+  ]
+}
