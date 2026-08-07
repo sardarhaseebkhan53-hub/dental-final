@@ -1,15 +1,22 @@
-/* Serene Dental — shared site behaviour */
+/* Junaid Dental Care — shared site behaviour */
 window.SD = window.SD || {};
 (function (SD) {
   /* ── Static site data (mirrors server constants) ───────────────────────── */
   SD.CLINIC = {
-    name: "Serene Dental Clinic",
-    phone: "(555) 123-4567",
-    emergencyPhone: "(555) 911-0000",
-    email: "info@serenedental.com",
-    address: { street: "123 Wellness Avenue, Suite 200", city: "San Francisco", state: "CA", zip: "94102" },
-    hours: { weekday: "8:00 AM - 8:00 PM", saturday: "9:00 AM - 5:00 PM", sunday: "10:00 AM - 4:00 PM" },
-    founded: 1999,
+    name: "Junaid Dental Care",
+    shortName: "Junaid Dental",
+    tagline: "Premium Dental Care with a Personal Touch",
+    phone: "+92 312 5028812",
+    emergencyPhone: "+92 312 5028812",
+    whatsapp: "923125028812",
+    email: "info@junaiddentalcare.pk",
+    website: "https://junaiddentalcare.pk",
+    address: { street: "J5WM+643, Lehtrar Road, near Old Bank Stop", city: "Ali Pur", state: "Islamabad Capital Territory", zip: "45600", country: "Pakistan" },
+    hours: { weekday: "8:00 AM - 9:00 PM", saturday: "9:00 AM - 6:00 PM", sunday: "Closed (Emergency Only)" },
+    rating: 4.6,
+    founded: 2015,
+    googleMaps: "https://maps.app.goo.gl/sim1qA4wDdpcMovK7",
+    coordinates: { lat: 33.6455048, lng: 73.1802099 }
   };
 
   const NAV = [
@@ -17,31 +24,36 @@ window.SD = window.SD || {};
     { label: "About", href: "/about", children: [
       { label: "Our Story", href: "/about" },
       { label: "Our Team", href: "/team" },
-      { label: "Technology", href: "/technology" },
-      { label: "Careers", href: "/careers" },
+      { label: "Our Technology", href: "/technology" },
+      { label: "Patient Journey", href: "/patient-journey" },
     ]},
     { label: "Services", href: "/services", children: [
       { label: "General Dentistry", href: "/services/general-dentistry" },
       { label: "Cosmetic Dentistry", href: "/services/cosmetic-dentistry" },
-      { label: "Orthodontics", href: "/services/orthodontics" },
+      { label: "Orthodontics & Braces", href: "/services/orthodontics" },
       { label: "Dental Implants", href: "/services/dental-implants" },
       { label: "Teeth Whitening", href: "/services/teeth-whitening" },
+      { label: "Root Canal Therapy", href: "/services/root-canal-therapy" },
       { label: "Pediatric Dentistry", href: "/services/pediatric-dentistry" },
       { label: "Emergency Care", href: "/services/emergency-care" },
       { label: "View All Services", href: "/services" },
     ]},
     { label: "Doctors", href: "/doctors" },
-    { label: "Gallery", href: "/gallery" },
+    { label: "Smile Gallery", href: "/gallery", children: [
+      { label: "Clinic Photos", href: "/gallery" },
+      { label: "Before & After", href: "/smile-transformation" },
+      { label: "Video Testimonials", href: "/testimonials#video" },
+    ]},
     { label: "Blog", href: "/blog" },
     { label: "Contact", href: "/contact" },
   ];
 
   const SOCIAL = [
-    { label: "Facebook", href: "https://facebook.com/serenedental", path: "M14 13.5h2.5l.5-2.5H14V9c0-.7.3-1.5 1.5-1.5h1.5V5.2s-1.2-.2-2.4-.2c-2.4 0-4 1.5-4 4V11H8v2.5h2.5V21h3.5v-7.5Z" },
-    { label: "Instagram", href: "https://instagram.com/serenedental", path: "M12 2c2.7 0 3 0 4 .1 1 .1 1.6.2 2.1.4.6.2 1 .5 1.5 1 .4.4.8.9 1 1.5.2.5.4 1.1.4 2.1.1 1 .1 1.3.1 4s0 3-.1 4c-.1 1-.2 1.6-.4 2.1-.2.6-.5 1-1 1.5-.4.4-.9.8-1.5 1-.5.2-1.1.4-2.1.4-1 .1-1.3.1-4 .1s-3 0-4-.1c-1-.1-1.6-.2-2.1-.4-.6-.2-1-.5-1.5-1-.4-.4-.8-.9-1-1.5-.2-.5-.4-1.1-.4-2.1C2 15 2 14.7 2 12s0-3 .1-4c.1-1 .2-1.6.4-2.1.2-.6.5-1 1-1.5.4-.4.9-.8 1.5-1C5.5 3.2 6.1 3 7.1 2.9 8.1 2.8 8.3 2.8 11.1 2.8L12 2Zm0 2.4c-2.7 0-3 0-4 .1-.9.1-1.4.2-1.7.3-.4.2-.7.3-1 .7-.3.3-.5.6-.7 1-.1.3-.2.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c.1.9.2 1.4.3 1.7.2.4.3.7.7 1 .3.3.6.5 1 .7.3.1.8.2 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9-.1 1.4-.2 1.7-.3.4-.2.7-.3 1-.7.3-.3.5-.6.7-1 .1-.3.2-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c-.1-.9-.2-1.4-.3-1.7-.2-.4-.3-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.2-1.7-.3-1-.1-1.3-.1-4-.1Zm0 4.1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm0 2.4a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Zm3.6-2.9a.8.8 0 1 1 0 1.6.8.8 0 0 1 0-1.6Z" },
-    { label: "Twitter", href: "https://twitter.com/serenedental", path: "M22 5.8c-.7.3-1.5.6-2.3.7a4 4 0 0 0 1.8-2.2 8 8 0 0 1-2.5 1 4 4 0 0 0-6.8 3.6A11.4 11.4 0 0 1 3.9 4.5a4 4 0 0 0 1.2 5.3c-.6 0-1.2-.2-1.8-.5a4 4 0 0 0 3.2 4 4 4 0 0 1-1.8.1 4 4 0 0 0 3.7 2.8A8 8 0 0 1 2 18.3a11.3 11.3 0 0 0 6.1 1.8c7.3 0 11.3-6.1 11.3-11.4v-.5c.8-.6 1.5-1.3 2-2Z" },
-    { label: "LinkedIn", href: "https://linkedin.com/company/serenedental", path: "M4.98 3.5A2 2 0 1 1 3 5.5a2 2 0 0 1 1.98-2ZM3 8.5h4V21H3V8.5Zm6.5 0h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.7 4.8 6.1V21h-4v-5.9c0-1.4 0-3.2-2-3.2s-2.3 1.5-2.3 3V21h-4V8.5Z" },
-    { label: "YouTube", href: "https://youtube.com/@serenedental", path: "M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8c1.6.4 7.8.4 7.8.4s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8ZM10 15.2V8.8l5.2 3.2L10 15.2Z" },
+    { label: "Facebook", href: "https://facebook.com/junaiddentalcare", path: "M14 13.5h2.5l.5-2.5H14V9c0-.7.3-1.5 1.5-1.5h1.5V5.2s-1.2-.2-2.4-.2c-2.4 0-4 1.5-4 4V11H8v2.5h2.5V21h3.5v-7.5Z" },
+    { label: "Instagram", href: "https://instagram.com/junaiddentalcare", path: "M12 2c2.7 0 3 0 4 .1 1 .1 1.6.2 2.1.4.6.2 1 .5 1.5 1 .4.4.8.9 1 1.5.2.5.4 1.1.4 2.1.1 1 .1 1.3.1 4s0 3-.1 4c-.1 1-.2 1.6-.4 2.1-.2.6-.5 1-1 1.5-.4.4-.9.8-1.5 1-.5.2-1.1.4-2.1.4-1 .1-1.3.1-4 .1s-3 0-4-.1c-1-.1-1.6-.2-2.1-.4-.6-.2-1-.5-1.5-1-.4-.4-.8-.9-1-1.5-.2-.5-.4-1.1-.4-2.1C2 15 2 14.7 2 12s0-3 .1-4c.1-1 .2-1.6.4-2.1.2-.6.5-1 1-1.5.4-.4.9-.8 1.5-1C5.5 3.2 6.1 3 7.1 2.9 8.1 2.8 8.3 2.8 11.1 2.8L12 2Zm0 2.4c-2.7 0-3 0-4 .1-.9.1-1.4.2-1.7.3-.4.2-.7.3-1 .7-.3.3-.5.6-.7 1-.1.3-.2.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c.1.9.2 1.4.3 1.7.2.4.3.7.7 1 .3.3.6.5 1 .7.3.1.8.2 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9-.1 1.4-.2 1.7-.3.4-.2.7-.3 1-.7.3-.3.5-.6.7-1 .1-.3.2-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c-.1-.9-.2-1.4-.3-1.7-.2-.4-.3-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.2-1.7-.3-1-.1-1.3-.1-4-.1Zm0 4.1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm0 2.4a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Zm3.6-2.9a.8.8 0 1 1 0 1.6.8.8 0 0 1 0-1.6Z" },
+    { label: "WhatsApp", href: "https://wa.me/923125028812", path: "M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1.1-.2.1-.3.2-.6.1-1.7-.8-2.7-1.5-3.8-3.4-.3-.5.3-.5.8-1.5.1-.2.1-.3 0-.4-.1-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4 0 1.4 1 2.7 1.2 2.9.1.2 2 3 4.8 4.2 1.7.7 2.4.8 3.3.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.2-.3-.3-.5-.3M12 2.5C6.8 2.5 2.5 6.8 2.5 12c0 1.7.5 3.4 1.3 4.9L2.5 21.5l4.7-1.2c1.4.8 3.1 1.2 4.8 1.2 5.2 0 9.5-4.3 9.5-9.5S17.2 2.5 12 2.5Z" },
+    { label: "YouTube", href: "https://youtube.com/@junaiddentalcare", path: "M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8c1.6.4 7.8.4 7.8.4s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8ZM10 15.2V8.8l5.2 3.2L10 15.2Z" },
+    { label: "TikTok", href: "https://tiktok.com/@junaiddentalcare", path: "M16.6 5.8c-1.1 0-2 .9-2 2v8.7a3.4 3.4 0 1 1-3.4-3.4c.3 0 .6 0 .9.1V10a6.5 6.5 0 1 0 5.5 6.5V8.7c1 .8 2.3 1.3 3.7 1.3V7c-1.6 0-3.4-1.1-3.7-1.2Z" },
   ];
 
   /* ── Icon helpers (inline SVG, mimics lucide-react) ────────────────────── */
@@ -146,7 +158,7 @@ window.SD = window.SD || {};
         '<div class="flex items-center gap-6">' +
           '<a href="tel:' + SD.CLINIC.phone + '">' + SD.icon("phone", 14) + "<span>" + SD.CLINIC.phone + "</span></a>" +
           '<span class="divider">|</span>' +
-          '<span class="muted">Mon-Sat: ' + SD.CLINIC.hours.weekday + " • Emergency 24/7</span>" +
+          '<span class="muted">Open Today: ' + SD.CLINIC.hours.weekday + " • Emergency 24/7</span>" +
         "</div>" +
         '<div class="flex items-center gap-4">' +
           '<a href="/login">Patient Portal</a><span class="divider">|</span><a href="/book-appointment">Book Appointment</a>' +
@@ -155,7 +167,7 @@ window.SD = window.SD || {};
       '<header class="site-header"><div class="container">' +
         '<a class="logo" href="/">' +
           '<span class="logo-icon">' + toothSVG() + "</span>" +
-          '<span class="logo-text"><span class="brand">Serene <span>Dental</span></span><span class="tag">Premium Dental Care</span></span>' +
+          '<span class="logo-text"><span class="brand">Junaid <span>Dental Care</span></span><span class="tag">' + SD.CLINIC.tagline + "</span></span>" +
         "</a>" +
         '<nav class="nav" aria-label="Main navigation">' + navItems + "</nav>" +
         '<div class="header-actions">' +
@@ -168,7 +180,7 @@ window.SD = window.SD || {};
         mobileItems +
         '<div class="mobile-cta">' +
           '<a class="btn btn-primary btn-block" href="/book-appointment">' + SD.icon("calendar", 18) + " Book Appointment</a>" +
-          '<a class="btn btn-secondary btn-block" href="tel:' + SD.CLINIC.phone + '">' + SD.icon("phone", 18) + " " + SD.CLINIC.phone + "</a>" +
+          '<a class="btn btn-secondary btn-block" href="https://wa.me/' + SD.CLINIC.whatsapp + '">' + SD.icon("phone", 18) + " WhatsApp Us</a>" +
         "</div>" +
       "</div></div>" +
       "</header>"
@@ -186,7 +198,7 @@ window.SD = window.SD || {};
       '<footer class="site-footer">' +
         '<div class="emergency-banner"><div class="container">' +
           '<div class="left"><div class="ico">' + SD.icon("phone", 20) + "</div>" +
-            "<div><strong>Dental Emergency? We're Here 24/7</strong><span>Don't wait — call now for immediate care</span></div>" +
+            "<div><strong>Dental Emergency? We're Here to Help</strong><span>Same-day appointments & emergency care available</span></div>" +
           "</div>" +
           '<a class="btn btn-accent btn-lg" href="tel:' + SD.CLINIC.emergencyPhone + '">' + SD.icon("phone", 16) + " " + SD.CLINIC.emergencyPhone + "</a>" +
         "</div></div>" +
@@ -195,48 +207,77 @@ window.SD = window.SD || {};
           '<div class="footer-col">' +
             '<a class="logo" href="/" style="margin-bottom:1.5rem;display:inline-flex">' +
               '<span class="logo-icon">' + toothSVG() + "</span>" +
-              '<span class="logo-text"><span class="brand" style="color:#fff">Serene <span style="color:var(--accent)">Dental</span></span><span class="tag" style="color:rgba(255,255,255,0.7)">Premium Dental Care</span></span>' +
+              '<span class="logo-text"><span class="brand" style="color:#fff">Junaid <span style="color:var(--accent)">Dental Care</span></span><span class="tag" style="color:rgba(255,255,255,0.7)">Premium Dental Care • Ali Pur</span></span>' +
             "</a>" +
-            "<p style='font-size:.9rem;color:rgba(255,255,255,0.7);line-height:1.7'>Where beautiful smiles begin. Experience premium dental care with over " + (year - SD.CLINIC.founded) + " years of excellence.</p>" +
+            "<p style='font-size:.9rem;color:rgba(255,255,255,0.7);line-height:1.7'>Junaid Dental Care provides premium dental treatments with modern technology, gentle hands, and a calm environment — trusted by families across Ali Pur, Lehtrar Road and surrounding areas.</p>" +
             '<div class="footer-contact" style="margin-top:1.5rem">' +
               '<a href="tel:' + SD.CLINIC.phone + '"><span class="ico">' + SD.icon("phone", 16) + "</span>" + SD.CLINIC.phone + "</a>" +
+              '<a href="https://wa.me/' + SD.CLINIC.whatsapp + '"><span class="ico">' + SD.icon("phone", 16) + "</span>WhatsApp Direct</a>" +
               '<a href="mailto:' + SD.CLINIC.email + '"><span class="ico">' + SD.icon("mail", 16) + "</span>" + SD.CLINIC.email + "</a>" +
-              '<div class="line"><span class="ico">' + SD.icon("mapPin", 16) + "</span><span>" + SD.CLINIC.address.street + "<br>" + SD.CLINIC.address.city + ", " + SD.CLINIC.address.state + " " + SD.CLINIC.address.zip + "</span></div>" +
-              '<div class="line"><span class="ico">' + SD.icon("clock", 16) + "</span><span>Mon-Fri: " + SD.CLINIC.hours.weekday + "<br>Sat: " + SD.CLINIC.hours.saturday + "<br>Sun: " + SD.CLINIC.hours.sunday + "</span></div>" +
+              '<div class="line"><span class="ico">' + SD.icon("mapPin", 16) + "</span><span>" + SD.CLINIC.address.street + "<br>" + SD.CLINIC.address.city + ", " + SD.CLINIC.address.state + " " + SD.CLINIC.address.zip + "<br>" + SD.CLINIC.address.country + "</span></div>" +
+              '<div class="line"><span class="ico">' + SD.icon("clock", 16) + "</span><span>Mon-Sat: " + SD.CLINIC.hours.weekday + "<br>Sunday: " + SD.CLINIC.hours.sunday + "</span></div>" +
             "</div>" +
             '<div class="socials">' + SOCIAL.map((s) => '<a href="' + s.href + '" target="_blank" rel="noopener noreferrer" aria-label="' + s.label + '"><svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="' + s.path + '"/></svg></a>').join("") + "</div>" +
           "</div>" +
           /* Services */
           '<div class="footer-col"><h3>Our Services</h3><ul>' +
-            ["General Dentistry","Cosmetic Dentistry","Orthodontics","Dental Implants","Teeth Whitening","Emergency Care"].map((s) =>
-              '<li><a href="/services/' + s.toLowerCase().replace(/ /g, "-") + '">' + s + "</a></li>").join("") +
+            [
+              {l:"General Dentistry",h:"/services/general-dentistry"},
+              {l:"Cosmetic Dentistry",h:"/services/cosmetic-dentistry"},
+              {l:"Orthodontics & Braces",h:"/services/orthodontics"},
+              {l:"Dental Implants",h:"/services/dental-implants"},
+              {l:"Teeth Whitening",h:"/services/teeth-whitening"},
+              {l:"Root Canal Therapy",h:"/services/root-canal-therapy"},
+              {l:"Pediatric Dentistry",h:"/services/pediatric-dentistry"},
+              {l:"Emergency Care",h:"/services/emergency-care"}
+            ].map((s) => '<li><a href="' + s.h + '">' + s.l + "</a></li>").join("") +
           "</ul></div>" +
           /* Company + patients */
-          '<div class="footer-col"><h3>Company</h3><ul>' +
-            ["About Us","Our Team","Technology","Careers","Blog","Contact"].map((s) => {
-              const href = { "About Us": "/about", "Our Team": "/team", "Technology": "/technology", "Careers": "/careers", "Blog": "/blog", "Contact": "/contact" }[s];
-              return '<li><a href="' + href + '">' + s + "</a></li>";
-            }).join("") +
+          '<div class="footer-col"><h3>Quick Links</h3><ul>' +
+            [
+              {l:"About Us",h:"/about"},
+              {l:"Our Team",h:"/team"},
+              {l:"Our Technology",h:"/technology"},
+              {l:"Patient Journey",h:"/patient-journey"},
+              {l:"Smile Gallery",h:"/gallery"},
+              {l:"Before & After",h:"/smile-transformation"},
+              {l:"Blog",h:"/blog"},
+              {l:"Contact",h:"/contact"}
+            ].map((s) => '<li><a href="' + s.h + '">' + s.l + "</a></li>").join("") +
           "</ul><h3 style='margin-top:2rem'>For Patients</h3><ul>" +
-            [{l:"Book Appointment",h:"/book-appointment"},{l:"Patient Portal",h:"/login"},{l:"Insurance",h:"/insurance"},{l:"Pricing",h:"/pricing"},{l:"FAQ",h:"/faq"},{l:"Reviews",h:"/testimonials"}].map((s) => '<li><a href="' + s.h + '">' + s.l + "</a></li>").join("") +
+            [
+              {l:"Book Appointment",h:"/book-appointment"},
+              {l:"Patient Portal",h:"/login"},
+              {l:"Emergency Care",h:"/emergency"},
+              {l:"Insurance",h:"/insurance"},
+              {l:"Pricing",h:"/pricing"},
+              {l:"FAQ",h:"/faq"},
+              {l:"Reviews",h:"/testimonials"}
+            ].map((s) => '<li><a href="' + s.h + '">' + s.l + "</a></li>").join("") +
           "</ul></div>" +
           /* Newsletter */
           '<div class="footer-col"><h3>Stay Connected</h3>' +
-            "<p style='font-size:.9rem;color:rgba(255,255,255,0.7);margin-bottom:1rem'>Subscribe for dental tips, clinic updates, and special offers.</p>" +
+            "<p style='font-size:.9rem;color:rgba(255,255,255,0.7);margin-bottom:1rem'>Subscribe for dental tips, clinic updates, and special offers delivered to your inbox.</p>" +
             '<form class="newsletter-form" data-newsletter>' +
               '<div class="form-group"><input type="email" class="form-input" placeholder="Your email address" required></div>' +
               '<button class="btn btn-accent btn-block" type="submit">Subscribe ' + SD.icon("arrowRight", 16) + "</button>" +
             "</form>" +
             "<p style='font-size:.75rem;color:rgba(255,255,255,0.4);margin-top:.75rem'>We respect your privacy. Unsubscribe anytime.</p>" +
-            '<div class="new-patient-card"><h4>New Patient Special</h4><p>Free consultation + 20% off your first treatment.</p>' +
+            '<div class="new-patient-card"><h4>★ Rated ' + SD.CLINIC.rating + '/5 on Google</h4><p>Join thousands of happy patients who trust Junaid Dental Care.</p>' +
               '<a class="btn btn-ghost btn-sm" href="/book-appointment" style="margin-top:.75rem;color:var(--accent)">Book Now ' + SD.icon("arrowRight", 12) + "</a>" +
             "</div>" +
           "</div>" +
         "</div></div></div>" +
         '<div class="footer-bottom"><div class="container">' +
-          "<p>© " + year + " Serene Dental Clinic. All rights reserved.</p>" +
+          "<p>© " + year + " Junaid Dental Care. All rights reserved. • Trusted dental care in Ali Pur, Pakistan.</p>" +
           '<div class="legal">' +
-            [{l:"Privacy Policy",h:"/privacy"},{l:"Terms of Service",h:"/terms"},{l:"Cookie Policy",h:"/cookies"},{l:"Refund Policy",h:"/refund-policy"},{l:"Sitemap",h:"/sitemap"}].map((s) => '<a href="' + s.h + '">' + s.l + "</a>").join("") +
+            [
+              {l:"Privacy Policy",h:"/privacy"},
+              {l:"Terms of Service",h:"/terms"},
+              {l:"Cookie Policy",h:"/cookies"},
+              {l:"Refund Policy",h:"/refund-policy"},
+              {l:"Sitemap",h:"/sitemap"}
+            ].map((s) => '<a href="' + s.h + '">' + s.l + "</a>").join("") +
           "</div>" +
         "</div></div>" +
       "</footer>"

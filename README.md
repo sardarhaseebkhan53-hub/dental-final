@@ -1,48 +1,81 @@
-# 🦷 Serene Dental Clinic — Full-Stack Website
+# 🦷 Junaid Dental Care — Premium Dental Clinic Website
 
-A complete, self-hosted dental clinic website and admin panel rebuilt from an
-existing Next.js application into a lean stack with **no frameworks**:
+A complete, self-hosted dental clinic website and admin panel for **Junaid Dental Care** in Ali Pur, Pakistan. Built with a lean stack and **no frameworks** on the frontend:
 
 - **Frontend:** HTML5, CSS3, Vanilla JavaScript (ES6)
 - **Backend:** Node.js + Express.js
 - **Database:** PostgreSQL + Prisma ORM
 
-The site is designed to look and behave almost exactly like the original
-application — same layout, colours, fonts, spacing, animations, and pages — but
-with a simpler, dependency-light codebase.
+> **Live clinic info (from Google Maps):** Junaid Dental Care, Lehtrar Road, near Old Bank Stop, Ali Pur 45600, Pakistan · ☎ +92 312 5028812 · ⭐ 4.6/5 (487+ reviews)
+
+---
 
 ## ✨ Features
 
 ### Public website
-- Home page (hero, trust bar, services, about, doctors, journey, gallery,
-  testimonials, pricing, FAQ, contact CTA)
-- About, Team, Technology, Careers
-- Services list + per-service detail pages
-- Doctors directory
-- Gallery (filterable, lightbox)
-- Blog (list + article pages)
-- Testimonials, Pricing, FAQ (filterable)
-- Insurance, Emergency, Contact (with working form)
-- Legal pages (Privacy, Terms, Cookies, Refund Policy), Sitemap
-- **Book Appointment** form (creates a patient + appointment)
-- Newsletter subscription
-- Patient login / register / forgot & reset password
+- **Luxury hero section** with premium dental imagery, animated counters, Google rating
+- **Comprehensive services** (12 treatments: general, cosmetic, orthodontics, implants, etc.)
+- **Before & After gallery** with smile transformation slider
+- **Meet our doctors** — 6 specialist dentists with detailed profiles
+- **Patient journey** — step-by-step experience guide
+- **Modern technology** showcase (digital X-ray, 3D imaging, laser, rotary endo)
+- **Insurance partners** & flexible payment plans
+- **Awards & certifications**
+- **Clinic gallery** with lightbox
+- **Patient testimonials** + video testimonials
+- **Special offers** & pricing
+- **FAQ** with categories
+- **24/7 Emergency care** section
+- **Latest blog** with categories, tags, SEO
+- **Google Maps** integration
+- **Contact form** with admin notification
+- **Newsletter** subscription
+- **Working hours** with live status
+- **Social links** & professional footer
+- **WhatsApp floating button** with pulse animation
+- **Sticky appointment button**
+- Mobile-first responsive design
+
+### Appointment system
+- **Patients:** Choose doctor, treatment, date, time → instant confirmation
+- **Admin:** Approve, reject, reschedule, cancel with calendar view
+- **Status tracking:** Pending → Confirmed → Completed / Cancelled / No-Show
+- **Email notifications** (SMTP-ready)
+- **WhatsApp booking** integration
 
 ### Admin panel (`/admin`)
-- **Secure login** (JWT)
-- **Dashboard** with live statistics
-- **Appointments** — create, update status, delete, filter
-- **Doctors** — add / edit / delete
-- **Services** — add / edit / delete
-- **Gallery** — add / delete
-- **Testimonials** — add / edit / delete
-- **FAQs** — add / edit / delete
-- **Blog** — write / publish / delete posts
-- **Contact Messages** — read, change status, delete
-- **Users** — manage roles & statuses
-- **Settings / Branding**
-- **Image Upload** (local `/uploads` folder)
-- **Profile** and **Password Change**
+- **Secure login** (JWT + bcrypt)
+- **Dashboard** with live statistics & recent activity
+- **Appointments** — full CRUD with status management
+- **Doctors** — profiles, specializations, fees
+- **Services** — 12 services with pricing, categories
+- **Gallery** — categories, image upload, before/after
+- **Testimonials** — patient reviews management
+- **FAQs** — categorized knowledge base
+- **Blog CMS** — posts, categories, tags, SEO
+- **Contact Messages** — read, respond, archive
+- **Users & Roles** — multi-role permissions
+- **SEO Panel** — per-page meta title, description, keywords, OG, Twitter, Schema.org, robots.txt, sitemap.xml
+- **Website Settings** — branding, contact info, business hours, emergency contact, WhatsApp, Google Maps, logo
+- **SMTP / Email** — full email configuration
+- **Analytics Dashboard** — page views, conversions, traffic sources
+- **Backup & Restore** — full database backups
+- **Image Upload** — drag-and-drop with copy URL
+- **Profile & Password** — self-service
+- **Roles & Permissions** — SUPER_ADMIN, ADMIN, DOCTOR, STAFF, RECEPTIONIST
+
+### Security
+- JWT authentication with expiry
+- bcrypt password hashing (cost 12)
+- Helmet security headers + CSP
+- Rate limiting (API + auth)
+- Input validation (express-validator)
+- XSS sanitization
+- SQL injection safe (Prisma)
+- Account lockout after failed logins
+- Secure file upload with type validation
+
+---
 
 ## 🛠 Technology Stack
 
@@ -52,10 +85,12 @@ with a simpler, dependency-light codebase.
 | Backend    | Node.js, Express.js                           |
 | Database   | PostgreSQL with Prisma ORM                    |
 | Auth       | JWT + bcrypt password hashing                 |
-| Security   | Helmet, CORS, input validation, rate limiting, XSS/sanitization, SQL-injection safe (Prisma) |
+| Security   | Helmet, CORS, rate limiting, input validation |
+| Uploads    | Multer (local filesystem)                     |
 
-No React, Next.js, Vue, Angular, Vite, Docker, Kubernetes, Firebase, Supabase,
-Redis, or cloud databases.
+No React, Next.js, Vue, Angular, Docker, Kubernetes, Firebase, Supabase, Redis, or cloud databases.
+
+---
 
 ## 📁 Project Structure
 
@@ -71,13 +106,16 @@ Redis, or cloud databases.
 │   ├── css/  js/  images/   site assets
 │   ├── *.html               all public pages
 │   ├── uploads/             locally-uploaded images (runtime)
-│   └── admin/               admin panel (HTML + JS)
+│   └── admin/               admin panel (HTML + JS + CSS)
 ├── prisma/
 │   ├── schema.prisma        database schema
-│   └── seed.js              demo data + admin user
+│   ├── seed.js              demo data + admin user
+│   └── migrations/          prisma migrations
 ├── scripts/gen-pages.sh     regenerates legal/info pages
 └── package.json
 ```
+
+---
 
 ## 🚀 Quick Start (Development)
 
@@ -103,29 +141,29 @@ Open http://localhost:3000
 
 **Admin login:**
 
-| Email                    | Password    | Role        |
-|--------------------------|-------------|-------------|
-| `admin@serenedental.com` | `Admin@123` | SUPER_ADMIN |
+| Email                            | Password    | Role        |
+|----------------------------------|-------------|-------------|
+| `admin@junaiddentalcare.pk`      | `Admin@123` | SUPER_ADMIN |
 
 > ⚠️ Change the default passwords immediately in production.
+
+---
 
 ## 🌍 Deployment
 
 The app is designed to be deployed anywhere that can run Node.js + PostgreSQL.
 
 1. **Install Node.js 20+** on your server.
-2. **Create a PostgreSQL database** (e.g. `CREATE DATABASE serene_dental;`).
+2. **Create a PostgreSQL database** (e.g. `CREATE DATABASE junaid_dental;`).
 3. **Upload the project** and run `npm install`.
-4. **Configure `.env`** — copy `.env.example` to `.env` and set `DATABASE_URL`
-   and a strong `JWT_SECRET`.
-5. **Run migrations** `npm run db:push` (or `npx prisma migrate deploy` if you
-   use the provided migrations) and `npm run db:seed`.
-6. **Start the server** `npm start` (run under a process manager such as
-   `pm2` or `systemd` for production).
-7. Point your domain's DNS at the server and set up a reverse proxy (nginx)
-   for HTTPS if needed.
+4. **Configure `.env`** — copy `.env.example` to `.env` and set `DATABASE_URL` and a strong `JWT_SECRET`.
+5. **Run migrations** `npm run db:push` (or `npx prisma migrate deploy` if you use the provided migrations) and `npm run db:seed`.
+6. **Start the server** `npm start` (run under a process manager such as `pm2` or `systemd` for production).
+7. Point your domain's DNS at the server and set up a reverse proxy (nginx) for HTTPS if needed.
 
 No Docker, no Kubernetes, no cloud services, no complicated setup.
+
+---
 
 ## 🧪 Useful Commands
 
@@ -139,18 +177,19 @@ No Docker, no Kubernetes, no cloud services, no complicated setup.
 | `npm run db:studio`    | Open Prisma Studio (DB GUI) at :5555         |
 | `npm run db:generate`  | Regenerate the Prisma client                 |
 
-## 🔒 Security
+---
 
-- Passwords hashed with **bcrypt** (cost 12).
-- **JWT**-based authentication with expiry.
-- **Helmet** sets secure HTTP headers (including a CSP).
-- **CORS** restricted to configured origins.
-- **express-validator** for input validation on every write endpoint.
-- **Rate limiting** on the API and stricter limits on auth/forms.
-- **XSS** sanitization strips `<script>`/event-handler payloads from input.
-- **Prisma** uses parameterised queries, so SQL injection is not possible.
-- Account lockout after repeated failed logins.
+## 📞 Clinic Information
+
+- **Name:** Junaid Dental Care
+- **Address:** J5WM+643, Lehtrar Road, near Old Bank Stop, Ali Pur, Islamabad Capital Territory 45600, Pakistan
+- **Phone:** +92 312 5028812
+- **Email:** info@junaiddentalcare.pk
+- **Hours:** Mon-Sat 8:00 AM – 9:00 PM · Sunday closed (Emergency only)
+- **Google Maps:** https://maps.app.goo.gl/sim1qA4wDdpcMovK7
+
+---
 
 ## 📄 License
 
-Private project. © Serene Dental Clinic.
+Private project. © Junaid Dental Care.
