@@ -19,6 +19,9 @@ const publicUser = (u) => ({
 
 // POST /api/auth/register
 const register = asyncHandler(async (req, res) => {
+  if (prisma.demoMode) {
+    return fail(res, 503, "Sign-up is disabled in demo mode (no database). Run `npm run setup` to enable accounts.");
+  }
   const { email, password, firstName, lastName, phone } = req.body;
   const normalized = String(email || "").toLowerCase().trim();
 
@@ -45,6 +48,9 @@ const register = asyncHandler(async (req, res) => {
 
 // POST /api/auth/login
 const login = asyncHandler(async (req, res) => {
+  if (prisma.demoMode) {
+    return fail(res, 503, "Login is disabled in demo mode (no database). Run `npm run setup` to enable accounts.");
+  }
   const { email, password } = req.body;
   const normalized = String(email || "").toLowerCase().trim();
 
@@ -98,6 +104,9 @@ const changePassword = asyncHandler(async (req, res) => {
 
 // POST /api/auth/forgot-password
 const forgotPassword = asyncHandler(async (req, res) => {
+  if (prisma.demoMode) {
+    return fail(res, 503, "Password reset is disabled in demo mode (no database).");
+  }
   const { email } = req.body;
   const normalized = String(email || "").toLowerCase().trim();
   const user = await prisma.user.findUnique({ where: { email: normalized } });
@@ -118,6 +127,9 @@ const forgotPassword = asyncHandler(async (req, res) => {
 
 // POST /api/auth/reset-password
 const resetPassword = asyncHandler(async (req, res) => {
+  if (prisma.demoMode) {
+    return fail(res, 503, "Password reset is disabled in demo mode (no database).");
+  }
   const { token, password } = req.body;
   const reset = await prisma.passwordReset.findUnique({ where: { token } });
   if (!reset || reset.used || reset.expires < new Date()) {

@@ -16,7 +16,7 @@
       document.getElementById("postBody").innerHTML = post.content || post.excerpt || "";
     }
     SD.api.blogPost(slug).then((r) => {
-      if (r.ok && r.data) fill(r.data);
+      if (r.ok && r.data && r.data.data) fill(r.data.data);
       else SD.data.get("blog").then((list) => {
         const p = (list || []).find((x) => x.slug === slug);
         if (p) fill(p);

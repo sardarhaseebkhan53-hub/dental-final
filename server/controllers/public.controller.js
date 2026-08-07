@@ -1,8 +1,18 @@
 const prisma = require("../lib/prisma");
+const demo = require("../data/demo.json");
 const { success, fail, asyncHandler } = require("../lib/response");
+
+// ── Demo mode helpers ──────────────────────────────────────────────────────
+// When the database isn't configured (demo mode), the public API serves the
+// same sample content the frontend ships with, so pages render with zero
+// errors and the UI never sees a 500.
+const inDemoMode = () => prisma.demoMode === true;
+
+const DEMO_MODE_MSG = "This is a demo (no database configured). Set up the database to enable live data.";
 
 // GET /api/public/services
 const listServices = asyncHandler(async (req, res) => {
+  if (inDemoMode()) return success(res, demo.services);
   const services = await prisma.service.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: "asc" },
@@ -13,6 +23,11 @@ const listServices = asyncHandler(async (req, res) => {
 
 // GET /api/public/services/:slug
 const getService = asyncHandler(async (req, res) => {
+  if (inDemoMode()) {
+    const service = demo.services.find((s) => s.slug === req.params.slug);
+    if (!service) return fail(res, 404, "Service not found");
+    return success(res, service);
+  }
   const service = await prisma.service.findFirst({
     where: { slug: req.params.slug, isActive: true },
     include: { department: true },
@@ -23,6 +38,7 @@ const getService = asyncHandler(async (req, res) => {
 
 // GET /api/public/doctors
 const listDoctors = asyncHandler(async (req, res) => {
+  if (inDemoMode()) return success(res, demo.doctors);
   const doctors = await prisma.doctor.findMany({
     where: { user: { status: "ACTIVE" } },
     include: {
@@ -50,6 +66,7 @@ const listDoctors = asyncHandler(async (req, res) => {
 
 // GET /api/public/testimonials
 const listTestimonials = asyncHandler(async (req, res) => {
+  if (inDemoMode()) return success(res, demo.testimonials);
   const testimonials = await prisma.testimonial.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: "asc" },
@@ -59,6 +76,7 @@ const listTestimonials = asyncHandler(async (req, res) => {
 
 // GET /api/public/faqs
 const listFaqs = asyncHandler(async (req, res) => {
+  if (inDemoMode()) return success(res, demo.faqs);
   const faqs = await prisma.faq.findMany({
     where: { isActive: true },
     orderBy: [{ category: "asc" }, { sortOrder: "asc" }],
@@ -68,6 +86,7 @@ const listFaqs = asyncHandler(async (req, res) => {
 
 // GET /api/public/gallery
 const listGallery = asyncHandler(async (req, res) => {
+  if (inDemoMode()) return success(res, demo.gallery);
   const items = await prisma.gallery.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: "asc" },
@@ -77,6 +96,7 @@ const listGallery = asyncHandler(async (req, res) => {
 
 // GET /api/public/blog
 const listBlog = asyncHandler(async (req, res) => {
+  if (inDemoMode()) return success(res, demo.blog);
   const posts = await prisma.blogPost.findMany({
     where: { status: "PUBLISHED", publishedAt: { lte: new Date() } },
     orderBy: { publishedAt: "desc" },
@@ -90,6 +110,11 @@ const listBlog = asyncHandler(async (req, res) => {
 
 // GET /api/public/blog/:slug
 const getBlog = asyncHandler(async (req, res) => {
+  if (inDemoMode()) {
+    const post = demo.blog.find((p) => p.slug === req.params.slug);
+    if (!post) return fail(res, 404, "Blog post not found");
+    return success(res, post);
+  }
   const post = await prisma.blogPost.findFirst({
     where: { slug: req.params.slug, status: "PUBLISHED", publishedAt: { lte: new Date() } },
     include: {
@@ -103,6 +128,9 @@ const getBlog = asyncHandler(async (req, res) => {
 
 // POST /api/public/contact
 const createContact = asyncHandler(async (req, res) => {
+  if (inDemoMode()) {
+    return success(res, { id: "demo" }, 201, "Message sent successfully. We'll get back to you soon.");
+  }
   const { name, email, phone, subject, message } = req.body;
   const contact = await prisma.contactMessage.create({
     data: {
@@ -120,6 +148,9 @@ const createContact = asyncHandler(async (req, res) => {
 
 // POST /api/public/newsletter
 const subscribeNewsletter = asyncHandler(async (req, res) => {
+  if (inDemoMode()) {
+    return success(res, null, 201, "Subscribed successfully!");
+  }
   const { email, name } = req.body;
   const normalized = String(email).toLowerCase().trim();
   const existing = await prisma.newsletter.findUnique({ where: { email: normalized } });
@@ -134,8 +165,17 @@ const subscribeNewsletter = asyncHandler(async (req, res) => {
 
 // GET /api/public/search
 const search = asyncHandler(async (req, res) => {
-  const q = String(req.query.q || "").trim();
+  const q = String(req.query.q || "").trim().toLowerCase();
   if (!q) return success(res, { services: [], doctors: [], posts: [] });
+
+  if (inDemoMode()) {
+    const match = (s) => String(s || "").toLowerCase().includes(q);
+    return success(res, {
+      services: demo.services.filter((s) => match(s.name) || match(s.description) || match(s.shortDescription)).slice(0, 8),
+      doctors: demo.doctors.filter((d) => match(d.name) || match(d.specialization) || match(d.bio)).slice(0, 8),
+      posts: demo.blog.filter((p) => match(p.title) || match(p.excerpt) || match(p.content)).slice(0, 8),
+    });
+  }
 
   const where = { OR: [{ name: { contains: q, mode: "insensitive" } }, { description: { contains: q, mode: "insensitive" } }] };
   const [services, doctors, posts] = await Promise.all([
@@ -155,6 +195,14 @@ const search = asyncHandler(async (req, res) => {
 
 // POST /api/public/book-appointment
 const bookAppointment = asyncHandler(async (req, res) => {
+  if (inDemoMode()) {
+    return success(
+      res,
+      { appointmentNumber: "APT-DEMO-00001" },
+      201,
+      "Appointment requested successfully. We'll confirm shortly."
+    );
+  }
   const { name, email, phone, dateOfBirth, gender, serviceId, doctorId, date, time, notes } = req.body;
   const normalized = String(email || "").toLowerCase().trim();
 
@@ -209,6 +257,7 @@ const bookAppointment = asyncHandler(async (req, res) => {
 
 // GET /api/public/stats
 const stats = asyncHandler(async (req, res) => {
+  if (inDemoMode()) return success(res, demo.stats);
   const [doctors, reviews, services, patients] = await Promise.all([
     prisma.doctor.count(),
     prisma.review.count(),

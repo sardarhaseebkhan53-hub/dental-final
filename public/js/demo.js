@@ -73,7 +73,8 @@ window.SD = window.SD || {};
   SD.data = {
     get: (name) =>
       SD.api[name]()
-        .then((r) => (r.ok ? r.data : SD.DEMO[name]))
+        // API responds { success, message, data } — unwrap to the payload.
+        .then((r) => (r.ok && r.data && r.data.data !== undefined ? r.data.data : SD.DEMO[name]))
         .catch(() => SD.DEMO[name]),
   };
 })(window.SD);
