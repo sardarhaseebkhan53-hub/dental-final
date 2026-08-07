@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Service Details | Serene Dental</title>
+  <meta name="description" content="Learn more about our dental services and treatments.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div data-header></div>
+  <main id="main-content">
+    <section class="page-hero">
+      <div class="container ph-inner">
+        <div class="ph-breadcrumb"><a href="/">Home</a> <span>›</span> <a href="/services">Services</a> <span>›</span> <span id="crumbSlug">Service</span></div>
+        <h1 class="display-2" id="svcTitle">Loading…</h1>
+        <p id="svcShort">Fetching service details.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="grid" style="grid-template-columns:1fr;gap:2.5rem">
+          <div class="article">
+            <div id="svcImageWrap"></div>
+            <div id="svcDesc" class="text-muted" style="line-height:1.8"></div>
+            <div class="grid" style="grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:1rem;margin:2rem 0">
+              <div class="card" style="padding:1.25rem;text-align:center"><p class="text-light text-xs uppercase tracking-wider">Duration</p><p class="font-bold text-lg" id="svcDuration">—</p></div>
+              <div class="card" style="padding:1.25rem;text-align:center"><p class="text-light text-xs uppercase tracking-wider">Starting At</p><p class="font-bold text-lg" id="svcPrice">—</p></div>
+              <div class="card" style="padding:1.25rem;text-align:center"><p class="text-light text-xs uppercase tracking-wider">Category</p><p class="font-bold text-lg" id="svcCategory">—</p></div>
+            </div>
+            <div style="display:flex;gap:1rem;flex-wrap:wrap">
+              <a class="btn btn-accent btn-lg" href="/book-appointment">Book This Treatment</a>
+              <a class="btn btn-secondary btn-lg" href="/services">View All Services</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <div data-footer></div>
+  <script src="/js/api.js"></script>
+  <script src="/js/demo.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/js/service-detail.js"></script>
+</body>
+</html>

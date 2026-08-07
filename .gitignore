@@ -3,13 +3,10 @@ node_modules/
 .pnp
 .pnp.js
 
-# Next.js
-.next/
-out/
-build/
-
 # Production
 dist/
+build/
+out/
 
 # Environment
 .env
@@ -42,7 +39,11 @@ test-results/
 # NOTE: prisma/migrations/ IS version-controlled on purpose — it is required
 # for `prisma migrate deploy` in production. Do not ignore it.
 
+# Local uploads (runtime-generated)
+public/uploads/
+
 # Misc
 *.tsbuildinfo
 next-env.d.ts
 .vercel
+*.log

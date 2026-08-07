@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Admin Dashboard | Serene Dental</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+  <link rel="stylesheet" href="/admin/css/admin.css">
+</head>
+<body>
+  <div class="admin-body">
+    <aside class="admin-sidebar" id="adminSidebar">
+      <div class="brand">
+        <span class="logo-icon" style="width:2.25rem;height:2.25rem" id="adminLogoIcon"></span>
+        <span class="name">Serene <span>Dental</span></span>
+      </div>
+      <nav id="adminNav"></nav>
+      <div class="sidebar-footer" id="adminSideFooter"></div>
+    </aside>
+    <div class="admin-overlay" id="adminOverlay"></div>
+
+    <div class="admin-main">
+      <header class="admin-topbar">
+        <div style="display:flex;align-items:center;gap:1rem">
+          <button class="nav-toggle hamburger" id="hamburger">☰</button>
+          <div>
+            <h1 id="pageTitle" style="font-size:1.1rem">Dashboard</h1>
+            <span id="pageSub" style="font-size:.8rem;color:var(--neutral-light)"></span>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem">
+          <a href="/" class="btn btn-secondary btn-sm" style="display:inline-flex">View Website</a>
+          <div class="dropdown-menu" id="userMenu">
+            <button class="user-chip btn btn-secondary btn-sm" style="display:inline-flex;gap:.5rem">
+              <span class="avatar" id="adminAvatar">?</span>
+              <span id="adminName">Admin</span>
+              <span>▾</span>
+            </button>
+            <div class="dd-body">
+              <button data-nav="profile">Profile</button>
+              <button data-nav="password">Change Password</button>
+              <button class="danger" id="logoutBtn">Log Out</button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <main class="admin-content" id="adminContent">
+        <div class="text-center" style="padding:4rem;color:var(--neutral-light)">Loading…</div>
+      </main>
+    </div>
+  </div>
+
+  <script src="/js/api.js"></script>
+  <script src="/js/main.js"></script>
+  <script src="/admin/js/admin.js"></script>
+  <script>document.getElementById("adminLogoIcon").innerHTML = SD.toothSVG();</script>
+</body>
+</html>

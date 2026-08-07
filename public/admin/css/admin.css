@@ -1,0 +1,76 @@
+/* Serene Dental — Admin panel styles */
+.admin-body { display: flex; min-height: 100vh; background: #f1f5f9; }
+.admin-sidebar {
+  width: 260px; background: #123b3a; background: linear-gradient(180deg, #134e4a, #0f3f3c);
+  color: #fff; display: flex; flex-direction: column; flex-shrink: 0; transition: transform 0.3s ease;
+  position: sticky; top: 0; height: 100vh; overflow-y: auto;
+}
+.admin-sidebar .brand { display: flex; align-items: center; gap: 0.75rem; padding: 1.25rem 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); }
+.admin-sidebar .brand .name { font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; }
+.admin-sidebar .brand .name span { color: var(--accent-300); }
+.admin-sidebar nav { padding: 1rem 0.75rem; flex: 1; }
+.admin-nav-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255,255,255,0.4); padding: 1rem 0.75rem 0.4rem; }
+.admin-nav-item { display: flex; align-items: center; gap: 0.75rem; width: 100%; padding: 0.65rem 0.85rem; border-radius: var(--radius-lg); color: rgba(255,255,255,0.8); font-size: 0.9rem; font-weight: 500; margin-bottom: 2px; transition: all 0.15s; text-align: left; }
+.admin-nav-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.admin-nav-item.active { background: var(--primary-light); color: #123b3a; }
+.admin-nav-item .ico { flex-shrink: 0; }
+.admin-sidebar .sidebar-footer { padding: 1rem 1.5rem; border-top: 1px solid rgba(255,255,255,0.1); font-size: 0.8rem; color: rgba(255,255,255,0.5); }
+
+.admin-main { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.admin-topbar { background: #fff; border-bottom: 1px solid var(--border); padding: 0 1.5rem; height: 4rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; position: sticky; top: 0; z-index: 30; }
+.admin-topbar .hamburger { display: none; }
+.admin-content { padding: 1.75rem; flex: 1; }
+@media (max-width: 900px) {
+  .admin-sidebar { position: fixed; left: 0; top: 0; z-index: 60; transform: translateX(-100%); box-shadow: var(--shadow-elevated); }
+  .admin-sidebar.open { transform: translateX(0); }
+  .admin-topbar .hamburger { display: flex; }
+  .admin-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 55; }
+  .admin-overlay.show { display: block; }
+}
+
+.stat-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.75rem; }
+.stat-card { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 1.25rem; display: flex; align-items: center; gap: 1rem; box-shadow: var(--shadow-card); }
+.stat-card .ico { width: 3rem; height: 3rem; border-radius: var(--radius-lg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.stat-card .num { font-size: 1.5rem; font-weight: 800; color: var(--neutral-dark); line-height: 1; }
+.stat-card .lbl { font-size: 0.8rem; color: var(--neutral-light); }
+
+.panel { background: #fff; border: 1px solid var(--border); border-radius: var(--radius-xl); padding: 1.5rem; box-shadow: var(--shadow-card); }
+.panel-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.panel-head h2 { font-size: 1.15rem; }
+
+.toolbar { display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1.25rem; }
+.toolbar .spacer { flex: 1; }
+
+.avatar { width: 2.25rem; height: 2.25rem; border-radius: 50%; background: var(--primary-100); color: var(--primary-700); display: inline-flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.8rem; }
+.avatar-sm { width: 1.75rem; height: 1.75rem; font-size: 0.7rem; }
+.user-chip { display: inline-flex; align-items: center; gap: 0.5rem; }
+
+.badge-dot { display: inline-block; width: 0.5rem; height: 0.5rem; border-radius: 50%; margin-right: 0.4rem; }
+
+.tab-bar { display: flex; gap: 0.5rem; border-bottom: 1px solid var(--border); margin-bottom: 1.5rem; }
+.tab { padding: 0.6rem 1rem; font-weight: 600; font-size: 0.9rem; color: var(--neutral-mid); border-bottom: 2px solid transparent; }
+.tab.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+.upload-zone { border: 2px dashed var(--border-strong); border-radius: var(--radius-xl); padding: 2rem; text-align: center; cursor: pointer; transition: all 0.2s; background: var(--surface-alt); }
+.upload-zone:hover { border-color: var(--primary); background: var(--primary-50); }
+
+.status-pill { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.2rem 0.6rem; border-radius: 999px; font-size: 0.72rem; font-weight: 600; }
+.status-SCHEDULED, .status-PENDING { background: var(--info-light); color: #1d4ed8; }
+.status-CONFIRMED, .status-ACTIVE, .status-APPROVED, .status-PUBLISHED, .status-NEW { background: var(--success-light); color: #047857; }
+.status-CHECKED_IN, .status-IN_PROGRESS { background: var(--warning-light); color: #b45309; }
+.status-COMPLETED, .status-RESOLVED, .status-READ { background: var(--surface-muted); color: var(--muted-foreground); }
+.status-CANCELLED, .status-REJECTED, .status-INACTIVE, .status-SUSPENDED, .status-ARCHIVED { background: var(--error-light); color: #b91c1c; }
+.status-NO_SHOW { background: var(--error-light); color: #b91c1c; }
+
+.admin-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; }
+@media (min-width: 1100px) { .admin-grid.two { grid-template-columns: 2fr 1fr; } }
+
+.thumb { width: 3rem; height: 3rem; border-radius: var(--radius-lg); object-fit: cover; background: var(--surface-muted); }
+
+/* Dropdown menu */
+.dropdown-menu { position: relative; }
+.dropdown-menu .dd-body { position: absolute; right: 0; top: calc(100% + 6px); background: #fff; border: 1px solid var(--border); border-radius: var(--radius-xl); box-shadow: var(--shadow-elevated); padding: 0.4rem; min-width: 180px; z-index: 40; display: none; }
+.dropdown-menu.open .dd-body { display: block; animation: fadeIn 0.15s ease; }
+.dd-body button { display: flex; align-items: center; gap: 0.5rem; width: 100%; text-align: left; padding: 0.5rem 0.75rem; border-radius: var(--radius-lg); font-size: 0.875rem; color: var(--neutral-mid); }
+.dd-body button:hover { background: var(--surface-alt); }
+.dd-body .danger:hover { color: var(--error); background: var(--error-light); }
