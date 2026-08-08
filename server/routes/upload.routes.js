@@ -3,8 +3,8 @@ const upload = require("../config/multer");
 const { requireAuth } = require("../middleware/auth");
 const { success } = require("../lib/response");
 
-// POST /api/upload (multipart field "file" or "files")
-router.post("/", requireAuth, upload.array("files", 10), (req, res) => {
+// POST /api/upload (multipart field "file", "files", etc.)
+router.post("/", requireAuth, upload.any(), (req, res) => {
   if (!req.files || req.files.length === 0) {
     return res.status(400).json({ success: false, message: "No file uploaded" });
   }

@@ -1,5 +1,14 @@
 const path = require("path");
-require("dotenv").config({ path: path.resolve(__dirname, "../../.env") });
+const fs = require("fs");
+const dotenv = require("dotenv");
+
+const envPath = path.resolve(__dirname, "../../.env");
+const examplePath = path.resolve(__dirname, "../../.env.example");
+if (fs.existsSync(envPath)) {
+  dotenv.config({ path: envPath });
+} else if (fs.existsSync(examplePath)) {
+  dotenv.config({ path: examplePath });
+}
 
 const port = parseInt(process.env.PORT || "3000", 10);
 const isProd = process.env.NODE_ENV === "production";

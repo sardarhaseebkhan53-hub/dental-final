@@ -53,13 +53,13 @@ EOF
 legal() {
   local file="$1" title="$2" date="$3"
   {
-    head "${title} | Serene Dental" "${title} at Serene Dental Clinic."
-    pagehero "Legal" "${title}" "Please read this page carefully. It governs your use of the Serene Dental website and services."
+    head "${title} | Junaid Dental Care" "${title} at Junaid Dental Care."
+    pagehero "Legal" "${title}" "Please read this page carefully. It governs your use of the Junaid Dental Care website and services."
     cat <<EOF
     <section class="section">
       <div class="container article">
         <p class="lead">Effective date: ${date}</p>
-        <p>This ${title} explains how Serene Dental Clinic collects, uses, and protects information, and the terms that apply when you use our website and services.</p>
+        <p>This ${title} explains how Junaid Dental Care collects, uses, and protects information, and the terms that apply when you use our website and services.</p>
         <h2>1. Information We Collect</h2>
         <p>We collect information you provide directly — such as your name, email address, phone number, and health information you share during appointments — as well as certain technical data automatically when you use our website.</p>
         <h2>2. How We Use Information</h2>
@@ -67,9 +67,9 @@ legal() {
         <h2>3. Data Security</h2>
         <p>We use industry-standard security measures including encryption, secure connections, and access controls to protect your data. Only authorized staff have access to your records.</p>
         <h2>4. Your Rights</h2>
-        <p>You may request access to, correction of, or deletion of your personal information at any time by contacting us at info@serenedental.com.</p>
+        <p>You may request access to, correction of, or deletion of your personal information at any time by contacting us at junaiddental22@gmail.com.</p>
         <h2>5. Contact Us</h2>
-        <p>If you have questions about this ${title}, please contact us at Serene Dental Clinic, 123 Wellness Avenue, Suite 200, San Francisco, CA 94102, or call (555) 123-4567.</p>
+        <p>If you have questions about this ${title}, please contact us at Junaid Dental Care, Main Lehtrar Road, Alipur U turn, near Old Bank Stop, Ali Pur, Islamabad 45600, Pakistan, or call +92 312 5028812.</p>
       </div>
     </section>
 EOF
@@ -85,8 +85,8 @@ legal refund-policy.html "Refund Policy" "January 1, 2025"
 
 # ── Sitemap ─────────────────────────────────────────────────────────────────
 {
-  head "Sitemap | Serene Dental" "Browse all pages on the Serene Dental website."
-  pagehero "Sitemap" "Sitemap" "Every page on the Serene Dental website, organized for easy navigation."
+  head "Sitemap | Junaid Dental Care" "Browse all pages on the Junaid Dental Care website."
+  pagehero "Sitemap" "Sitemap" "Every page on the Junaid Dental Care website, organized for easy navigation."
   cat <<'EOF'
     <section class="section">
       <div class="container" style="max-width:52rem">
@@ -128,7 +128,7 @@ echo "generated sitemap.html"
 
 # ── Technology ──────────────────────────────────────────────────────────────
 {
-  head "Technology | Serene Dental" "The advanced dental technology we use for precise, comfortable care."
+  head "Technology | Junaid Dental Care" "The advanced dental technology we use for precise, comfortable care."
   pagehero "About" "Modern Dental Technology" "Digital precision and comfort, powered by the latest in dental innovation."
   cat <<'EOF'
     <section class="section">
@@ -148,7 +148,7 @@ echo "generated technology.html"
 
 # ── Insurance ───────────────────────────────────────────────────────────────
 {
-  head "Insurance | Serene Dental" "We accept most major dental insurance plans."
+  head "Insurance | Junaid Dental Care" "We accept most major dental insurance plans."
   pagehero "Patients" "Insurance & Financing" "We work with most major providers to make great dental care accessible."
   cat <<'EOF'
     <section class="section">
@@ -167,14 +167,14 @@ echo "generated insurance.html"
 
 # ── Emergency ───────────────────────────────────────────────────────────────
 {
-  head "Emergency Dental Care | Serene Dental" "Same-day relief for dental emergencies, 24/7."
+  head "Emergency Dental Care | Junaid Dental Care" "Same-day relief for dental emergencies, 24/7."
   pagehero "Patients" "Dental Emergency Care" "Pain can't wait. We keep same-day slots open and provide 24/7 emergency support."
   cat <<'EOF'
     <section class="section">
       <div class="container">
         <div class="card" style="padding:2rem;border-left:6px solid #ef4444;margin-bottom:1.5rem">
           <h2 style="color:#b91c1c;margin-bottom:.5rem">Call Us Immediately</h2>
-          <p class="text-muted">For urgent dental issues, call <a href="tel:(555) 911-0000" style="color:#0f766e;font-weight:600">(555) 911-0000</a>. Our emergency line is staffed 24/7.</p>
+          <p class="text-muted">For urgent dental issues, call <a href="tel:+92 312 5028812" style="color:#0f766e;font-weight:600">+92 312 5028812</a>. Our emergency line is staffed 24/7.</p>
         </div>
         <div class="grid" style="grid-template-columns:1fr;gap:1.5rem">
           <div class="card card-hover" style="padding:1.75rem"><h3 style="color:#0f766e;margin-bottom:.5rem">Severe Toothache</h3><p class="text-muted">Rinse with warm water, gently floss to remove debris, and apply a cold compress. Avoid aspirin directly on the gums.</p></div>
@@ -191,18 +191,18 @@ echo "generated emergency.html"
 
 # ── Careers ─────────────────────────────────────────────────────────────────
 {
-  head "Careers | Serene Dental" "Join a team that's passionate about smiles."
-  pagehero "About" "Careers at Serene Dental" "We're always looking for passionate, compassionate people to join our growing team."
+  head "Careers | Junaid Dental Care" "Join a team that's passionate about smiles."
+  pagehero "About" "Careers at Junaid Dental Care" "We're always looking for passionate, compassionate people to join our growing team."
   cat <<'EOF'
     <section class="section">
       <div class="container">
         <div class="section-head"><span class="eyebrow">Join Us</span><h2 class="section-title">Open Positions</h2></div>
         <div class="grid" style="grid-template-columns:1fr;gap:1.5rem;max-width:48rem;margin:0 auto">
-          <div class="card card-hover" style="padding:1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap"><div><h3>Dental Hygienist</h3><p class="text-muted text-sm">Full-time • San Francisco, CA</p></div><a class="btn btn-outline btn-sm" href="/contact">Apply Now</a></div>
-          <div class="card card-hover" style="padding:1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap"><div><h3>Registered Dental Assistant</h3><p class="text-muted text-sm">Full-time • San Francisco, CA</p></div><a class="btn btn-outline btn-sm" href="/contact">Apply Now</a></div>
-          <div class="card card-hover" style="padding:1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap"><div><h3>Patient Care Coordinator</h3><p class="text-muted text-sm">Full-time • San Francisco, CA</p></div><a class="btn btn-outline btn-sm" href="/contact">Apply Now</a></div>
+          <div class="card card-hover" style="padding:1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap"><div><h3>Dental Hygienist</h3><p class="text-muted text-sm">Full-time • Ali Pur, Islamabad</p></div><a class="btn btn-outline btn-sm" href="/contact">Apply Now</a></div>
+          <div class="card card-hover" style="padding:1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap"><div><h3>Registered Dental Assistant</h3><p class="text-muted text-sm">Full-time • Ali Pur, Islamabad</p></div><a class="btn btn-outline btn-sm" href="/contact">Apply Now</a></div>
+          <div class="card card-hover" style="padding:1.5rem;display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap"><div><h3>Patient Care Coordinator</h3><p class="text-muted text-sm">Full-time • Ali Pur, Islamabad</p></div><a class="btn btn-outline btn-sm" href="/contact">Apply Now</a></div>
         </div>
-        <p class="text-center text-muted" style="margin-top:2rem">Don't see your role? Email your resume to <a href="mailto:careers@serenedental.com" style="color:#0f766e">careers@serenedental.com</a>.</p>
+        <p class="text-center text-muted" style="margin-top:2rem">Don't see your role? Email your resume to <a href="mailto:junaiddental22@gmail.com" style="color:#0f766e">junaiddental22@gmail.com</a>.</p>
       </div>
     </section>
 EOF

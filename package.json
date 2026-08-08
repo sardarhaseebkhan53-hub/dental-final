@@ -1,8 +1,8 @@
 {
-  "name": "serene-dental",
+  "name": "junaid-dental-care",
   "version": "2.0.0",
   "private": true,
-  "description": "Serene Dental Clinic - HTML/CSS/JS + Express + PostgreSQL + Prisma",
+  "description": "Junaid Dental Care - HTML/CSS/JS + Express + PostgreSQL + Prisma",
   "main": "server/index.js",
   "engines": {
     "node": ">=20.0.0"
@@ -17,7 +17,7 @@
     "db:migrate:prod": "prisma migrate deploy",
     "db:seed": "node prisma/seed.js",
     "db:studio": "prisma studio",
-    "postinstall": "prisma generate"
+    "postinstall": "prisma generate || true"
   },
   "dependencies": {
     "@prisma/client": "^6.2.1",
