@@ -28,7 +28,7 @@ app.use(
         scriptSrc: ["'self'", "'unsafe-inline'"],
         styleSrc: ["'self'", "'unsafe-inline'", "https://fonts.googleapis.com"],
         fontSrc: ["'self'", "data:", "https://fonts.gstatic.com"],
-        imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://via.placeholder.com", "https://*.googleapis.com", "https://*.ggpht.com", "https://*.fbcdn.net", "blob:"],
+        imgSrc: ["'self'", "data:", "https://images.unsplash.com", "https://via.placeholder.com", "https://*.googleapis.com", "https://*.ggpht.com", "https://*.fbcdn.net", "https://images.weserv.nl", "blob:"],
         connectSrc: ["'self'"],
         frameSrc: ["'self'", "https://www.google.com", "https://maps.google.com", "https://www.facebook.com"],
         formAction: ["'self'"],
@@ -68,6 +68,19 @@ app.use(express.static(PUBLIC_DIR));
 // Dynamic detail pages: /services/:slug and /blog/:slug render a shared template.
 app.get("/services/:slug", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "services/detail.html")));
 app.get("/blog/:slug", (req, res) => res.sendFile(path.join(PUBLIC_DIR, "blog/detail.html")));
+
+// ── Admin panel SPA fallback ───────────────────────────────────────────────
+// The admin panel is a client-side app at /admin/index.html with path-based
+// routes (/admin, /admin/dashboard, /admin/appointments, …). Serve the SPA
+// shell for those paths so direct navigation and browser refresh render the
+// real dashboard instead of falling through to the API JSON 404 handler.
+// Real admin assets (/admin/css/…, /admin/js/…, /admin/login.html) contain a
+// dot in the last segment and are matched by express.static below — they are
+// never intercepted here. API routes (/api/…) are also unaffected and still
+// end in the JSON 404 handler when they do not exist.
+app.get(/^\/admin(?:\/[^./]+)?\/?$/, (req, res) => {
+  res.sendFile(path.join(PUBLIC_DIR, "admin/index.html"));
+});
 
 // ── API routes ─────────────────────────────────────────────────────────────
 app.use("/api", apiLimiter);
