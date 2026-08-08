@@ -323,7 +323,7 @@ async function main() {
           googleMaps: "https://maps.app.goo.gl/sim1qA4wDdpcMovK7",
         },
         socialLinks: {
-          facebook: "https://facebook.com/junaiddentalcare",
+          facebook: "https://www.facebook.com/profile.php?id=100083737489911",
           instagram: "https://instagram.com/junaiddentalcare",
           youtube: "https://youtube.com/@junaiddentalcare",
           tiktok: "https://tiktok.com/@junaiddentalcare",
