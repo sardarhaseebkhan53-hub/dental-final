@@ -6,7 +6,9 @@ A complete, self-hosted dental clinic website and admin panel for **Junaid Denta
 - **Backend:** Node.js + Express.js
 - **Database:** PostgreSQL + Prisma ORM
 
-> **Live clinic info (from Google Maps):** Junaid Dental Care, Lehtrar Road, near Old Bank Stop, Ali Pur 45600, Pakistan · ☎ +92 312 5028812 · ⭐ 4.6/5 (487+ reviews)
+> **Live clinic info (from Google Maps + Facebook):** JDC – Junaid Dental Care, Main Lehtrar Road, Alipur U turn, near Old Bank Stop, Islamabad, Pakistan · Established 2006 · 16+ years of experience · ☎ +92 312 5028812 / +92 314 8290684 · ✉ junaiddental22@gmail.com · 📘 [facebook.com/profile.php?id=100083737489911](https://www.facebook.com/profile.php?id=100083737489911) (JDC – Junaid Dental care) · ⭐ 4.6/5 (487+ reviews)
+
+> **Facebook media:** the site uses the clinic's Facebook page (JDC – Junaid Dental care, id `100083737489911`) for its logo, gallery photos and embedded videos. Videos are embedded live from Facebook; the profile picture and gallery photos currently hotlink to Facebook's CDN (links expire) and fall back to the bundled images. To host them permanently, run `python3 scripts/fetch_fb_media.py` on any machine with internet access — it downloads everything into `public/images/fb/` (profile.jpg, photo-01…08.jpg, video-*.mp4) — then commit the files. Local files always win over the hotlinks.
 
 ---
 
@@ -184,7 +186,7 @@ No Docker, no Kubernetes, no cloud services, no complicated setup.
 - **Name:** Junaid Dental Care
 - **Address:** J5WM+643, Lehtrar Road, near Old Bank Stop, Ali Pur, Islamabad Capital Territory 45600, Pakistan
 - **Phone:** +92 312 5028812
-- **Email:** info@junaiddentalcare.pk
+- **Email:** junaiddental22@gmail.com
 - **Hours:** Mon-Sat 8:00 AM – 9:00 PM · Sunday closed (Emergency only)
 - **Google Maps:** https://maps.app.goo.gl/sim1qA4wDdpcMovK7
 

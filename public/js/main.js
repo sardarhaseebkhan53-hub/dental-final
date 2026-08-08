@@ -8,16 +8,26 @@ window.SD = window.SD || {};
     tagline: "Premium Dental Care with a Personal Touch",
     phone: "+92 312 5028812",
     emergencyPhone: "+92 312 5028812",
+    secondaryPhone: "+92 314 8290684",
     whatsapp: "923125028812",
-    email: "info@junaiddentalcare.pk",
+    email: "junaiddental22@gmail.com",
     website: "https://junaiddentalcare.pk",
-    address: { street: "J5WM+643, Lehtrar Road, near Old Bank Stop", city: "Ali Pur", state: "Islamabad Capital Territory", zip: "45600", country: "Pakistan" },
+    facebookPage: "https://www.facebook.com/profile.php?id=100083737489911",
+    address: { street: "Main Lehtrar Road, Alipur U turn", city: "Ali Pur", state: "Islamabad", zip: "45600", country: "Pakistan" },
     hours: { weekday: "8:00 AM - 9:00 PM", saturday: "9:00 AM - 6:00 PM", sunday: "Closed (Emergency Only)" },
     rating: 4.6,
-    founded: 2015,
+    founded: 2006,
     googleMaps: "https://maps.app.goo.gl/J9DzSYyFtrsJFhTr6",
     coordinates: { lat: 33.6455004, lng: 73.1827848 }
   };
+
+  /* JDC Facebook page media (used until the files are uploaded to /images/fb).
+     Local files win; the hotlink is a temporary fallback; the tooth icon is last. */
+  SD.FB = {
+    page: "https://www.facebook.com/profile.php?id=100083737489911",
+    profilePic: "https://scontent-atl3-3.xx.fbcdn.net/v/t39.30808-6/541088700_741493211985255_3442905982410331216_n.jpg?stp=dst-jpg_tt6&cstp=mx1280x640&ctp=s960x960&_nc_cat=108&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=XLhiHwIer7AQ7kNvwFd6WQl&_nc_oc=AdqrXILpyd6oBgBnonFoV0TXvmD1qx35lq2WMdENhWC42qVlOcm3Qvf6xdtccya1VtQ&_nc_zt=23&_nc_ht=scontent-atl3-3.xx&_nc_gid=Pf0IXhQkRfILTgyAt44yuQ&_nc_ss=7b289&oh=00_AQHET36Btlms93UHz6mykEEgYraK2ctkdJ5__Tt_H8h0ww&oe=6A7C8F9C"
+  };
+
 
   const NAV = [
     { label: "Home", href: "/" },
@@ -129,6 +139,15 @@ window.SD = window.SD || {};
     return p === href || p.startsWith(href + "/");
   }
 
+  /* Logo icon: clinic profile photo (local file preferred, Facebook CDN fallback,
+     then the classic tooth icon if neither loads). */
+  function logoIcon() {
+    return '<span class="logo-icon">' +
+      '<img class="logo-photo" src="/images/fb/profile.jpg" alt="JDC - Junaid Dental Care" onerror="this.onerror=function(){this.remove()};this.src=\'' + SD.FB.profilePic + '\'">' +
+      toothSVG() +
+      "</span>";
+  }
+
   function renderHeader() {
     const current = new Date().getFullYear() - SD.CLINIC.founded + " ";
     let topbar = "";
@@ -166,7 +185,7 @@ window.SD = window.SD || {};
       "</div></div>" +
       '<header class="site-header"><div class="container">' +
         '<a class="logo" href="/">' +
-          '<span class="logo-icon">' + toothSVG() + "</span>" +
+          logoIcon() +
           '<span class="logo-text"><span class="brand">Junaid <span>Dental Care</span></span><span class="tag">' + SD.CLINIC.tagline + "</span></span>" +
         "</a>" +
         '<nav class="nav" aria-label="Main navigation">' + navItems + "</nav>" +
@@ -206,12 +225,13 @@ window.SD = window.SD || {};
           /* Brand column */
           '<div class="footer-col">' +
             '<a class="logo" href="/" style="margin-bottom:1.5rem;display:inline-flex">' +
-              '<span class="logo-icon">' + toothSVG() + "</span>" +
+              logoIcon() +
               '<span class="logo-text"><span class="brand" style="color:#fff">Junaid <span style="color:var(--accent)">Dental Care</span></span><span class="tag" style="color:rgba(255,255,255,0.7)">Premium Dental Care • Ali Pur</span></span>' +
             "</a>" +
             "<p style='font-size:.9rem;color:rgba(255,255,255,0.7);line-height:1.7'>Junaid Dental Care provides premium dental treatments with modern technology, gentle hands, and a calm environment — trusted by families across Ali Pur, Lehtrar Road and surrounding areas.</p>" +
             '<div class="footer-contact" style="margin-top:1.5rem">' +
               '<a href="tel:' + SD.CLINIC.phone + '"><span class="ico">' + SD.icon("phone", 16) + "</span>" + SD.CLINIC.phone + "</a>" +
+              '<a href="tel:' + SD.CLINIC.secondaryPhone + '"><span class="ico">' + SD.icon("phone", 16) + "</span>" + SD.CLINIC.secondaryPhone + "</a>" +
               '<a href="https://wa.me/' + SD.CLINIC.whatsapp + '"><span class="ico">' + SD.icon("phone", 16) + "</span>WhatsApp Direct</a>" +
               '<a href="mailto:' + SD.CLINIC.email + '"><span class="ico">' + SD.icon("mail", 16) + "</span>" + SD.CLINIC.email + "</a>" +
               '<div class="line"><span class="ico">' + SD.icon("mapPin", 16) + "</span><span>" + SD.CLINIC.address.street + "<br>" + SD.CLINIC.address.city + ", " + SD.CLINIC.address.state + " " + SD.CLINIC.address.zip + "<br>" + SD.CLINIC.address.country + "</span></div>" +

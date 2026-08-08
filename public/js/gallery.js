@@ -14,7 +14,7 @@
         const list = cat === "All" ? all : all.filter((g) => g.category === cat);
         grid.innerHTML = list.map((g) =>
           '<div class="gallery-item reveal" data-full="' + g.image + '">' +
-            '<img src="' + g.image + '" alt="' + SD.escapeHtml(g.title) + '" loading="lazy">' +
+            '<img src="' + g.image + '" alt="' + SD.escapeHtml(g.title) + '" loading="lazy" data-fb="' + (g.fb || "") + '" data-fb2="' + (g.fallback || "") + '" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.dataset.fb=\'\'}else if(this.dataset.fb2){this.src=this.dataset.fb2;this.dataset.fb2=\'\'}else{this.remove()}">' +
             '<div class="cap"><h3>' + SD.escapeHtml(g.title) + "</h3><span>" + SD.escapeHtml(g.description || "") + "</span></div>" +
           "</div>").join("");
         grid.querySelectorAll(".gallery-item").forEach((el) => el.addEventListener("click", () => lightbox(el.dataset.full, el.querySelector("img").alt)));

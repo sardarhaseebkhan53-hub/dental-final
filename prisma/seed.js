@@ -225,13 +225,19 @@ async function main() {
   console.log(`✅ FAQs (${faqData.length})`);
 
   // ── Gallery ──────────────────────────────────────────────────────────────
+  // Photos published on the JDC – Junaid Dental care Facebook page
+  // (profile id 100083737489911). Replace with local /images/fb/photo-NN.jpg files
+  // for permanent hosting.
+  const fbPhoto = (i, url) => ({ title: "JDC – Junaid Dental Care", description: "Photos from our Facebook page", category: "CLINIC", image: url, sortOrder: i });
   const galleryData = [
-    { title: "Welcome to Junaid Dental Care", description: "Our modern reception area in Ali Pur", category: "CLINIC", image: img("gallery-reception.jpg"), sortOrder: 1 },
-    { title: "State-of-the-Art Treatment Suite", description: "Premium equipment for comfortable care", category: "CLINIC", image: img("gallery-treatment.jpg"), sortOrder: 2 },
-    { title: "Digital X-Ray & 3D Imaging", description: "Modern diagnostic technology", category: "TECHNOLOGY", image: img("gallery-tech.jpg"), sortOrder: 3 },
-    { title: "Smile Makeover Result", description: "Cosmetic dentistry transformation", category: "BEFORE_AFTER", image: img("gallery-smile.jpg"), sortOrder: 4 },
-    { title: "Our Caring Team", description: "The Junaid Dental Care family", category: "TEAM", image: img("gallery-team.jpg"), sortOrder: 5 },
-    { title: "Gentle, Personalised Care", description: "Every patient is family", category: "TREATMENTS", image: img("gallery-care.jpg"), sortOrder: 6 },
+    fbPhoto(1, "https://scontent-atl3-2.xx.fbcdn.net/v/t39.30808-6/557003369_769524089182167_6455132352003665931_n.jpg?stp=c0.135.1639.1639a_dst-jpg_tt6&cstp=mx1639x1639&ctp=s206x206&_nc_cat=101&ccb=1-7&_nc_sid=50ad20&_nc_ohc=zQwYwPnNpj4Q7kNvwHFiAxI&_nc_oc=AdofZpJKTUfV4LhlxFHjob0qkfR6p6KlUcIfRug2uPaTsoLMA9RaEYivv5bbHhVhYdI&_nc_zt=23&_nc_ht=scontent-atl3-2.xx&_nc_gid=hh9DQPODpnTPln5_hvPBdA&_nc_ss=7b289&oh=00_AQGwQq7uLdHHUTtcDZoh65CchxZSR3l4VcwQ6gphoHuNDA&oe=6A7C9536"),
+    fbPhoto(2, "https://scontent-atl3-1.xx.fbcdn.net/v/t39.30808-6/558659589_769520415849201_1304346506333179237_n.jpg?stp=c0.238.720.720a_dst-jpg_tt6&cstp=mx720x720&ctp=s206x206&_nc_cat=106&ccb=1-7&_nc_sid=50ad20&_nc_ohc=nsxjFhU920UQ7kNvwFis_3m&_nc_oc=AdpS0_KM7FOfeKcH8cP1YlIRo7Czrz7Kq7xZS6TS5oWwODAe3d_8CsjOXgw3tQHe5TM&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&_nc_gid=hh9DQPODpnTPln5_hvPBdA&_nc_ss=7b289&oh=00_AQFSBmHdf8i32qbGcuYEPi7_Ohvs8zSyrBvw1XFgsuRx6A&oe=6A7C7E15"),
+    fbPhoto(3, "https://scontent-atl3-3.xx.fbcdn.net/v/t39.30808-6/560019321_769518702516039_1940233805240748422_n.jpg?stp=c0.238.720.720a_dst-jpg_tt6&cstp=mx720x720&ctp=s206x206&_nc_cat=109&ccb=1-7&_nc_sid=50ad20&_nc_ohc=lHmqWy5v2FcQ7kNvwHG9L1W&_nc_oc=AdqpNzUfLKfweevK-6j6Atiq5zBvf7oPbGJT16DlQqdu2jXoaHj2JIzWmRbhow9Eyy0&_nc_zt=23&_nc_ht=scontent-atl3-3.xx&_nc_gid=hh9DQPODpnTPln5_hvPBdA&_nc_ss=7b289&oh=00_AQHuCDXp2uHcudYSpaX47-bNwJQUHzvzIKmmxV0VdZ2sBw&oe=6A7CAF43"),
+    fbPhoto(4, "https://scontent-atl3-2.xx.fbcdn.net/v/t39.30808-6/534378615_730783263056250_577405584606350370_n.jpg?stp=dst-jpg_tt6&cstp=mx1080x1080&ctp=s206x206&_nc_cat=101&ccb=1-7&_nc_sid=7a06f5&_nc_ohc=mm0LmFs-dx4Q7kNvwGDbkOZ&_nc_oc=AdpLLhc14ln1ZBfxfXqjnjao3BSsaQIsaL1zvljTuIDVdRaxp-XgugG4EoB0nVS0ZGQ&_nc_zt=23&_nc_ht=scontent-atl3-2.xx&_nc_gid=hh9DQPODpnTPln5_hvPBdA&_nc_ss=7b289&oh=00_AQGH-vVhhBTN7_PsKSROK-uo06YFsKqQCfDd_X2qIjpNgw&oe=6A7CA157"),
+    fbPhoto(5, "https://scontent-atl3-1.xx.fbcdn.net/v/t39.30808-6/484845994_615527044581873_743475418351901264_n.jpg?stp=dst-jpg_tt6&cstp=mx1600x1600&ctp=s206x206&_nc_cat=106&ccb=1-7&_nc_sid=50ad20&_nc_ohc=ftzZwF51q3oQ7kNvwHcBUJb&_nc_oc=AdrtMRso2cL1tF3ZLP7m95PkuZRGVfUnMfzu-OItNkjqSNe2Cu_svL02VvKvUrgKk4s&_nc_zt=23&_nc_ht=scontent-atl3-1.xx&_nc_gid=hh9DQPODpnTPln5_hvPBdA&_nc_ss=7b289&oh=00_AQHX8oKaP7kb5pXCH3bdw8-mLV9WO8skPm3eU2ZKlOqcfg&oe=6A7C9C06"),
+    fbPhoto(6, "https://scontent-atl3-3.xx.fbcdn.net/v/t39.30808-6/484343697_615040477963863_8487895130045872153_n.jpg?stp=dst-jpg_tt6&cstp=mx1600x1600&ctp=s160x160&_nc_cat=110&ccb=1-7&_nc_sid=8a6525&_nc_ohc=dfvycMYR_DAQ7kNvwGz-68e&_nc_oc=AdpY8LkCq41KLz2H2Qbq-C4DcSGHegX7cJSys1TzZkcvKE76KcbTaNxW_NYwYkCU5HA&_nc_zt=23&_nc_ht=scontent-atl3-3.xx&_nc_gid=Pf0IXhQkRfILTgyAt44yuQ&_nc_ss=7b289&oh=00_AQFVShZwnZ3S8kAEcHbNSK_pB9LvXhxfxXX8wFK_q1ILoQ&oe=6A7C7BFD"),
+    fbPhoto(7, "https://scontent-atl3-2.xx.fbcdn.net/v/t39.30808-6/484742311_615526957915215_4323027810523282718_n.jpg?stp=c113.0.494.494a_dst-jpg_tt6&cstp=mx494x494&ctp=s206x206&_nc_cat=102&ccb=1-7&_nc_sid=50ad20&_nc_ohc=VeRw4JadQHkQ7kNvwH-Ffu1&_nc_oc=Adqh7lxbmLI_3afXhQ6g8jIbVdgjap-lvb891xyubV_9lOZTSBkj7srrvKfFYmB8UIE&_nc_zt=23&_nc_ht=scontent-atl3-2.xx&_nc_gid=hh9DQPODpnTPln5_hvPBdA&_nc_ss=7b289&oh=00_AQHpOTyCfgUREOzQByVBDLC-a7x1QtKmCHTstCOIJlBAHQ&oe=6A7C8AEA"),
+    fbPhoto(8, "https://scontent-atl3-3.xx.fbcdn.net/v/t39.30808-6/484627294_615526911248553_3437693195088685677_n.jpg?stp=c115.0.491.491a_dst-jpg_tt6&cstp=mx491x491&ctp=s206x206&_nc_cat=107&ccb=1-7&_nc_sid=50ad20&_nc_ohc=41lZZD1308sQ7kNvwEYQGvV&_nc_oc=AdoYGtw3p-jGTiVAnh56TrAzbx4f6gjmvl4VCHmvY1Pniq0uWP71w3iyJBorNNI9sIQ&_nc_zt=23&_nc_ht=scontent-atl3-3.xx&_nc_gid=hh9DQPODpnTPln5_hvPBdA&_nc_ss=7b289&oh=00_AQGY_uf6PI9wM4-Wn_RxyWVhOZANvfy86K5bAo8SV5WNtA&oe=6A7CA2BF"),
   ];
   for (const g of galleryData) {
     await prisma.gallery.create({ data: g });
@@ -315,8 +321,9 @@ async function main() {
         fontFamily: "Plus Jakarta Sans",
         contactInfo: {
           phone: "+92 312 5028812",
-          email: "info@junaiddentalcare.pk",
-          address: "J5WM+643, Lehtrar Road, near Old Bank Stop, Ali Pur, Islamabad Capital Territory 45600, Pakistan",
+          secondaryPhone: "+92 314 8290684",
+          email: "junaiddental22@gmail.com",
+          address: "JDC – Junaid Dental Care, Main Lehtrar Road, Alipur U turn, near Old Bank Stop, Islamabad, Pakistan",
           hours: "Mon-Sat 8:00 AM - 9:00 PM",
           whatsapp: "923125028812",
           emergencyPhone: "+92 312 5028812",
@@ -337,7 +344,7 @@ async function main() {
   // ── SEO defaults ───────────────────────────────────────────────────────
   const seoDefaults = [
     { pagePath: "/", title: "Junaid Dental Care — Premium Dental Clinic in Ali Pur, Pakistan", description: "Junaid Dental Care offers premium dental treatments in Ali Pur, Pakistan. Dental implants, braces, cosmetic dentistry, root canals & emergency care. Call +92 312 5028812 to book.", keywords: ["dentist Ali Pur", "dental clinic Lehtrar Road", "dental implants Pakistan", "braces Islamabad"] },
-    { pagePath: "/about", title: "About Junaid Dental Care | Our Story", description: "Learn about Junaid Dental Care — Ali Pur's trusted family dental clinic since 2015. Meet our team and discover our approach to gentle, modern dental care.", keywords: ["about Junaid Dental", "Ali Pur dentist", "dental clinic story"] },
+    { pagePath: "/about", title: "About JDC – Junaid Dental Care | Our Story", description: "Learn about JDC – Junaid Dental Care — Ali Pur's trusted family dental clinic since 2006. Meet our team and discover our approach to gentle, modern dental care.", keywords: ["about Junaid Dental", "Ali Pur dentist", "dental clinic story"] },
     { pagePath: "/services", title: "Dental Services | Junaid Dental Care Ali Pur", description: "Explore our full range of dental services: general, cosmetic, orthodontics, implants, root canal, paediatric and emergency dentistry in Ali Pur.", keywords: ["dental services", "cosmetic dentistry", "dental implants"] },
     { pagePath: "/doctors", title: "Our Doctors | Junaid Dental Care", description: "Meet our six specialist dentists at Junaid Dental Care — experts in cosmetic dentistry, orthodontics, implants, paediatric care, and oral surgery.", keywords: ["dentists Ali Pur", "dental specialists"] },
     { pagePath: "/contact", title: "Contact Junaid Dental Care | Ali Pur, Pakistan", description: "Visit us at Lehtrar Road, near Old Bank Stop, Ali Pur. Call +92 312 5028812, WhatsApp us, or book online for premium dental care.", keywords: ["contact dentist Ali Pur", "dental clinic location"] },

@@ -729,7 +729,7 @@
     const cfg = r.ok && r.data ? r.data.data : {
       host: "smtp.gmail.com", port: 587, secure: false,
       user: "", password: "", fromName: "Junaid Dental Care",
-      fromEmail: "info@junaiddentalcare.pk"
+      fromEmail: "junaiddental22@gmail.com"
     };
     c.innerHTML = '<div class="panel"><div class="panel-head"><h2>SMTP / Email Settings</h2></div>' +
       '<p class="text-sm text-muted" style="margin-bottom:1.5rem">Configure your email provider to send appointment confirmations, contact form notifications, and newsletters.</p>' +
