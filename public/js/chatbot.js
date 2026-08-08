@@ -438,7 +438,7 @@ window.SD = window.SD || {};
 
     // inject CSS if not already present
     if (!document.querySelector('link[href*="chatbot.css"]')){
-      var l=document.createElement('link'); l.rel='stylesheet'; l.href='/css/chatbot.css'; document.head.appendChild(l);
+      var l=document.createElement('link'); l.rel='stylesheet'; l.href='/css/chatbot.css'; (document.head || document.getElementsByTagName('head')[0] || document.body).appendChild(l);
     }
 
     var root=document.createElement('div');
@@ -469,13 +469,13 @@ window.SD = window.SD || {};
 
     document.body.appendChild(root);
 
-    var launcher=document.getElementById('cbLauncher');
+    var launcher=root.querySelector('#cbLauncher');
     var win=root.querySelector('.cb-window');
-    var msgs=document.getElementById('cbMessages');
-    var chipsEl=document.getElementById('cbChips');
-    var form=document.getElementById('cbForm');
-    var input=document.getElementById('cbInput');
-    var badge=document.getElementById('cbBadge');
+    var msgs=root.querySelector('#cbMessages');
+    var chipsEl=root.querySelector('#cbChips');
+    var form=root.querySelector('#cbForm');
+    var input=root.querySelector('#cbInput');
+    var badge=root.querySelector('#cbBadge');
 
     var isOpen=false;
     var hasWelcomed=false;
@@ -484,20 +484,22 @@ window.SD = window.SD || {};
     function setOpen(open){
       isOpen=open;
       root.classList.toggle('cb-open', open);
-      launcher.setAttribute('aria-label', open? 'Close chat':'Open chat');
+      if (launcher) launcher.setAttribute('aria-label', open? 'Close chat':'Open chat');
       if (open){
-        unread=0; badge.style.display='none';
+        unread=0; if (badge) badge.style.display='none';
         if(!hasWelcomed){
           hasWelcomed=true;
           setTimeout(function(){ addBotWelcome(); }, 300);
         }
-        setTimeout(function(){ input.focus(); }, 350);
+        setTimeout(function(){ if (input) input.focus(); }, 350);
       }
     }
 
-    launcher.addEventListener('click', function(){ setOpen(!isOpen); });
-    document.getElementById('cbClose').addEventListener('click', function(){ setOpen(false); });
-    document.getElementById('cbMin').addEventListener('click', function(){ setOpen(false); });
+    if (launcher) launcher.addEventListener('click', function(){ setOpen(!isOpen); });
+    var closeBtn = root.querySelector('#cbClose');
+    var minBtn = root.querySelector('#cbMin');
+    if (closeBtn) closeBtn.addEventListener('click', function(){ setOpen(false); });
+    if (minBtn) minBtn.addEventListener('click', function(){ setOpen(false); });
 
     // ESC to close
     document.addEventListener('keydown', function(e){ if(e.key==='Escape' && isOpen) setOpen(false); });

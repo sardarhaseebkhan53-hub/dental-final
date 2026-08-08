@@ -4,7 +4,7 @@
 
     // Data may be from API (returns array) or we fetch single.
     function fill(svc) {
-      document.title = svc.name + " | Serene Dental";
+      document.title = svc.name + " | Junaid Dental Care";
       document.getElementById("crumbSlug").textContent = svc.name;
       document.getElementById("svcTitle").textContent = svc.name;
       document.getElementById("svcShort").textContent = svc.shortDescription || svc.description;

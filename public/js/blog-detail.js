@@ -7,7 +7,7 @@
   document.addEventListener("DOMContentLoaded", function () {
     const slug = window.location.pathname.replace(/^\/blog\//, "").replace(/\.html$/, "");
     function fill(post) {
-      document.title = post.title + " | Serene Dental";
+      document.title = post.title + " | Junaid Dental Care";
       document.getElementById("postTitle").textContent = post.title;
       document.getElementById("postMeta").innerHTML =
         "<span>" + (post.category ? post.category.name : "News") + "</span> &nbsp;•&nbsp; <span>" + fmtDate(post.publishedAt) + "</span> &nbsp;•&nbsp; <span>" + (post.readingTime || 4) + " min read</span>";
