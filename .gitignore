@@ -47,3 +47,6 @@ public/uploads/
 next-env.d.ts
 .vercel
 *.log
+
+# Scratch (search tool downloads)
+image-search/
