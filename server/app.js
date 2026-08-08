@@ -92,7 +92,11 @@ const logoUpload = require("multer")({
   }),
   fileFilter: (req, file, cb) => {
     const ok = ["image/jpeg","image/png","image/webp","image/svg+xml","image/gif"].includes(file.mimetype);
-    if (!ok) return cb(new Error("Logo must be an image (png/jpg/webp/svg/gif)"), false);
+    if (!ok) {
+      const err = new Error("Logo must be an image (png/jpg/webp/svg/gif)");
+      err.status = 400;
+      return cb(err, false);
+    }
     cb(null, true);
   },
   limits: { fileSize: 5 * 1024 * 1024 }

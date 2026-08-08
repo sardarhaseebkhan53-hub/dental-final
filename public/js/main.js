@@ -292,7 +292,7 @@ window.SD = window.SD || {};
           /* Brand column */
           '<div class="footer-col">' +
             '<a class="logo" aria-label="Junaid Dental Care" href="/" style="margin-bottom:1.25rem;display:inline-flex;align-items:center">' +
-              '<img src="/images/logo.png" alt="JUNAID Dental Care Clinic" style="width:160px;height:auto;max-width:100%;object-fit:contain;display:block;border-radius:8px" onerror="this.onerror=null;this.src='/images/logo-horizontal.png'">'+
+              '<img src="/images/logo.png" alt="JUNAID Dental Care Clinic" style="width:160px;height:auto;max-width:100%;object-fit:contain;display:block;border-radius:8px" onerror="this.onerror=null;this.src=\'/images/logo-horizontal.png\'">'+
               '<span style="display:none;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;align-items:center;justify-content:center;margin-left:.75rem">'+toothSVG()+'</span>'+
             "</a>" +
             "<p style='font-size:.9rem;color:rgba(255,255,255,0.7);line-height:1.7'>Junaid Dental Care provides premium dental treatments with modern technology, gentle hands, and a calm environment — trusted by families across Ali Pur, Lehtrar Road and surrounding areas.</p>" +
