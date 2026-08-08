@@ -225,13 +225,19 @@ async function main() {
   console.log(`✅ FAQs (${faqData.length})`);
 
   // ── Gallery ──────────────────────────────────────────────────────────────
+  // Photos published on the JDC – Junaid Dental care Facebook page
+  // (profile id 100083737489911). Replace with local /images/fb/photo-NN.jpg files
+  // for permanent hosting.
+  const fbPhoto = (i, url) => ({ title: "JDC – Junaid Dental Care", description: "Photos from our Facebook page", category: "CLINIC", image: url, sortOrder: i });
   const galleryData = [
-    { title: "Welcome to Junaid Dental Care", description: "Our modern reception area in Ali Pur", category: "CLINIC", image: img("gallery-reception.jpg"), sortOrder: 1 },
-    { title: "State-of-the-Art Treatment Suite", description: "Premium equipment for comfortable care", category: "CLINIC", image: img("gallery-treatment.jpg"), sortOrder: 2 },
-    { title: "Digital X-Ray & 3D Imaging", description: "Modern diagnostic technology", category: "TECHNOLOGY", image: img("gallery-tech.jpg"), sortOrder: 3 },
-    { title: "Smile Makeover Result", description: "Cosmetic dentistry transformation", category: "BEFORE_AFTER", image: img("gallery-smile.jpg"), sortOrder: 4 },
-    { title: "Our Caring Team", description: "The Junaid Dental Care family", category: "TEAM", image: img("gallery-team.jpg"), sortOrder: 5 },
-    { title: "Gentle, Personalised Care", description: "Every patient is family", category: "TREATMENTS", image: img("gallery-care.jpg"), sortOrder: 6 },
+    fbPhoto(1, "https://images.weserv.nl/?url=https%3A%2F%2Fscontent-atl3-2.xx.fbcdn.net%2Fv%2Ft39.30808-6%2F557003369_769524089182167_6455132352003665931_n.jpg%3Fstp%3Dc0.135.1639.1639a_dst-jpg_tt6%26cstp%3Dmx1639x1639%26ctp%3Ds206x206%26_nc_cat%3D101%26ccb%3D1-7%26_nc_sid%3D50ad20%26_nc_ohc%3DzQwYwPnNpj4Q7kNvwHFiAxI%26_nc_oc%3DAdofZpJKTUfV4LhlxFHjob0qkfR6p6KlUcIfRug2uPaTsoLMA9RaEYivv5bbHhVhYdI%26_nc_zt%3D23%26_nc_ht%3Dscontent-atl3-2.xx%26_nc_gid%3Dhh9DQPODpnTPln5_hvPBdA%26_nc_ss%3D7b289%26oh%3D00_AQGwQq7uLdHHUTtcDZoh65CchxZSR3l4VcwQ6gphoHuNDA%26oe%3D6A7C9536&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F125.0.0.0%20Safari%2F537.36&w=1400&q=85&output=jpg"),
+    fbPhoto(2, "https://images.weserv.nl/?url=https%3A%2F%2Fscontent-atl3-1.xx.fbcdn.net%2Fv%2Ft39.30808-6%2F558659589_769520415849201_1304346506333179237_n.jpg%3Fstp%3Dc0.238.720.720a_dst-jpg_tt6%26cstp%3Dmx720x720%26ctp%3Ds206x206%26_nc_cat%3D106%26ccb%3D1-7%26_nc_sid%3D50ad20%26_nc_ohc%3DnsxjFhU920UQ7kNvwFis_3m%26_nc_oc%3DAdpS0_KM7FOfeKcH8cP1YlIRo7Czrz7Kq7xZS6TS5oWwODAe3d_8CsjOXgw3tQHe5TM%26_nc_zt%3D23%26_nc_ht%3Dscontent-atl3-1.xx%26_nc_gid%3Dhh9DQPODpnTPln5_hvPBdA%26_nc_ss%3D7b289%26oh%3D00_AQFSBmHdf8i32qbGcuYEPi7_Ohvs8zSyrBvw1XFgsuRx6A%26oe%3D6A7C7E15&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F125.0.0.0%20Safari%2F537.36&w=1400&q=85&output=jpg"),
+    fbPhoto(3, "https://images.weserv.nl/?url=https%3A%2F%2Fscontent-atl3-3.xx.fbcdn.net%2Fv%2Ft39.30808-6%2F560019321_769518702516039_1940233805240748422_n.jpg%3Fstp%3Dc0.238.720.720a_dst-jpg_tt6%26cstp%3Dmx720x720%26ctp%3Ds206x206%26_nc_cat%3D109%26ccb%3D1-7%26_nc_sid%3D50ad20%26_nc_ohc%3DlHmqWy5v2FcQ7kNvwHG9L1W%26_nc_oc%3DAdqpNzUfLKfweevK-6j6Atiq5zBvf7oPbGJT16DlQqdu2jXoaHj2JIzWmRbhow9Eyy0%26_nc_zt%3D23%26_nc_ht%3Dscontent-atl3-3.xx%26_nc_gid%3Dhh9DQPODpnTPln5_hvPBdA%26_nc_ss%3D7b289%26oh%3D00_AQHuCDXp2uHcudYSpaX47-bNwJQUHzvzIKmmxV0VdZ2sBw%26oe%3D6A7CAF43&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F125.0.0.0%20Safari%2F537.36&w=1400&q=85&output=jpg"),
+    fbPhoto(4, "https://images.weserv.nl/?url=https%3A%2F%2Fscontent-atl3-2.xx.fbcdn.net%2Fv%2Ft39.30808-6%2F534378615_730783263056250_577405584606350370_n.jpg%3Fstp%3Ddst-jpg_tt6%26cstp%3Dmx1080x1080%26ctp%3Ds206x206%26_nc_cat%3D101%26ccb%3D1-7%26_nc_sid%3D7a06f5%26_nc_ohc%3Dmm0LmFs-dx4Q7kNvwGDbkOZ%26_nc_oc%3DAdpLLhc14ln1ZBfxfXqjnjao3BSsaQIsaL1zvljTuIDVdRaxp-XgugG4EoB0nVS0ZGQ%26_nc_zt%3D23%26_nc_ht%3Dscontent-atl3-2.xx%26_nc_gid%3Dhh9DQPODpnTPln5_hvPBdA%26_nc_ss%3D7b289%26oh%3D00_AQGH-vVhhBTN7_PsKSROK-uo06YFsKqQCfDd_X2qIjpNgw%26oe%3D6A7CA157&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F125.0.0.0%20Safari%2F537.36&w=1400&q=85&output=jpg"),
+    fbPhoto(5, "https://images.weserv.nl/?url=https%3A%2F%2Fscontent-atl3-1.xx.fbcdn.net%2Fv%2Ft39.30808-6%2F484845994_615527044581873_743475418351901264_n.jpg%3Fstp%3Ddst-jpg_tt6%26cstp%3Dmx1600x1600%26ctp%3Ds206x206%26_nc_cat%3D106%26ccb%3D1-7%26_nc_sid%3D50ad20%26_nc_ohc%3DftzZwF51q3oQ7kNvwHcBUJb%26_nc_oc%3DAdrtMRso2cL1tF3ZLP7m95PkuZRGVfUnMfzu-OItNkjqSNe2Cu_svL02VvKvUrgKk4s%26_nc_zt%3D23%26_nc_ht%3Dscontent-atl3-1.xx%26_nc_gid%3Dhh9DQPODpnTPln5_hvPBdA%26_nc_ss%3D7b289%26oh%3D00_AQHX8oKaP7kb5pXCH3bdw8-mLV9WO8skPm3eU2ZKlOqcfg%26oe%3D6A7C9C06&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F125.0.0.0%20Safari%2F537.36&w=1400&q=85&output=jpg"),
+    fbPhoto(6, "https://images.weserv.nl/?url=https%3A%2F%2Fscontent-atl3-3.xx.fbcdn.net%2Fv%2Ft39.30808-6%2F484343697_615040477963863_8487895130045872153_n.jpg%3Fstp%3Ddst-jpg_tt6%26cstp%3Dmx1600x1600%26ctp%3Ds160x160%26_nc_cat%3D110%26ccb%3D1-7%26_nc_sid%3D8a6525%26_nc_ohc%3DdfvycMYR_DAQ7kNvwGz-68e%26_nc_oc%3DAdpY8LkCq41KLz2H2Qbq-C4DcSGHegX7cJSys1TzZkcvKE76KcbTaNxW_NYwYkCU5HA%26_nc_zt%3D23%26_nc_ht%3Dscontent-atl3-3.xx%26_nc_gid%3DPf0IXhQkRfILTgyAt44yuQ%26_nc_ss%3D7b289%26oh%3D00_AQFVShZwnZ3S8kAEcHbNSK_pB9LvXhxfxXX8wFK_q1ILoQ%26oe%3D6A7C7BFD&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F125.0.0.0%20Safari%2F537.36&w=1400&q=85&output=jpg"),
+    fbPhoto(7, "https://images.weserv.nl/?url=https%3A%2F%2Fscontent-atl3-2.xx.fbcdn.net%2Fv%2Ft39.30808-6%2F484742311_615526957915215_4323027810523282718_n.jpg%3Fstp%3Dc113.0.494.494a_dst-jpg_tt6%26cstp%3Dmx494x494%26ctp%3Ds206x206%26_nc_cat%3D102%26ccb%3D1-7%26_nc_sid%3D50ad20%26_nc_ohc%3DVeRw4JadQHkQ7kNvwH-Ffu1%26_nc_oc%3DAdqh7lxbmLI_3afXhQ6g8jIbVdgjap-lvb891xyubV_9lOZTSBkj7srrvKfFYmB8UIE%26_nc_zt%3D23%26_nc_ht%3Dscontent-atl3-2.xx%26_nc_gid%3Dhh9DQPODpnTPln5_hvPBdA%26_nc_ss%3D7b289%26oh%3D00_AQHpOTyCfgUREOzQByVBDLC-a7x1QtKmCHTstCOIJlBAHQ%26oe%3D6A7C8AEA&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F125.0.0.0%20Safari%2F537.36&w=1400&q=85&output=jpg"),
+    fbPhoto(8, "https://images.weserv.nl/?url=https%3A%2F%2Fscontent-atl3-3.xx.fbcdn.net%2Fv%2Ft39.30808-6%2F484627294_615526911248553_3437693195088685677_n.jpg%3Fstp%3Dc115.0.491.491a_dst-jpg_tt6%26cstp%3Dmx491x491%26ctp%3Ds206x206%26_nc_cat%3D107%26ccb%3D1-7%26_nc_sid%3D50ad20%26_nc_ohc%3D41lZZD1308sQ7kNvwEYQGvV%26_nc_oc%3DAdoYGtw3p-jGTiVAnh56TrAzbx4f6gjmvl4VCHmvY1Pniq0uWP71w3iyJBorNNI9sIQ%26_nc_zt%3D23%26_nc_ht%3Dscontent-atl3-3.xx%26_nc_gid%3Dhh9DQPODpnTPln5_hvPBdA%26_nc_ss%3D7b289%26oh%3D00_AQGY_uf6PI9wM4-Wn_RxyWVhOZANvfy86K5bAo8SV5WNtA%26oe%3D6A7CA2BF&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F125.0.0.0%20Safari%2F537.36&w=1400&q=85&output=jpg"),
   ];
   for (const g of galleryData) {
     await prisma.gallery.create({ data: g });
@@ -264,6 +270,38 @@ async function main() {
       readingTime: 4, status: "PUBLISHED", categorySlug: "dental-care", days: 5,
     },
     {
+      title: "Full Arch Rehabilitation: A Real Case From Our Clinic",
+      slug: "full-arch-rehabilitation-real-case",
+      excerpt: "Our team rebuilt a 65-year-old patient's smile with full arch rehabilitation — PFM bridges and endo-restorative coverage.",
+      content: "<p>At JDC – Junaid Dental Care, we believe every patient deserves a smile they're proud of — at any age. One of our recent full arch rehabilitation cases shows exactly what our team does best.</p><h3>The Patient</h3><p>A 65-year-old female patient came to our Alipur U turn clinic with missing teeth <strong>#1.6, #1.7, #2.5, #2.6, #3.5, #3.4 and #4.4</strong>, along with multiple carious (decayed) lesions in both arches.</p><h3>The Plan</h3><p>Our dentists carried out a complete full arch rehabilitation: decayed teeth were restored endo-restoratively, and the missing teeth were replaced with strong, natural-looking <strong>PFM (porcelain-fused-to-metal) bridges</strong>.</p><h3>Why PFM Bridges?</h3><p>PFM bridges combine a strong metal core with a tooth-coloured porcelain exterior — a proven, affordable option for replacing missing teeth and restoring chewing function.</p><p>We are proud of our 16+ years of experience in the field of general dentistry, using the latest technology and techniques with qualified professional dentists and dental assistants.</p><p>Book your appointment with our professional dentists: <strong>0312 5028812</strong> — Junaid Dental Care, Main Lehtrar Road, Alipur U turn, Islamabad-Pakistan.</p>",
+      readingTime: 4, status: "PUBLISHED", categorySlug: "dental-care", days: 3,
+      featuredImage: "https://images.weserv.nl/?url=https%3A%2F%2Fscontent-atl3-2.xx.fbcdn.net%2Fv%2Ft15.5256-10%2F649594770_1673824783997453_6710853513405848693_n.jpg%3Fstp%3Ddst-jpg_tt6%26cstp%3Dmx1080x1080%26ctp%3Ds1080x1080%26_nc_cat%3D101%26ccb%3D1-7%26_nc_sid%3D5fad0e%26_nc_ohc%3DY_3iHTqh0ykQ7kNvwHgq1R1%26_nc_oc%3DAdqZGSihFhI5V3h1ZtAFo06VOPereJPb6l675JLaqBp8TtqhIElQqYMwphqXanxik8Q%26_nc_zt%3D23%26_nc_ht%3Dscontent-atl3-2.xx%26_nc_gid%3DEqNP5-l3VzEB3j1O__-DeQ%26_nc_ss%3D7b289%26oh%3D00_AQExIMoatixUfAduyaVwAfBs0su9sZLGPOpY7guj91gfrQ%26oe%3D6A7C946E&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F125.0.0.0%20Safari%2F537.36&w=1400&q=85&output=jpg",
+    },
+    {
+      title: "Severe Tooth Wear (Attrition)? PFM Bridges Still Create Beautiful Smiles",
+      slug: "severe-tooth-wear-attrition-pfm-bridges",
+      excerpt: "How endo-restorative coverage and PFM bridgework restored the smile of a 59-year-old patient with severe full-arch attrition.",
+      content: "<p>Teeth grinding, an unbalanced bite, and years of wear can slowly flatten your teeth. When wear becomes severe — called full-arch attrition — it affects not just your smile but also how you chew and speak.</p><h3>The Case</h3><p>Our team recently managed a case of <strong>severe full-arch attrition</strong> in a 59-year-old female patient. The treatment combined <strong>endo-restorative coverage</strong> (protecting and rebuilding worn teeth) with <strong>PFM bridgework</strong>.</p><h3>The Result</h3><p>Even in severe wear cases, PFM bridges are still creating beautiful smiles. The patient left with restored height, function and confidence.</p><p>Keep your teeth safe — don't wait until the wear is severe. A simple check-up can catch attrition early. Call us at <strong>0312 5028812</strong> or visit us at Main Lehtrar Road, Alipur Old Bank Stop, Islamabad-Pakistan.</p>",
+      readingTime: 4, status: "PUBLISHED", categorySlug: "dental-care", days: 10,
+      featuredImage: "https://images.weserv.nl/?url=https%3A%2F%2Fscontent-atl3-3.xx.fbcdn.net%2Fv%2Ft15.5256-10%2F649211189_1457962879283830_6757778998911666148_n.jpg%3Fstp%3Ddst-jpg_tt6%26cstp%3Dmx1080x1080%26ctp%3Ds1080x1080%26_nc_cat%3D110%26ccb%3D1-7%26_nc_sid%3D5fad0e%26_nc_ohc%3DL8nWTH0OsT4Q7kNvwEz_iOO%26_nc_oc%3DAdr4sdfT-SxKF2G7iB4SJktamginYAHUiSVF1hdPrXpmnNwI-3NeNLTdvoRkIadFVf4%26_nc_zt%3D23%26_nc_ht%3Dscontent-atl3-3.xx%26_nc_gid%3DEqNP5-l3VzEB3j1O__-DeQ%26_nc_ss%3D7b289%26oh%3D00_AQHPPwFjyHHHuwlrcfQig26W1fdxm46-xqf0HIvlStbfig%26oe%3D6A7C9A57&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F125.0.0.0%20Safari%2F537.36&w=1400&q=85&output=jpg",
+    },
+    {
+      title: "16+ Years of Dental Excellence: The JDC Story",
+      slug: "jdc-16-years-dental-excellence",
+      excerpt: "Established in 2006, JDC (Junaid Dental Care) has grown into one of Islamabad's most trusted family dental clinics — here's our story.",
+      content: "<p>JDC (Junaid Dental Care) was established in <strong>2006</strong>. For more than 16 years, we have proudly served the families of Alipur U turn, Lehtrar Road and greater Islamabad with one simple mission: better teeth, better health.</p><h3>What 16+ Years Gives You</h3><ul><li>Qualified professional dentists and dental assistants</li><li>The latest technology and techniques in general dentistry</li><li>Every specialty under one roof — endodontics, orthodontics, periodontics, prosthodontics, oral surgery and pediatric dentistry</li><li>Honest pricing and flexible payment plans</li></ul><h3>Follow Our Work</h3><p>We regularly share real cases, treatments and patient stories on our Facebook page — <strong>JDC – Junaid Dental care</strong>. Follow us to see the work behind the smile.</p><p>Address: Main Lehtrar Road, Alipur U turn, Islamabad-Pakistan · ☎ 0312 5028812 / 0314 8290684</p>",
+      readingTime: 3, status: "PUBLISHED", categorySlug: "dental-care", days: 20,
+      featuredImage: "https://images.weserv.nl/?url=https%3A%2F%2Fscontent-atl3-3.xx.fbcdn.net%2Fv%2Ft39.30808-6%2F541088700_741493211985255_3442905982410331216_n.jpg%3Fstp%3Ddst-jpg_tt6%26cstp%3Dmx1280x640%26ctp%3Ds960x960%26_nc_cat%3D108%26ccb%3D1-7%26_nc_sid%3Dcc71e4%26_nc_ohc%3DXLhiHwIer7AQ7kNvwFd6WQl%26_nc_oc%3DAdqrXILpyd6oBgBnonFoV0TXvmD1qx35lq2WMdENhWC42qVlOcm3Qvf6xdtccya1VtQ%26_nc_zt%3D23%26_nc_ht%3Dscontent-atl3-3.xx%26_nc_gid%3DPf0IXhQkRfILTgyAt44yuQ%26_nc_ss%3D7b289%26oh%3D00_AQHET36Btlms93UHz6mykEEgYraK2ctkdJ5__Tt_H8h0ww%26oe%3D6A7C8F9C&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F125.0.0.0%20Safari%2F537.36&w=1400&q=85&output=jpg",
+    },
+    {
+      title: "10 Dental Treatments Under One Roof at JDC",
+      slug: "10-dental-treatments-under-one-roof",
+      excerpt: "From endodontics and orthodontics to zirconia CAD/CAM bridges and pediatric dentistry — the full list of what we do.",
+      content: "<p>One clinic, ten specialties — here is everything we do under one roof at JDC:</p><ol><li><strong>Endodontics</strong> — root canal therapy and operative dentistry</li><li><strong>Orthodontics</strong> — braces and aligners for all ages</li><li><strong>Periodontics</strong> — gum treatment and prevention</li><li><strong>Dental extractions &amp; wisdom tooth management</strong></li><li><strong>Zirconia CAD/CAM</strong> bridges and crowns</li><li><strong>PFM bridges and crowns</strong></li><li><strong>Prosthodontics</strong> — full and partial dentures</li><li><strong>Dental X-ray</strong></li><li><strong>Pediatric dentistry</strong></li><li><strong>Full arch rehabilitation</strong></li></ol><p>Every treatment is performed by qualified professional dentists using the latest technology and techniques — with more than 16 years of experience behind us.</p><p>Book your appointment: <strong>0312 5028812</strong> · Junaid Dental Care, Main Lehtrar Road, Alipur U turn, Islamabad-Pakistan.</p>",
+      readingTime: 3, status: "PUBLISHED", categorySlug: "dental-care", days: 30,
+      featuredImage: "https://images.weserv.nl/?url=https%3A%2F%2Fscontent-atl3-3.xx.fbcdn.net%2Fv%2Ft15.5256-10%2F561633594_807719941627758_7563477028851161741_n.jpg%3Fstp%3Ddst-jpg_tt6%26cstp%3Dmx464x832%26ctp%3Ds464x832%26_nc_cat%3D107%26ccb%3D1-7%26_nc_sid%3D5fad0e%26_nc_ohc%3DdOFVCiutNaAQ7kNvwGJ_l54%26_nc_oc%3DAdr-cj6J-acIIZngTYB2MebA1JI_5UETP8gYPRnsgnk1yL-2d0hqyjSJZOmW0rb32Po%26_nc_zt%3D23%26_nc_ht%3Dscontent-atl3-3.xx%26_nc_gid%3DE0nS6ld51lxBmxC2NPloVg%26_nc_ss%3D7b289%26oh%3D00_AQGAfVtV3YMuMx7lX-D-LywwlaFwbYSJPFOQd-usPnPj3w%26oe%3D6A7CA4F1&ua=Mozilla%2F5.0%20(Windows%20NT%2010.0%3B%20Win64%3B%20x64)%20AppleWebKit%2F537.36%20(KHTML%2C%20like%20Gecko)%20Chrome%2F125.0.0.0%20Safari%2F537.36&w=1400&q=85&output=jpg",
+    },
+    {
       title: "What to Expect During Your First Visit to Junaid Dental Care",
       slug: "first-visit-junaid-dental-care",
       excerpt: "A complete walkthrough of your first appointment at our Ali Pur clinic — from check-in to your personalised care plan.",
@@ -289,7 +327,7 @@ async function main() {
           slug: b.slug,
           excerpt: b.excerpt,
           content: b.content,
-          featuredImage: img("blog-1.svg"),
+          featuredImage: b.featuredImage || img("blog-1.svg"),
           authorId: author.id,
           categoryId: blogCatMap[b.categorySlug]?.id,
           status: "PUBLISHED",
@@ -315,15 +353,16 @@ async function main() {
         fontFamily: "Plus Jakarta Sans",
         contactInfo: {
           phone: "+92 312 5028812",
-          email: "info@junaiddentalcare.pk",
-          address: "J5WM+643, Lehtrar Road, near Old Bank Stop, Ali Pur, Islamabad Capital Territory 45600, Pakistan",
+          secondaryPhone: "+92 314 8290684",
+          email: "junaiddental22@gmail.com",
+          address: "JDC – Junaid Dental Care, Main Lehtrar Road, Alipur U turn, near Old Bank Stop, Islamabad, Pakistan",
           hours: "Mon-Sat 8:00 AM - 9:00 PM",
           whatsapp: "923125028812",
           emergencyPhone: "+92 312 5028812",
           googleMaps: "https://maps.app.goo.gl/sim1qA4wDdpcMovK7",
         },
         socialLinks: {
-          facebook: "https://facebook.com/junaiddentalcare",
+          facebook: "https://www.facebook.com/profile.php?id=100083737489911",
           instagram: "https://instagram.com/junaiddentalcare",
           youtube: "https://youtube.com/@junaiddentalcare",
           tiktok: "https://tiktok.com/@junaiddentalcare",
@@ -337,7 +376,7 @@ async function main() {
   // ── SEO defaults ───────────────────────────────────────────────────────
   const seoDefaults = [
     { pagePath: "/", title: "Junaid Dental Care — Premium Dental Clinic in Ali Pur, Pakistan", description: "Junaid Dental Care offers premium dental treatments in Ali Pur, Pakistan. Dental implants, braces, cosmetic dentistry, root canals & emergency care. Call +92 312 5028812 to book.", keywords: ["dentist Ali Pur", "dental clinic Lehtrar Road", "dental implants Pakistan", "braces Islamabad"] },
-    { pagePath: "/about", title: "About Junaid Dental Care | Our Story", description: "Learn about Junaid Dental Care — Ali Pur's trusted family dental clinic since 2015. Meet our team and discover our approach to gentle, modern dental care.", keywords: ["about Junaid Dental", "Ali Pur dentist", "dental clinic story"] },
+    { pagePath: "/about", title: "About JDC – Junaid Dental Care | Our Story", description: "Learn about JDC – Junaid Dental Care — Ali Pur's trusted family dental clinic since 2006. Meet our team and discover our approach to gentle, modern dental care.", keywords: ["about Junaid Dental", "Ali Pur dentist", "dental clinic story"] },
     { pagePath: "/services", title: "Dental Services | Junaid Dental Care Ali Pur", description: "Explore our full range of dental services: general, cosmetic, orthodontics, implants, root canal, paediatric and emergency dentistry in Ali Pur.", keywords: ["dental services", "cosmetic dentistry", "dental implants"] },
     { pagePath: "/doctors", title: "Our Doctors | Junaid Dental Care", description: "Meet our six specialist dentists at Junaid Dental Care — experts in cosmetic dentistry, orthodontics, implants, paediatric care, and oral surgery.", keywords: ["dentists Ali Pur", "dental specialists"] },
     { pagePath: "/contact", title: "Contact Junaid Dental Care | Ali Pur, Pakistan", description: "Visit us at Lehtrar Road, near Old Bank Stop, Ali Pur. Call +92 312 5028812, WhatsApp us, or book online for premium dental care.", keywords: ["contact dentist Ali Pur", "dental clinic location"] },

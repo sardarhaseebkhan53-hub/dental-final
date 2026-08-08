@@ -12,7 +12,7 @@
       document.getElementById("postMeta").innerHTML =
         "<span>" + (post.category ? post.category.name : "News") + "</span> &nbsp;•&nbsp; <span>" + fmtDate(post.publishedAt) + "</span> &nbsp;•&nbsp; <span>" + (post.readingTime || 4) + " min read</span>";
       const cover = post.featuredImage || "";
-      if (cover) document.getElementById("postCover").innerHTML = '<img src="' + cover + '" alt="' + SD.escapeHtml(post.title) + '" class="cover">';
+      if (cover) document.getElementById("postCover").innerHTML = '<img src="' + cover + '" alt="' + SD.escapeHtml(post.title) + '" class="cover" onerror="this.onerror=null;this.src=\'/images/blog-1.jpg\'">';
       document.getElementById("postBody").innerHTML = post.content || post.excerpt || "";
     }
     SD.api.blogPost(slug).then((r) => {

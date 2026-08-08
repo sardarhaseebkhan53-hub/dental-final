@@ -480,6 +480,9 @@ const updateUser = asyncHandler(async (req, res) => {
 
 // Profile update (own account)
 const updateProfile = asyncHandler(async (req, res) => {
+  if (prisma.demoMode) {
+    return success(res, req.body, 200, "Profile changes are not saved in demo mode. Connect a database to update it.");
+  }
   const { firstName, lastName, phone, avatar } = req.body;
   const data = { firstName, lastName, phone, avatar };
   Object.keys(data).forEach((k) => data[k] === undefined && delete data[k]);

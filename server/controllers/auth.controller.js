@@ -46,10 +46,23 @@ const register = asyncHandler(async (req, res) => {
   return success(res, { token, user: publicUser(user) }, 201, "Account created");
 });
 
+// Demo-mode staff accounts (only used when no database is configured).
+const DEMO_USERS = [
+  { id: "demo-admin", email: "admin@junaiddentalcare.pk", password: "Admin@123", firstName: "Junaid", lastName: "Ahmed", name: "Junaid Ahmed", role: "SUPER_ADMIN", status: "ACTIVE" },
+  { id: "demo-ayesha", email: "ayesha@junaiddentalcare.pk", password: "Admin@123", firstName: "Ayesha", lastName: "Khan", name: "Ayesha Khan", role: "ADMIN", status: "ACTIVE" },
+  { id: "demo-reception", email: "reception@junaiddentalcare.pk", password: "Admin@123", firstName: "Reception", lastName: "Staff", name: "Reception Staff", role: "RECEPTIONIST", status: "ACTIVE" },
+  { id: "demo-drjunaid", email: "junaid@junaiddentalcare.pk", password: "Doctor@123", firstName: "Junaid", lastName: "Ahmed", name: "Dr. Junaid Ahmed", role: "DOCTOR", status: "ACTIVE" },
+];
+
 // POST /api/auth/login
 const login = asyncHandler(async (req, res) => {
   if (prisma.demoMode) {
-    return fail(res, 503, "Login is disabled in demo mode (no database). Run `npm run setup` to enable accounts.");
+    const { email, password } = req.body;
+    const normalized = String(email || "").toLowerCase().trim();
+    const demoUser = DEMO_USERS.find((u) => u.email === normalized && u.password === password);
+    if (!demoUser) return fail(res, 401, "Invalid email or password. Demo accounts: admin@junaiddentalcare.pk / Admin@123");
+    const token = jwtLib.sign(demoUser);
+    return success(res, { token, user: publicUser(demoUser) }, 200, "Logged in (demo mode)");
   }
   const { email, password } = req.body;
   const normalized = String(email || "").toLowerCase().trim();
@@ -87,6 +100,9 @@ const me = asyncHandler(async (req, res) => {
 
 // POST /api/auth/change-password (protected)
 const changePassword = asyncHandler(async (req, res) => {
+  if (prisma.demoMode) {
+    return success(res, null, 200, "Password change is not saved in demo mode. Connect a database to update it.");
+  }
   const { currentPassword, newPassword } = req.body;
   const user = await prisma.user.findUnique({ where: { id: req.user.id } });
 

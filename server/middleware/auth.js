@@ -24,6 +24,22 @@ async function requireAuth(req, res, next) {
   try {
     user = await prisma.user.findUnique({ where: { id: payload.sub } });
   } catch {
+    // Demo mode (no database): trust the signed JWT payload so the admin
+    // panel stays usable with sample data.
+    if (prisma.demoMode) {
+      req.user = {
+        id: payload.sub,
+        email: payload.email,
+        role: payload.role,
+        name: payload.name,
+        firstName: payload.name || "",
+        lastName: "",
+        status: "ACTIVE",
+        createdAt: new Date(),
+      };
+      req.jwt = payload;
+      return next();
+    }
     return fail(res, 503, "Database is not configured yet. Please run the setup steps.");
   }
   if (!user) return fail(res, 401, "Account not found");

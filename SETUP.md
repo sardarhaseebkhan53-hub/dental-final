@@ -98,7 +98,7 @@ The seed data and website content are pre-populated with Junaid Dental Care's in
 - **Name:** Junaid Dental Care
 - **Address:** J5WM+643, Lehtrar Road, near Old Bank Stop, Ali Pur, Islamabad Capital Territory 45600, Pakistan
 - **Phone:** +92 312 5028812
-- **Email:** info@junaiddentalcare.pk
+- **Email:** junaiddental22@gmail.com
 - **Hours:** Mon-Sat 8:00 AM – 9:00 PM
 - **Google Rating:** 4.6/5 (487+ reviews)
 - **Google Maps:** https://maps.app.goo.gl/sim1qA4wDdpcMovK7

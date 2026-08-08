@@ -8,16 +8,56 @@ window.SD = window.SD || {};
     tagline: "Premium Dental Care with a Personal Touch",
     phone: "+92 312 5028812",
     emergencyPhone: "+92 312 5028812",
+    secondaryPhone: "+92 314 8290684",
     whatsapp: "923125028812",
-    email: "info@junaiddentalcare.pk",
+    email: "junaiddental22@gmail.com",
     website: "https://junaiddentalcare.pk",
-    address: { street: "J5WM+643, Lehtrar Road, near Old Bank Stop", city: "Ali Pur", state: "Islamabad Capital Territory", zip: "45600", country: "Pakistan" },
+    facebookPage: "https://www.facebook.com/profile.php?id=100083737489911",
+    address: { street: "Main Lehtrar Road, Alipur U turn", city: "Ali Pur", state: "Islamabad", zip: "45600", country: "Pakistan" },
     hours: { weekday: "8:00 AM - 9:00 PM", saturday: "9:00 AM - 6:00 PM", sunday: "Closed (Emergency Only)" },
     rating: 4.6,
-    founded: 2015,
+    founded: 2006,
     googleMaps: "https://maps.app.goo.gl/J9DzSYyFtrsJFhTr6",
     coordinates: { lat: 33.6455004, lng: 73.1827848 }
   };
+
+  /* JDC Facebook page media (used until the files are uploaded to /images/fb).
+     Local files win; otherwise images load through the images.weserv.nl proxy,
+     which fetches the Facebook CDN once and serves a permanent cached copy.
+     If the proxy ever fails, the direct Facebook link is tried, then the
+     original bundled image / tooth icon. */
+  SD.FB = {
+    page: "https://www.facebook.com/profile.php?id=100083737489911",
+    profilePic: "https://scontent-atl3-3.xx.fbcdn.net/v/t39.30808-6/541088700_741493211985255_3442905982410331216_n.jpg?stp=dst-jpg_tt6&cstp=mx1280x640&ctp=s960x960&_nc_cat=108&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=XLhiHwIer7AQ7kNvwFd6WQl&_nc_oc=AdqrXILpyd6oBgBnonFoV0TXvmD1qx35lq2WMdENhWC42qVlOcm3Qvf6xdtccya1VtQ&_nc_zt=23&_nc_ht=scontent-atl3-3.xx&_nc_gid=Pf0IXhQkRfILTgyAt44yuQ&_nc_ss=7b289&oh=00_AQHET36Btlms93UHz6mykEEgYraK2ctkdJ5__Tt_H8h0ww&oe=6A7C8F9C"
+  };
+
+  /* Permanent online image proxy: weserv fetches the (expiring) Facebook CDN
+     URL once and serves a cached copy from its own CDN afterwards. */
+  SD.FB.proxy = function (url) {
+    if (!url) return "";
+    return "https://images.weserv.nl/?url=" + encodeURIComponent(url) +
+      "&ua=" + encodeURIComponent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36") +
+      "&w=1400&q=85&output=jpg";
+  };
+
+  /* Logo fallback chain: local file → weserv proxy → direct FB → tooth icon. */
+  SD.logoFallback = function (img) {
+    if (!img.dataset.stage) { img.dataset.stage = "1"; img.src = SD.FB.proxy(SD.FB.profilePic); }
+    else if (img.dataset.stage === "1") { img.dataset.stage = "2"; img.src = SD.FB.profilePic; }
+    else { img.onerror = null; img.remove(); }
+  };
+
+  /* Generic image fallback chain driven by data attributes:
+     src (local) → data-p (proxy) → data-fb (direct FB) → data-fb2 (bundled). */
+  SD.imgFallback = function (img) {
+    if (img.dataset.p && !img.dataset.pDone) { img.dataset.pDone = "1"; img.src = img.dataset.p; return; }
+    if (img.dataset.fb && !img.dataset.fbDone) { img.dataset.fbDone = "1"; img.src = img.dataset.fb; return; }
+    if (img.dataset.fb2 && !img.dataset.fb2Done) { img.dataset.fb2Done = "1"; img.src = img.dataset.fb2; return; }
+    img.onerror = null;
+    img.remove();
+  };
+
+
 
   const NAV = [
     { label: "Home", href: "/" },
@@ -49,7 +89,7 @@ window.SD = window.SD || {};
   ];
 
   const SOCIAL = [
-    { label: "Facebook", href: "https://facebook.com/junaiddentalcare", path: "M14 13.5h2.5l.5-2.5H14V9c0-.7.3-1.5 1.5-1.5h1.5V5.2s-1.2-.2-2.4-.2c-2.4 0-4 1.5-4 4V11H8v2.5h2.5V21h3.5v-7.5Z" },
+    { label: "Facebook", href: "https://www.facebook.com/profile.php?id=100083737489911", path: "M14 13.5h2.5l.5-2.5H14V9c0-.7.3-1.5 1.5-1.5h1.5V5.2s-1.2-.2-2.4-.2c-2.4 0-4 1.5-4 4V11H8v2.5h2.5V21h3.5v-7.5Z" },
     { label: "Instagram", href: "https://instagram.com/junaiddentalcare", path: "M12 2c2.7 0 3 0 4 .1 1 .1 1.6.2 2.1.4.6.2 1 .5 1.5 1 .4.4.8.9 1 1.5.2.5.4 1.1.4 2.1.1 1 .1 1.3.1 4s0 3-.1 4c-.1 1-.2 1.6-.4 2.1-.2.6-.5 1-1 1.5-.4.4-.9.8-1.5 1-.5.2-1.1.4-2.1.4-1 .1-1.3.1-4 .1s-3 0-4-.1c-1-.1-1.6-.2-2.1-.4-.6-.2-1-.5-1.5-1-.4-.4-.8-.9-1-1.5-.2-.5-.4-1.1-.4-2.1C2 15 2 14.7 2 12s0-3 .1-4c.1-1 .2-1.6.4-2.1.2-.6.5-1 1-1.5.4-.4.9-.8 1.5-1C5.5 3.2 6.1 3 7.1 2.9 8.1 2.8 8.3 2.8 11.1 2.8L12 2Zm0 2.4c-2.7 0-3 0-4 .1-.9.1-1.4.2-1.7.3-.4.2-.7.3-1 .7-.3.3-.5.6-.7 1-.1.3-.2.8-.3 1.7-.1 1-.1 1.3-.1 4s0 3 .1 4c.1.9.2 1.4.3 1.7.2.4.3.7.7 1 .3.3.6.5 1 .7.3.1.8.2 1.7.3 1 .1 1.3.1 4 .1s3 0 4-.1c.9-.1 1.4-.2 1.7-.3.4-.2.7-.3 1-.7.3-.3.5-.6.7-1 .1-.3.2-.8.3-1.7.1-1 .1-1.3.1-4s0-3-.1-4c-.1-.9-.2-1.4-.3-1.7-.2-.4-.3-.7-.7-1-.3-.3-.6-.5-1-.7-.3-.1-.8-.2-1.7-.3-1-.1-1.3-.1-4-.1Zm0 4.1a3.5 3.5 0 1 1 0 7 3.5 3.5 0 0 1 0-7Zm0 2.4a1.1 1.1 0 1 0 0 2.2 1.1 1.1 0 0 0 0-2.2Zm3.6-2.9a.8.8 0 1 1 0 1.6.8.8 0 0 1 0-1.6Z" },
     { label: "WhatsApp", href: "https://wa.me/923125028812", path: "M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1.1-.2.1-.3.2-.6.1-1.7-.8-2.7-1.5-3.8-3.4-.3-.5.3-.5.8-1.5.1-.2.1-.3 0-.4-.1-.1-.6-1.5-.8-2-.2-.5-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.3.3-1 1-1 2.4 0 1.4 1 2.7 1.2 2.9.1.2 2 3 4.8 4.2 1.7.7 2.4.8 3.3.7.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.2-.3-.3-.5-.3M12 2.5C6.8 2.5 2.5 6.8 2.5 12c0 1.7.5 3.4 1.3 4.9L2.5 21.5l4.7-1.2c1.4.8 3.1 1.2 4.8 1.2 5.2 0 9.5-4.3 9.5-9.5S17.2 2.5 12 2.5Z" },
     { label: "YouTube", href: "https://youtube.com/@junaiddentalcare", path: "M21.6 7.2a2.5 2.5 0 0 0-1.8-1.8C18.2 5 12 5 12 5s-6.2 0-7.8.4A2.5 2.5 0 0 0 2.4 7.2 26 26 0 0 0 2 12a26 26 0 0 0 .4 4.8 2.5 2.5 0 0 0 1.8 1.8c1.6.4 7.8.4 7.8.4s6.2 0 7.8-.4a2.5 2.5 0 0 0 1.8-1.8A26 26 0 0 0 22 12a26 26 0 0 0-.4-4.8ZM10 15.2V8.8l5.2 3.2L10 15.2Z" },
@@ -129,6 +169,15 @@ window.SD = window.SD || {};
     return p === href || p.startsWith(href + "/");
   }
 
+  /* Logo icon: clinic profile photo (local file preferred, weserv proxy,
+     direct Facebook CDN fallback, then the classic tooth icon). */
+  function logoIcon() {
+    return '<span class="logo-icon">' +
+      '<img class="logo-photo" src="/images/fb/profile.jpg" alt="JDC - Junaid Dental Care" onerror="SD.logoFallback(this)">' +
+      toothSVG() +
+      "</span>";
+  }
+
   function renderHeader() {
     const current = new Date().getFullYear() - SD.CLINIC.founded + " ";
     let topbar = "";
@@ -166,7 +215,7 @@ window.SD = window.SD || {};
       "</div></div>" +
       '<header class="site-header"><div class="container">' +
         '<a class="logo" href="/">' +
-          '<span class="logo-icon">' + toothSVG() + "</span>" +
+          logoIcon() +
           '<span class="logo-text"><span class="brand">Junaid <span>Dental Care</span></span><span class="tag">' + SD.CLINIC.tagline + "</span></span>" +
         "</a>" +
         '<nav class="nav" aria-label="Main navigation">' + navItems + "</nav>" +
@@ -206,12 +255,13 @@ window.SD = window.SD || {};
           /* Brand column */
           '<div class="footer-col">' +
             '<a class="logo" href="/" style="margin-bottom:1.5rem;display:inline-flex">' +
-              '<span class="logo-icon">' + toothSVG() + "</span>" +
+              logoIcon() +
               '<span class="logo-text"><span class="brand" style="color:#fff">Junaid <span style="color:var(--accent)">Dental Care</span></span><span class="tag" style="color:rgba(255,255,255,0.7)">Premium Dental Care • Ali Pur</span></span>' +
             "</a>" +
             "<p style='font-size:.9rem;color:rgba(255,255,255,0.7);line-height:1.7'>Junaid Dental Care provides premium dental treatments with modern technology, gentle hands, and a calm environment — trusted by families across Ali Pur, Lehtrar Road and surrounding areas.</p>" +
             '<div class="footer-contact" style="margin-top:1.5rem">' +
               '<a href="tel:' + SD.CLINIC.phone + '"><span class="ico">' + SD.icon("phone", 16) + "</span>" + SD.CLINIC.phone + "</a>" +
+              '<a href="tel:' + SD.CLINIC.secondaryPhone + '"><span class="ico">' + SD.icon("phone", 16) + "</span>" + SD.CLINIC.secondaryPhone + "</a>" +
               '<a href="https://wa.me/' + SD.CLINIC.whatsapp + '"><span class="ico">' + SD.icon("phone", 16) + "</span>WhatsApp Direct</a>" +
               '<a href="mailto:' + SD.CLINIC.email + '"><span class="ico">' + SD.icon("mail", 16) + "</span>" + SD.CLINIC.email + "</a>" +
               '<div class="line"><span class="ico">' + SD.icon("mapPin", 16) + "</span><span>" + SD.CLINIC.address.street + "<br>" + SD.CLINIC.address.city + ", " + SD.CLINIC.address.state + " " + SD.CLINIC.address.zip + "<br>" + SD.CLINIC.address.country + "</span></div>" +
@@ -371,11 +421,44 @@ window.SD = window.SD || {};
     els.forEach((el) => io.observe(el));
   };
 
+  /* ── Scroll progress bar + back-to-top ────────────────────────────────── */
+  SD.initExtras = function () {
+    if (!document.body) return;
+
+    const bar = document.createElement("div");
+    bar.className = "scroll-progress";
+    bar.setAttribute("aria-hidden", "true");
+    document.body.appendChild(bar);
+
+    const btn = document.createElement("button");
+    btn.className = "back-to-top";
+    btn.setAttribute("aria-label", "Back to top");
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+    document.body.appendChild(btn);
+    btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+        bar.style.width = pct + "%";
+        btn.classList.toggle("show", window.scrollY > 420);
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  };
+
   /* ── Run on load ───────────────────────────────────────────────────────── */
   document.addEventListener("DOMContentLoaded", function () {
     SD.initHeaderFooter();
     SD.initReveal();
     SD.initFaqs();
     SD.initCounters();
+    SD.initExtras();
   });
 })(window.SD);

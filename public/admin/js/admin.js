@@ -171,6 +171,7 @@
     const d = r.data.data; const ct = d.counts;
     const stat = (lbl, num, icon, bg, color) => '<div class="stat-card"><div class="ico" style="background:' + bg + ";color:" + color + '">' + ICONS[icon] + "</div><div><div class='num'>" + (num == null ? 0 : num) + "</div><div class='lbl'>" + lbl + "</div></div></div>";
     c.innerHTML =
+      (d.demoNotice ? '<div class="demo-banner">' + SD.escapeHtml(d.demoNotice) + "</div>" : "") +
       '<div class="stat-cards">' +
         stat("Total Appointments", ct.appointments, "appointments", "var(--primary-50)", "var(--primary)") +
         stat("Today's Appointments", ct.todayAppointments, "appointments", "var(--info-light)", "#1d4ed8") +
@@ -729,7 +730,7 @@
     const cfg = r.ok && r.data ? r.data.data : {
       host: "smtp.gmail.com", port: 587, secure: false,
       user: "", password: "", fromName: "Junaid Dental Care",
-      fromEmail: "info@junaiddentalcare.pk"
+      fromEmail: "junaiddental22@gmail.com"
     };
     c.innerHTML = '<div class="panel"><div class="panel-head"><h2>SMTP / Email Settings</h2></div>' +
       '<p class="text-sm text-muted" style="margin-bottom:1.5rem">Configure your email provider to send appointment confirmations, contact form notifications, and newsletters.</p>' +

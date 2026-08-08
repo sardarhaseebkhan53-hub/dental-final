@@ -375,6 +375,167 @@ input, textarea, select { font-family: inherit; color: inherit; }
 .reveal-delay-2 { transition-delay: 0.2s; }
 .reveal-delay-3 { transition-delay: 0.3s; }
 
+/* ── Entrance animation (hero) ─────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim-up {
+  opacity: 0;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-up { opacity: 1; animation: none; }
+  .marquee-track { animation: none !important; }
+}
+
+/* ── Treatment marquee ─────────────────────────────────────────────────── */
+.marquee {
+  overflow: hidden;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  padding: 0.8rem 0;
+  white-space: nowrap;
+  position: relative;
+}
+.marquee::before, .marquee::after {
+  content: '';
+  position: absolute; top: 0; bottom: 0; width: 4rem; z-index: 2; pointer-events: none;
+}
+.marquee::before { left: 0; background: linear-gradient(90deg, var(--primary), transparent); }
+.marquee::after  { right: 0; background: linear-gradient(-90deg, var(--primary-dark), transparent); }
+.marquee-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.25rem;
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+.marquee-track span {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  opacity: 0.95;
+}
+.marquee-track i { font-style: normal; color: var(--accent); font-size: 0.7rem; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── Mobile refinements ────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .marquee { padding: 0.6rem 0; }
+  .marquee-track { gap: 1.25rem; }
+  .marquee-track span { font-size: 0.68rem; letter-spacing: 0.06em; }
+  .float-shape { display: none; }
+  .back-to-top { right: 1rem; bottom: 5.25rem; width: 2.5rem; height: 2.5rem; }
+  .hero-badge { padding: 0.4rem 0.75rem; }
+  .hero-badge span { font-size: 0.62rem; letter-spacing: 0.12em; }
+  .video-card a { margin: 0.5rem 1rem 1rem; }
+}
+
+/* ── Facebook page widget ──────────────────────────────────────────────── */
+.fb-page-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.fb-page-wrap iframe {
+  width: 100%;
+  max-width: 500px;
+  height: 600px;
+  border-radius: var(--radius-xl);
+  background: #fff;
+  box-shadow: var(--shadow-card);
+}
+@media (max-width: 560px) { .fb-page-wrap iframe { height: 480px; } }
+
+/* ── Scroll progress bar ───────────────────────────────────────────────── */
+.scroll-progress {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  width: 0;
+  background: linear-gradient(90deg, var(--primary), var(--accent));
+  z-index: 1000;
+  transition: width 80ms linear;
+}
+
+/* ── Back to top button ────────────────────────────────────────────────── */
+.back-to-top {
+  position: fixed;
+  right: 1.25rem;
+  bottom: 6rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--primary), var(--primary-700));
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 10px 20px -8px rgba(15,118,110,0.6);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity .3s ease, transform .3s ease, visibility .3s;
+  z-index: 900;
+}
+.back-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
+.back-to-top:hover { transform: translateY(-3px); }
+
+/* ── Button shine on hover ─────────────────────────────────────────────── */
+.btn-primary, .btn-accent {
+  position: relative;
+  overflow: hidden;
+}
+.btn-primary::after, .btn-accent::after {
+  content: '';
+  position: absolute;
+  top: 0; left: -75%;
+  width: 50%; height: 100%;
+  background: linear-gradient(105deg, transparent, rgba(255,255,255,0.35), transparent);
+  transform: skewX(-20deg);
+  transition: left .5s ease;
+}
+.btn-primary:hover::after, .btn-accent:hover::after { left: 125%; }
+
+/* ── Ken-burns hero image ──────────────────────────────────────────────── */
+.hero-media .img-wrap img {
+  transition: transform 18s ease-in-out;
+}
+.hero-media .img-wrap img:hover { transform: scale(1.05); }
+
+/* ── Blog card image zoom ──────────────────────────────────────────────── */
+.blog-card .thumb img {
+  transition: transform .6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.blog-card:hover .thumb img { transform: scale(1.07); }
+
+/* ── Floating shapes (hero / sections) ─────────────────────────────────── */
+@keyframes floatShape {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-14px) rotate(6deg); }
+}
+.float-shape {
+  position: absolute;
+  border-radius: 1.25rem;
+  animation: floatShape 7s ease-in-out infinite;
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes softPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.06); opacity: 0.85; }
+}
+.anim-pulse-soft { animation: softPulse 3.2s ease-in-out infinite; }
+
 /* ── Header ────────────────────────────────────────────────────────────── */
 .topbar {
   background: var(--primary);
@@ -411,10 +572,17 @@ input, textarea, select { font-family: inherit; color: inherit; }
   position: relative;
   display: flex; align-items: center; justify-content: center;
   width: 2.5rem; height: 2.5rem;
-  border-radius: var(--radius-xl);
+  border-radius: 50%;
+  overflow: hidden;
   background: linear-gradient(135deg, var(--primary), var(--primary-light), var(--primary-700));
   color: #fff;
   box-shadow: 0 8px 16px -8px rgba(15,118,110,0.5);
+}
+.logo-icon img.logo-photo {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  display: block;
 }
 .logo-text { line-height: 1.1; }
 .logo-text .brand { font-family: var(--font-display); font-weight: 800; letter-spacing: -0.02em; font-size: 1.25rem; color: var(--neutral-dark); }
