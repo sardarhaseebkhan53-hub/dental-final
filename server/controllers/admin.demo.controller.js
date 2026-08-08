@@ -100,7 +100,7 @@ const seo = [
 ];
 
 const branding = {
-  logo: "/images/logo.svg",
+  logo: "/images/logo.png",
   favicon: "/favicon.svg",
   primaryColor: "#0F766E",
   secondaryColor: "#C8874A",

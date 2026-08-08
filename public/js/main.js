@@ -21,6 +21,16 @@ window.SD = window.SD || {};
     coordinates: { lat: 33.6455004, lng: 73.1827848 }
   };
 
+  /* Developed by Sardar Haseeb — sardarghaseeb777@gmail.com | 03369778543 */
+  SD.DEVELOPER = {
+    name: "Sardar Haseeb",
+    email: "sardarghaseeb777@gmail.com",
+    phone: "03369778543",
+    phoneDisplay: "0336 9778543",
+    phoneIntl: "+92 336 9778543",
+    whatsapp: "923369778543"
+  };
+
   /* JDC Facebook page media (used until the files are uploaded to /images/fb).
      Local files win; otherwise images load through the images.weserv.nl proxy,
      which fetches the Facebook CDN once and serves a permanent cached copy.
@@ -40,12 +50,32 @@ window.SD = window.SD || {};
       "&w=1400&q=85&output=jpg";
   };
 
-  /* Logo fallback chain: local file → weserv proxy → direct FB → tooth icon. */
+  /* Logo fallback chain: uploaded logo → local files → weserv proxy → direct FB → tooth icon.
+     Priority: /images/logo.png (user uploaded) → /images/logo.svg → /images/fb/profile.jpg → proxy → direct FB → tooth icon */
   SD.logoFallback = function (img) {
-    if (!img.dataset.stage) { img.dataset.stage = "1"; img.src = SD.FB.proxy(SD.FB.profilePic); }
-    else if (img.dataset.stage === "1") { img.dataset.stage = "2"; img.src = SD.FB.profilePic; }
-    else { img.onerror = null; img.remove(); }
+    var stage = img.dataset.stage || "0";
+    if (stage === "0") { img.dataset.stage = "1"; img.src = "/images/logo.svg"; return; }
+    if (stage === "1") { img.dataset.stage = "2"; img.src = "/images/fb/profile.jpg"; return; }
+    if (stage === "2") { img.dataset.stage = "3"; img.src = SD.FB.proxy(SD.FB.profilePic); return; }
+    if (stage === "3") { img.dataset.stage = "4"; img.src = SD.FB.profilePic; return; }
+    img.onerror = null; img.style.display = "none";
+    var svg = img.nextElementSibling;
+    if (svg) svg.style.display = "flex";
   };
+
+  /* Uploaded logo fallback - tries multiple logo variants before default */
+  SD.uploadedLogoFallback = function(img) {
+    var s = img.dataset.logoStage || "0";
+    if (s === "0") { img.dataset.logoStage = "1"; img.src = "/images/logo-horizontal.png"; return; }
+    if (s === "1") { img.dataset.logoStage = "2"; img.src = "/images/logo-light.png"; return; }
+    if (s === "2") { img.dataset.logoStage = "3"; img.src = "/images/logo-icon.png"; return; }
+    if (s === "3") { img.dataset.logoStage = "4"; img.src = "/images/logo.svg"; return; }
+    if (s === "4") { img.dataset.logoStage = "5"; img.src = "/images/fb/profile.jpg"; return; }
+    if (s === "5") { img.dataset.logoStage = "6"; img.src = SD.FB.proxy(SD.FB.profilePic); return; }
+    img.onerror = null; img.style.display = "none";
+    var nxt = img.nextElementSibling; if(nxt) nxt.style.display='flex';
+  };
+  SD.logoFallback = SD.uploadedLogoFallback;
 
   /* Generic image fallback chain driven by data attributes:
      src (local) → data-p (proxy) → data-fb (direct FB) → data-fb2 (bundled). */
@@ -169,13 +199,20 @@ window.SD = window.SD || {};
     return p === href || p.startsWith(href + "/");
   }
 
-  /* Logo icon: clinic profile photo (local file preferred, weserv proxy,
-     direct Facebook CDN fallback, then the classic tooth icon). */
+  /* Logo icon: prefers user-uploaded logo at /images/logo.png — supports png/jpg/webp/svg, then fallback chain */
+  // Primary logo for header - horizontal black lockup (user uploaded). Falls back to vertical/square logo, then tooth icon.
   function logoIcon() {
-    return '<span class="logo-icon">' +
-      '<img class="logo-photo" src="/images/fb/profile.jpg" alt="JDC - Junaid Dental Care" onerror="SD.logoFallback(this)">' +
-      toothSVG() +
+    return '<span class="logo-img" style="display:flex;align-items:center;flex-shrink:0;height:44px">' +
+      '<img src="/images/logo-horizontal.png" alt="JUNAID Dental Care Clinic" style="height:44px;width:auto;max-width:220px;object-fit:contain;display:block;border-radius:6px" ' +
+      'onerror="if(!this.dataset.f1){this.dataset.f1=1;this.src=\'/images/logo.png\';}else if(!this.dataset.f2){this.dataset.f2=1;this.src=\'/images/logo-icon.png\';}else{this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'}">' +
+      '<span style="display:none;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;flex-shrink:0">' + toothSVG() + '</span>' +
       "</span>";
+  }
+  // Small circular icon for chatbot
+  function logoIconSmall() {
+    return '<span class="logo-icon" style="overflow:hidden;border-radius:50%;width:44px;height:44px;background:#000;display:flex;align-items:center;justify-content:center;flex-shrink:0;border:2px solid rgba(255,255,255,0.15)">'+
+      '<img src="/images/logo-icon.png" alt="JDC" style="width:100%;height:100%;object-fit:cover;display:block" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'">'+
+      '<span style="display:none;align-items:center;justify-content:center;width:100%;height:100%;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff">'+toothSVG()+'</span></span>';
   }
 
   function renderHeader() {
@@ -214,9 +251,9 @@ window.SD = window.SD || {};
         "</div>" +
       "</div></div>" +
       '<header class="site-header"><div class="container">' +
-        '<a class="logo" href="/">' +
-          logoIcon() +
-          '<span class="logo-text"><span class="brand">Junaid <span>Dental Care</span></span><span class="tag">' + SD.CLINIC.tagline + "</span></span>" +
+        '<a class="logo" href="/" aria-label="Junaid Dental Care - Home">' +
+          logoIcon()+
+          '<span style="position:absolute;left:-9999px">Junaid Dental Care - Premium Dental Care with a Personal Touch</span>'+
         "</a>" +
         '<nav class="nav" aria-label="Main navigation">' + navItems + "</nav>" +
         '<div class="header-actions">' +
@@ -254,9 +291,9 @@ window.SD = window.SD || {};
         '<div class="footer-main"><div class="container"><div class="footer-grid">' +
           /* Brand column */
           '<div class="footer-col">' +
-            '<a class="logo" href="/" style="margin-bottom:1.5rem;display:inline-flex">' +
-              logoIcon() +
-              '<span class="logo-text"><span class="brand" style="color:#fff">Junaid <span style="color:var(--accent)">Dental Care</span></span><span class="tag" style="color:rgba(255,255,255,0.7)">Premium Dental Care • Ali Pur</span></span>' +
+            '<a class="logo" aria-label="Junaid Dental Care" href="/" style="margin-bottom:1.25rem;display:inline-flex;align-items:center">' +
+              '<img src="/images/logo.png" alt="JUNAID Dental Care Clinic" style="width:160px;height:auto;max-width:100%;object-fit:contain;display:block;border-radius:8px" onerror="this.onerror=null;this.src='/images/logo-horizontal.png'">'+
+              '<span style="display:none;width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;align-items:center;justify-content:center;margin-left:.75rem">'+toothSVG()+'</span>'+
             "</a>" +
             "<p style='font-size:.9rem;color:rgba(255,255,255,0.7);line-height:1.7'>Junaid Dental Care provides premium dental treatments with modern technology, gentle hands, and a calm environment — trusted by families across Ali Pur, Lehtrar Road and surrounding areas.</p>" +
             '<div class="footer-contact" style="margin-top:1.5rem">' +
@@ -330,6 +367,18 @@ window.SD = window.SD || {};
             ].map((s) => '<a href="' + s.h + '">' + s.l + "</a>").join("") +
           "</div>" +
         "</div></div>" +
+        // Developer credit — requested by client (Sardar Haseeb)
+        '<div class="footer-developer" style="background:#0d2a2e;border-top:1px solid rgba(255,255,255,0.08);padding:12px 0;text-align:center;font-size:12px;color:rgba(255,255,255,0.75);letter-spacing:0.02em">' +
+          '<div class="container" style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;align-items:center">' +
+            '<span>Developed with <span style="color:#f87171">♥</span> by <strong style="color:#fff;font-weight:800">Sardar Haseeb</strong></span>' +
+            '<span style="opacity:0.5">•</span>' +
+            '<a href="mailto:sardarghaseeb777@gmail.com" style="color:var(--accent);text-decoration:none;font-weight:600">sardarghaseeb777@gmail.com</a>' +
+            '<span style="opacity:0.5">•</span>' +
+            '<a href="tel:+923369778543" style="color:#fff;text-decoration:none;font-weight:600">0336 9778543</a>' +
+            '<span style="opacity:0.5">•</span>' +
+            '<a href="https://wa.me/923369778543" target="_blank" rel="noopener" style="color:#fff;text-decoration:none">WhatsApp</a>' +
+          "</div>" +
+        "</div>" +
       "</footer>"
     );
   }
@@ -453,6 +502,22 @@ window.SD = window.SD || {};
     onScroll();
   };
 
+  /* ── Chatbot loader ────────────────────────────────────────────────── */
+  SD.loadChatbot = function() {
+    if (document.getElementById('jdc-chatbot')) return;
+    if (!document.querySelector('link[href*="chatbot.css"]')) {
+      var l = document.createElement('link');
+      l.rel = 'stylesheet';
+      l.href = '/css/chatbot.css';
+      document.head.appendChild(l);
+    }
+    if (document.querySelector('script[src*="chatbot.js"]')) return;
+    var s = document.createElement('script');
+    s.src = '/js/chatbot.js';
+    s.defer = true;
+    document.body.appendChild(s);
+  };
+
   /* ── Run on load ───────────────────────────────────────────────────────── */
   document.addEventListener("DOMContentLoaded", function () {
     SD.initHeaderFooter();
@@ -460,5 +525,8 @@ window.SD = window.SD || {};
     SD.initFaqs();
     SD.initCounters();
     SD.initExtras();
+    SD.loadChatbot();
+    // also try after a short delay in case header/footer injects late
+    setTimeout(SD.loadChatbot, 800);
   });
 })(window.SD);

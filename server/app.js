@@ -11,6 +11,7 @@ const authRoutes = require("./routes/auth.routes");
 const publicRoutes = require("./routes/public.routes");
 const adminRoutes = require("./routes/admin.routes");
 const uploadRoutes = require("./routes/upload.routes");
+const chatbotRoutes = require("./routes/chatbot.routes");
 
 const app = express();
 app.disable("x-powered-by");
@@ -74,8 +75,35 @@ app.use("/api/auth", authRoutes);
 app.use("/api/public", publicRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/admin", adminRoutes);
+app.use("/api/chatbot", chatbotRoutes);
 
 app.get("/api/health", (req, res) => res.json({ success: true, message: "ok" }));
+
+// ── Logo upload — POST /api/logo (multipart field "logo")
+// Saves to /public/images/logo.<ext> (png/jpg/webp/svg). Header tries logo.png → logo.jpg → logo.webp → logo.svg automatically.
+// Example: curl -F logo=@mylogo.png http://localhost:3000/api/logo
+const logoUpload = require("multer")({
+  storage: require("multer").diskStorage({
+    destination: (req, file, cb) => cb(null, PUBLIC_DIR + "/images"),
+    filename: (req, file, cb) => {
+      const ext = require("path").extname(file.originalname).toLowerCase() || ".png";
+      cb(null, "logo" + ext);
+    },
+  }),
+  fileFilter: (req, file, cb) => {
+    const ok = ["image/jpeg","image/png","image/webp","image/svg+xml","image/gif"].includes(file.mimetype);
+    if (!ok) return cb(new Error("Logo must be an image (png/jpg/webp/svg/gif)"), false);
+    cb(null, true);
+  },
+  limits: { fileSize: 5 * 1024 * 1024 }
+});
+app.post("/api/logo", logoUpload.single("logo"), (req, res) => {
+  if (!req.file) return res.status(400).json({ success: false, message: "No logo file uploaded. Field name must be 'logo'." });
+  return res.json({ success: true, message: "Logo uploaded successfully — header and chatbot will use it automatically.", data: { file: `/images/${req.file.filename}`, logoUrl: `/images/${req.file.filename}` } });
+});
+
+// Developer info (also served by /api/chatbot/developer)
+app.get("/api/developer", (req, res) => res.json({ success: true, data: { name: "Sardar Haseeb", email: "sardarghaseeb777@gmail.com", phone: "03369778543", phoneDisplay: "0336 9778543", phoneIntl: "+92 336 9778543", whatsapp: "923369778543" } }));
 
 // ── 404 + error handling ───────────────────────────────────────────────────
 app.use(notFound);

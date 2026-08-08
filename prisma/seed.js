@@ -345,7 +345,7 @@ async function main() {
   if (!existingBranding) {
     await prisma.branding.create({
       data: {
-        logo: "/images/logo.svg",
+        logo: "/images/logo.png",
         favicon: "/favicon.svg",
         primaryColor: "#0F766E",
         secondaryColor: "#C8874A",
