@@ -375,6 +375,74 @@ input, textarea, select { font-family: inherit; color: inherit; }
 .reveal-delay-2 { transition-delay: 0.2s; }
 .reveal-delay-3 { transition-delay: 0.3s; }
 
+/* ── Entrance animation (hero) ─────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(26px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.anim-up {
+  opacity: 0;
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+@media (prefers-reduced-motion: reduce) {
+  .anim-up { opacity: 1; animation: none; }
+  .marquee-track { animation: none !important; }
+}
+
+/* ── Treatment marquee ─────────────────────────────────────────────────── */
+.marquee {
+  overflow: hidden;
+  background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+  color: #fff;
+  padding: 0.8rem 0;
+  white-space: nowrap;
+  position: relative;
+}
+.marquee::before, .marquee::after {
+  content: '';
+  position: absolute; top: 0; bottom: 0; width: 4rem; z-index: 2; pointer-events: none;
+}
+.marquee::before { left: 0; background: linear-gradient(90deg, var(--primary), transparent); }
+.marquee::after  { right: 0; background: linear-gradient(-90deg, var(--primary-dark), transparent); }
+.marquee-track {
+  display: inline-flex;
+  align-items: center;
+  gap: 2.25rem;
+  animation: marquee 30s linear infinite;
+  will-change: transform;
+}
+.marquee-track span {
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.82rem;
+  opacity: 0.95;
+}
+.marquee-track i { font-style: normal; color: var(--accent); font-size: 0.7rem; }
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── Floating shapes (hero / sections) ─────────────────────────────────── */
+@keyframes floatShape {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50%      { transform: translateY(-14px) rotate(6deg); }
+}
+.float-shape {
+  position: absolute;
+  border-radius: 1.25rem;
+  animation: floatShape 7s ease-in-out infinite;
+  opacity: 0.9;
+  pointer-events: none;
+  z-index: 0;
+}
+@keyframes softPulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50%      { transform: scale(1.06); opacity: 0.85; }
+}
+.anim-pulse-soft { animation: softPulse 3.2s ease-in-out infinite; }
+
 /* ── Header ────────────────────────────────────────────────────────────── */
 .topbar {
   background: var(--primary);

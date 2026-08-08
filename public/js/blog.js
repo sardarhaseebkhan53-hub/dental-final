@@ -8,7 +8,7 @@
   function card(b) {
     const thumb = b.featuredImage || "/images/blog-1.jpg";
     return '<article class="card card-hover blog-card reveal">' +
-      '<a class="thumb" href="/blog/' + b.slug + '"><img src="' + thumb + '" alt="' + SD.escapeHtml(b.title) + '" loading="lazy"></a>' +
+      '<a class="thumb" href="/blog/' + b.slug + '"><img src="' + thumb + '" alt="' + SD.escapeHtml(b.title) + '" loading="lazy" onerror="this.onerror=null;this.src=\'/images/blog-1.jpg\'"></a>' +
       '<div class="body">' +
         '<div class="meta"><span>' + (b.category ? b.category.name : "News") + "</span><span>•</span><span>" + fmtDate(b.publishedAt) + "</span><span>•</span><span>" + (b.readingTime || 4) + " min read</span></div>" +
         '<h3><a href="/blog/' + b.slug + '">' + SD.escapeHtml(b.title) + "</a></h3>" +
