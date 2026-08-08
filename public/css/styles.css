@@ -95,6 +95,22 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/*
+ * Page visibility safeguard
+ * The main page must remain visible even if an old cached stylesheet, a browser
+ * extension, or a failed entrance animation adds a hidden state. Fixed widgets
+ * (chat and appointment) should never be the only elements left on screen.
+ */
+[data-header], #main-content, [data-footer] {
+  display: block;
+  visibility: visible;
+}
+#main-content {
+  position: relative;
+  z-index: 1;
+  opacity: 1;
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-sans);
   color: var(--neutral-dark);
