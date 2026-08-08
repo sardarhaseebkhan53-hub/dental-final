@@ -313,7 +313,7 @@
     const editing = !!d;
     const body = '<form id="doctorForm">' +
       '<div class="grid" style="grid-template-columns:1fr 1fr;gap:1rem"><div class="form-group"><label class="form-label">First name *</label><input name="firstName" class="form-input" value="' + (d && d.user ? SD.escapeHtml(d.user.firstName || "") : "") + '" required></div><div class="form-group"><label class="form-label">Last name *</label><input name="lastName" class="form-input" value="' + (d && d.user ? SD.escapeHtml(d.user.lastName || "") : "") + '" required></div></div>' +
-      (editing ? "" : '<div class="form-group"><label class="form-label">Email *</label><input type="email" name="email" class="form-input" required><div class="form-hint">Doctor will receive a default password: Doctor@123</div></div>') +
+      (editing ? "" : '<div class="form-group"><label class="form-label">Email *</label><input type="email" name="email" class="form-input" required><div class="form-hint">The doctor will receive their sign-in details separately.</div></div>') +
       '<div class="form-group"><label class="form-label">Specialization *</label><input name="specialization" class="form-input" value="' + (d ? SD.escapeHtml(d.specialization || "") : "") + '" required></div>' +
       '<div class="grid" style="grid-template-columns:1fr 1fr;gap:1rem"><div class="form-group"><label class="form-label">Experience (years)</label><input type="number" name="experience" class="form-input" value="' + (d ? d.experience || 0 : 0) + '"></div><div class="form-group"><label class="form-label">Consultation Fee</label><input type="number" step="0.01" name="consultationFee" class="form-input" value="' + (d ? d.consultationFee || 0 : 0) + '"></div></div>' +
       '<div class="form-group"><label class="form-label">Bio</label><textarea name="bio" class="form-textarea" style="min-height:70px">' + (d ? SD.escapeHtml(d.bio || "") : "") + "</textarea></div>" +
@@ -323,7 +323,23 @@
         e.preventDefault();
         const fd = Object.fromEntries(new FormData(e.target).entries());
         const r = editing ? await SD.api.admin.updateDoctor(d.id, fd) : await SD.api.admin.createDoctor(fd);
-        if (r.ok) { SD.toast(editing ? "Doctor updated" : "Doctor added", "success"); closeModal(); renderDoctors(); } else SD.toast(r.data.message || "Failed", "error");
+        if (r.ok) {
+          const tmp = r.data && r.data.data && r.data.data.temporaryPassword;
+          if (editing) { SD.toast("Doctor updated", "success"); closeModal(); renderDoctors(); return; }
+          if (tmp) {
+            closeModal();
+            openModal("Doctor Created — Temporary Password",
+              '<p style="margin-bottom:1rem">Share these sign-in details with the doctor privately:</p>' +
+              '<div style="padding:1rem;background:var(--surface-alt);border-radius:var(--radius-lg)">' +
+              '<div class="form-group" style="margin-bottom:.75rem"><label class="form-label">Email</label><code style="font-size:.9rem;word-break:break-all">' + SD.escapeHtml(fd.email || "") + "</code></div>" +
+              '<div class="form-group" style="margin-bottom:0"><label class="form-label">Temporary password</label><code style="font-size:.9rem;word-break:break-all">' + SD.escapeHtml(tmp) + "</code></div>" +
+              "</div>" +
+              '<p class="text-sm text-muted" style="margin-top:1rem">The doctor should change this password after signing in.</p>');
+            renderDoctors();
+            return;
+          }
+          SD.toast("Doctor added", "success"); closeModal(); renderDoctors();
+        } else SD.toast(r.data.message || "Failed", "error");
       });
     });
   }

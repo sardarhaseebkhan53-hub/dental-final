@@ -1,5 +1,6 @@
 const prisma = require("../lib/prisma");
 const bcrypt = require("bcryptjs");
+const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const { success, fail, asyncHandler } = require("../lib/response");
@@ -139,8 +140,13 @@ const listDoctors = asyncHandler(async (req, res) => {
 const createDoctor = asyncHandler(async (req, res) => {
   const { email, password, firstName, lastName, phone, specialization, bio, experience, consultationFee, languages, departmentId, acceptingNewPatients } = req.body;
 
-  const count = await prisma.user.count();
-  const hashedPassword = await bcrypt.hash(password || "Doctor@123", 12);
+  // Never fall back to a shared, well-known default password. When the admin
+  // doesn't provide one, generate a unique temporary password and return it
+  // once in the response so it can be shared with the doctor privately.
+  const tempPassword = password
+    ? null
+    : "T" + crypto.randomBytes(9).toString("hex") + "9"; // 20 chars, includes uppercase + digits
+  const hashedPassword = await bcrypt.hash(password || tempPassword, 12);
   const user = await prisma.user.create({
     data: {
       email: String(email).toLowerCase().trim(),
@@ -169,7 +175,12 @@ const createDoctor = asyncHandler(async (req, res) => {
       licenseExpiry: new Date(req.body.licenseExpiry || Date.now() + 3.156e10),
     },
   });
-  return success(res, doctor, 201, "Doctor created");
+  return success(
+    res,
+    { ...doctor, temporaryPassword: tempPassword || undefined },
+    201,
+    tempPassword ? "Doctor created — share the temporary password with them" : "Doctor created"
+  );
 });
 
 const updateDoctor = asyncHandler(async (req, res) => {

@@ -60,7 +60,7 @@ const login = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
     const normalized = String(email || "").toLowerCase().trim();
     const demoUser = DEMO_USERS.find((u) => u.email === normalized && u.password === password);
-    if (!demoUser) return fail(res, 401, "Invalid email or password. Demo accounts: admin@junaiddentalcare.pk / Admin@123");
+    if (!demoUser) return fail(res, 401, "Invalid email or password");
     const token = jwtLib.sign(demoUser);
     return success(res, { token, user: publicUser(demoUser) }, 200, "Logged in (demo mode)");
   }
