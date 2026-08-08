@@ -8,7 +8,9 @@ A complete, self-hosted dental clinic website and admin panel for **Junaid Denta
 
 > **Live clinic info (from Google Maps + Facebook):** JDC – Junaid Dental Care, Main Lehtrar Road, Alipur U turn, near Old Bank Stop, Islamabad, Pakistan · Established 2006 · 16+ years of experience · ☎ +92 312 5028812 / +92 314 8290684 · ✉ junaiddental22@gmail.com · 📘 [facebook.com/profile.php?id=100083737489911](https://www.facebook.com/profile.php?id=100083737489911) (JDC – Junaid Dental care) · ⭐ 4.6/5 (487+ reviews)
 
-> **Facebook media:** the site uses the clinic's Facebook page (JDC – Junaid Dental care, id `100083737489911`) for its logo, gallery photos and embedded videos. Videos are embedded live from Facebook; the profile picture and gallery photos currently hotlink to Facebook's CDN (links expire) and fall back to the bundled images. To host them permanently, run `python3 scripts/fetch_fb_media.py` on any machine with internet access — it downloads everything into `public/images/fb/` (profile.jpg, photo-01…08.jpg, video-*.mp4) — then commit the files. Local files always win over the hotlinks.
+> **Facebook media:** the site uses the clinic's Facebook page (JDC – Junaid Dental care, id `100083737489911`) for its logo, gallery photos, blog covers and embedded videos. Videos are embedded live from Facebook; images load through the **images.weserv.nl caching proxy**, which fetches the (expiring) Facebook CDN link once and serves a permanent cached copy afterwards — with direct-Facebook and bundled-image fallbacks if the proxy is ever unavailable. For 100% self-hosting, run `python3 scripts/fetch_fb_media.py` on any machine with internet access — it downloads everything into `public/images/fb/` (profile.jpg, photo-01…08.jpg, video-*.mp4) — then commit the files. Local files always win.
+
+> **Admin panel demo mode:** when no database is configured the admin panel still works — sign in with `admin@junaiddentalcare.pk` / `Admin@123` (or any seeded staff account) and browse realistic sample data. A yellow banner marks demo mode; changes are not saved until you run `npm run setup` with PostgreSQL.
 
 ---
 

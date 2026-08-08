@@ -22,11 +22,41 @@ window.SD = window.SD || {};
   };
 
   /* JDC Facebook page media (used until the files are uploaded to /images/fb).
-     Local files win; the hotlink is a temporary fallback; the tooth icon is last. */
+     Local files win; otherwise images load through the images.weserv.nl proxy,
+     which fetches the Facebook CDN once and serves a permanent cached copy.
+     If the proxy ever fails, the direct Facebook link is tried, then the
+     original bundled image / tooth icon. */
   SD.FB = {
     page: "https://www.facebook.com/profile.php?id=100083737489911",
     profilePic: "https://scontent-atl3-3.xx.fbcdn.net/v/t39.30808-6/541088700_741493211985255_3442905982410331216_n.jpg?stp=dst-jpg_tt6&cstp=mx1280x640&ctp=s960x960&_nc_cat=108&ccb=1-7&_nc_sid=cc71e4&_nc_ohc=XLhiHwIer7AQ7kNvwFd6WQl&_nc_oc=AdqrXILpyd6oBgBnonFoV0TXvmD1qx35lq2WMdENhWC42qVlOcm3Qvf6xdtccya1VtQ&_nc_zt=23&_nc_ht=scontent-atl3-3.xx&_nc_gid=Pf0IXhQkRfILTgyAt44yuQ&_nc_ss=7b289&oh=00_AQHET36Btlms93UHz6mykEEgYraK2ctkdJ5__Tt_H8h0ww&oe=6A7C8F9C"
   };
+
+  /* Permanent online image proxy: weserv fetches the (expiring) Facebook CDN
+     URL once and serves a cached copy from its own CDN afterwards. */
+  SD.FB.proxy = function (url) {
+    if (!url) return "";
+    return "https://images.weserv.nl/?url=" + encodeURIComponent(url) +
+      "&ua=" + encodeURIComponent("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36") +
+      "&w=1400&q=85&output=jpg";
+  };
+
+  /* Logo fallback chain: local file → weserv proxy → direct FB → tooth icon. */
+  SD.logoFallback = function (img) {
+    if (!img.dataset.stage) { img.dataset.stage = "1"; img.src = SD.FB.proxy(SD.FB.profilePic); }
+    else if (img.dataset.stage === "1") { img.dataset.stage = "2"; img.src = SD.FB.profilePic; }
+    else { img.onerror = null; img.remove(); }
+  };
+
+  /* Generic image fallback chain driven by data attributes:
+     src (local) → data-p (proxy) → data-fb (direct FB) → data-fb2 (bundled). */
+  SD.imgFallback = function (img) {
+    if (img.dataset.p && !img.dataset.pDone) { img.dataset.pDone = "1"; img.src = img.dataset.p; return; }
+    if (img.dataset.fb && !img.dataset.fbDone) { img.dataset.fbDone = "1"; img.src = img.dataset.fb; return; }
+    if (img.dataset.fb2 && !img.dataset.fb2Done) { img.dataset.fb2Done = "1"; img.src = img.dataset.fb2; return; }
+    img.onerror = null;
+    img.remove();
+  };
+
 
 
   const NAV = [
@@ -139,11 +169,11 @@ window.SD = window.SD || {};
     return p === href || p.startsWith(href + "/");
   }
 
-  /* Logo icon: clinic profile photo (local file preferred, Facebook CDN fallback,
-     then the classic tooth icon if neither loads). */
+  /* Logo icon: clinic profile photo (local file preferred, weserv proxy,
+     direct Facebook CDN fallback, then the classic tooth icon). */
   function logoIcon() {
     return '<span class="logo-icon">' +
-      '<img class="logo-photo" src="/images/fb/profile.jpg" alt="JDC - Junaid Dental Care" onerror="this.onerror=function(){this.remove()};this.src=\'' + SD.FB.profilePic + '\'">' +
+      '<img class="logo-photo" src="/images/fb/profile.jpg" alt="JDC - Junaid Dental Care" onerror="SD.logoFallback(this)">' +
       toothSVG() +
       "</span>";
   }
@@ -391,11 +421,44 @@ window.SD = window.SD || {};
     els.forEach((el) => io.observe(el));
   };
 
+  /* ── Scroll progress bar + back-to-top ────────────────────────────────── */
+  SD.initExtras = function () {
+    if (!document.body) return;
+
+    const bar = document.createElement("div");
+    bar.className = "scroll-progress";
+    bar.setAttribute("aria-hidden", "true");
+    document.body.appendChild(bar);
+
+    const btn = document.createElement("button");
+    btn.className = "back-to-top";
+    btn.setAttribute("aria-label", "Back to top");
+    btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
+    document.body.appendChild(btn);
+    btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const max = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
+        bar.style.width = pct + "%";
+        btn.classList.toggle("show", window.scrollY > 420);
+        ticking = false;
+      });
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  };
+
   /* ── Run on load ───────────────────────────────────────────────────────── */
   document.addEventListener("DOMContentLoaded", function () {
     SD.initHeaderFooter();
     SD.initReveal();
     SD.initFaqs();
     SD.initCounters();
+    SD.initExtras();
   });
 })(window.SD);

@@ -47,7 +47,7 @@
       if (!wrap) return;
       wrap.innerHTML = items.map((g) =>
         '<div class="gallery-item reveal" data-full="' + g.image + '">' +
-          '<img src="' + g.image + '" alt="' + SD.escapeHtml(g.title) + '" loading="lazy" data-fb="' + (g.fb || "") + '" data-fb2="' + (g.fallback || "") + '" onerror="if(this.dataset.fb){this.src=this.dataset.fb;this.dataset.fb=\'\'}else if(this.dataset.fb2){this.src=this.dataset.fb2;this.dataset.fb2=\'\'}else{this.remove()}">' +
+          '<img src="' + g.image + '" alt="' + SD.escapeHtml(g.title) + '" loading="lazy" data-p="' + (g.p || "") + '" data-fb="' + (g.fb || "") + '" data-fb2="' + (g.fb2 || g.fallback || "") + '" onerror="SD.imgFallback(this)">' +
           '<div class="cap"><h3>' + SD.escapeHtml(g.title) + "</h3><span>" + SD.escapeHtml(g.description || g.category) + "</span></div>" +
         "</div>").join("");
       SD.initReveal();
