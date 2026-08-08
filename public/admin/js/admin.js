@@ -98,8 +98,12 @@
   async function boot() {
     if (!SD.getToken()) { window.location.href = "/admin/login.html"; return; }
     const me = await SD.api.me().catch(() => ({ ok: false }));
-    if (!me.ok || !me.data) { SD.clearToken(); SD.clearUser(); window.location.href = "/admin/login.html"; return; }
-    state.user = me.data.user; state.role = state.user.role;
+    // SD.api.me() resolves to { ok, status, data } where data is the full JSON
+    // body — the user object lives at data.data.user (same shape every other
+    // admin call uses, e.g. r.data.data).
+    const user = me.data && me.data.data && me.data.data.user;
+    if (!me.ok || !user) { SD.clearToken(); SD.clearUser(); window.location.href = "/admin/login.html"; return; }
+    state.user = user; state.role = state.user.role;
     SD.setUser(state.user);
     renderSidebar(); renderTop(); bindChrome(); route();
     window.addEventListener("hashchange", route);
@@ -130,15 +134,38 @@
     document.getElementById("logoutBtn").addEventListener("click", () => { SD.clearToken(); SD.clearUser(); window.location.href = "/admin/login.html"; });
   }
 
+  // Resolve the active admin module from the URL. The SPA supports hash routes
+  // (#/dashboard — sidebar links) and clean path routes (/admin/dashboard —
+  // direct navigation / browser refresh), which the server maps to this shell.
+  // Hash takes precedence so sidebar clicks never fight the pathname.
+  function currentModule() {
+    const hash = (window.location.hash || "").replace("#/", "").split("?")[0];
+    if (hash && MODULES[hash]) return hash;
+    const m = window.location.pathname.match(/^\/admin\/([^./]+)\/?$/);
+    if (m && MODULES[m[1]]) return m[1];
+    return "dashboard";
+  }
+
+  // Keep the address bar canonical (/admin/<module>) so refresh and direct
+  // links always land on the same screen — without relying on the hash.
+  function normalizeUrl(module) {
+    const want = "/admin/" + (module === "dashboard" ? "dashboard" : module);
+    if (window.location.pathname !== want) {
+      history.replaceState(null, "", want);
+    }
+  }
+
+  const MODULE_TITLES = { profile: "My Profile", password: "Change Password" };
+
   function route() {
-    const hash = (window.location.hash || "#/dashboard").replace("#/", "").split("?")[0];
-    const module = MODULES[hash] ? hash : "dashboard";
+    const module = currentModule();
     state.current = module;
     document.querySelectorAll(".admin-nav-item").forEach((el) => el.classList.toggle("active", el.dataset.route === module));
     const item = sidebarFor(state.role).find((x) => x.id === module);
-    document.getElementById("pageTitle").textContent = item ? item.label : "Dashboard";
+    document.getElementById("pageTitle").textContent = MODULE_TITLES[module] || (item ? item.label : "Dashboard");
     document.getElementById("pageSub").textContent = module === "dashboard" ? "Overview of your clinic" : "";
     MODULES[module].render();
+    normalizeUrl(module);
   }
 
   const MODULES = {

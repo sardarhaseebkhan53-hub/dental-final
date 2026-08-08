@@ -67,6 +67,30 @@
 
   --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: "Cormorant Garamond", Georgia, serif;
+
+  /* ── Z-index architecture ──────────────────────────────────────────────
+     One deliberate stacking order for the whole site — content sits at the
+     bottom, the sticky header above it, the floating action stack next, the
+     chat widget above the stack, and overlays (toasts/modals) on top.
+     Never use ad-hoc 9999 values. */
+  --z-content: 1;
+  --z-header: 40;
+  --z-dropdown: 50;
+  --z-floating: 90;
+  --z-chat: 100;
+  --z-toast: 200;
+  --z-modal: 300;
+  --z-scrollbar: 400;
+
+  /* ── Floating-actions geometry ─────────────────────────────────────────
+     Every fixed control derives its corner position from these variables,
+     so the stack can never collide. Layout (bottom → top):
+     Dental Chat → Book Appointment → WhatsApp → Scroll To Top.
+     Safe-area insets are respected on notched devices. */
+  --fa-bottom: max(1.25rem, env(safe-area-inset-bottom));
+  --fa-right: max(1.5rem, env(safe-area-inset-right));
+  --fa-gap: 1rem;
+  --fa-chat-size: 64px;
 }
 
 /* ── Reset & Base ──────────────────────────────────────────────────────── */
@@ -83,6 +107,17 @@
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+}
+
+/*
+ * Horizontal overflow safeguard.
+ * All real overflow sources (floating widgets, hero overlays, fixed controls)
+ * are fixed at their origin; this clip only guards against any future edge
+ * case. `clip` — unlike `hidden` — does not create a scroll container, so the
+ * sticky header and fixed widgets keep working.
+ */
+html, body {
+  overflow-x: clip;
 }
 
 body {
@@ -107,7 +142,7 @@ body {
 }
 #main-content {
   position: relative;
-  z-index: 1;
+  z-index: var(--z-content);
   opacity: 1;
 }
 
@@ -440,16 +475,32 @@ input, textarea, select { font-family: inherit; color: inherit; }
   to   { transform: translateX(-50%); }
 }
 
+/* ── Mobile floating-actions geometry ────────────────────────────────────
+   Smaller corner inset + compact chat button on phones/tablets. All offsets
+   stay derived from the same variables, so the stack keeps its spacing. */
+@media (max-width: 767px) {
+  :root {
+    --fa-bottom: max(1rem, env(safe-area-inset-bottom));
+    --fa-right: max(1rem, env(safe-area-inset-right));
+    --fa-gap: 0.75rem;
+    --fa-chat-size: 56px;
+  }
+}
+
 /* ── Mobile refinements ────────────────────────────────────────────────── */
 @media (max-width: 640px) {
   .marquee { padding: 0.6rem 0; }
   .marquee-track { gap: 1.25rem; }
   .marquee-track span { font-size: 0.68rem; letter-spacing: 0.06em; }
   .float-shape { display: none; }
-  .back-to-top { right: 1rem; bottom: 5.25rem; width: 2.5rem; height: 2.5rem; }
+  .back-to-top { width: 2.5rem; height: 2.5rem; }
   .hero-badge { padding: 0.4rem 0.75rem; }
   .hero-badge span { font-size: 0.62rem; letter-spacing: 0.12em; }
   .video-card a { margin: 0.5rem 1rem 1rem; }
+}
+
+@media print {
+  .floating-actions, #jdc-chatbot { display: none; }
 }
 
 /* ── Facebook page widget ──────────────────────────────────────────────── */
@@ -476,15 +527,39 @@ input, textarea, select { font-family: inherit; color: inherit; }
   height: 3px;
   width: 0;
   background: linear-gradient(90deg, var(--primary), var(--accent));
-  z-index: 1000;
+  z-index: var(--z-scrollbar);
   transition: width 80ms linear;
 }
 
-/* ── Back to top button ────────────────────────────────────────────────── */
-.back-to-top {
+/* ── Floating actions system ─────────────────────────────────────────────
+   Single bottom-right stack shared by every floating control:
+
+       Scroll To Top   (top of stack)
+       WhatsApp
+       Book Appointment
+       Dental Chat     (anchored to the viewport corner, below the stack)
+
+   The chat widget is its own fixed element at the corner (see chatbot.css);
+   this container sits directly above it using the same geometry variables,
+   so the controls can never occupy the same visual coordinates. */
+.floating-actions {
   position: fixed;
-  right: 1.25rem;
-  bottom: 6rem;
+  right: var(--fa-right);
+  bottom: calc(var(--fa-bottom) + var(--fa-chat-size) + var(--fa-gap));
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: var(--fa-gap);
+  z-index: var(--z-floating);
+  pointer-events: none; /* layout shell only — children receive clicks */
+}
+.floating-actions > * {
+  pointer-events: auto;
+}
+
+/* ── Back to top button (lives inside .floating-actions) ───────────────── */
+.back-to-top {
+  position: relative;
   width: 2.75rem;
   height: 2.75rem;
   border-radius: 50%;
@@ -500,7 +575,6 @@ input, textarea, select { font-family: inherit; color: inherit; }
   visibility: hidden;
   transform: translateY(10px);
   transition: opacity .3s ease, transform .3s ease, visibility .3s;
-  z-index: 900;
 }
 .back-to-top.show { opacity: 1; visibility: visible; transform: translateY(0); }
 .back-to-top:hover { transform: translateY(-3px); }
@@ -569,7 +643,7 @@ input, textarea, select { font-family: inherit; color: inherit; }
 .site-header {
   position: sticky;
   top: 0;
-  z-index: 40;
+  z-index: var(--z-header);
   width: 100%;
   background: #fff;
   transition: all 0.3s ease;
@@ -618,7 +692,7 @@ input, textarea, select { font-family: inherit; color: inherit; }
 .nav-link:hover, .nav-link.active { color: var(--primary); background: var(--primary-pale); }
 .nav-item { position: relative; }
 .dropdown {
-  position: absolute; top: 100%; left: 0; padding-top: 0.25rem; z-index: 50;
+  position: absolute; top: 100%; left: 0; padding-top: 0.25rem; z-index: var(--z-dropdown);
   opacity: 0; visibility: hidden; transform: translateY(6px);
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
 }
@@ -710,24 +784,53 @@ input, textarea, select { font-family: inherit; color: inherit; }
 .hero-media-card img { width: 100%; height: 100%; object-fit: cover; }
 .hero-media-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(19,78,74,0.65), rgba(19,78,74,0.1) 60%, transparent); }
 .hero-logo-chip { position: absolute; top: 1.5rem; left: 1.5rem; background: rgba(255,255,255,0.9); padding: 0.75rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-elevated); backdrop-filter: blur(8px); }
+/* Glass caption stays INSIDE the hero visual (the media card clips it) and
+   scales down on small screens instead of overflowing. */
 .hero-caption {
-  position: absolute; left: 1.5rem; right: 1.5rem; bottom: 1.5rem;
-  border-radius: 1.5rem; border: 1px solid rgba(255,255,255,0.25);
-  background: rgba(255,255,255,0.15); padding: 1.25rem; color: #fff;
+  position: absolute; left: 1.25rem; right: 1.25rem; bottom: 1.25rem;
+  border-radius: 1.25rem; border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255,255,255,0.15); padding: 1rem 1.1rem; color: #fff;
   box-shadow: var(--shadow-glass); backdrop-filter: blur(16px);
 }
-.hero-caption .cap-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; font-weight: 600; color: var(--accent-300); margin-bottom: 0.75rem; }
-.hero-caption p { font-size: 1.25rem; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; }
+.hero-caption .cap-label { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; font-weight: 600; color: var(--accent-300); margin-bottom: 0.6rem; }
+.hero-caption p { font-size: 1.05rem; font-weight: 800; line-height: 1.25; letter-spacing: -0.01em; }
+@media (min-width: 640px) {
+  .hero-caption { left: 1.5rem; right: 1.5rem; bottom: 1.5rem; padding: 1.25rem; }
+  .hero-caption .cap-label { font-size: 0.9rem; margin-bottom: 0.75rem; }
+  .hero-caption p { font-size: 1.25rem; line-height: 1.2; }
+}
 
+/* Stat cards are anchored to the hero visual (.hero-media is position:
+   relative), so they move WITH the image and never use page-level
+   coordinates. Offsets use clamps so they stay inside the viewport. */
 .hero-stat-card {
   position: absolute; display: none; background: rgba(255,255,255,0.95);
   padding: 1rem; border-radius: var(--radius-xl); box-shadow: var(--shadow-elevated);
   backdrop-filter: blur(8px); align-items: center; gap: 0.75rem;
+  z-index: 2;
+  max-width: min(14rem, calc(100% + 1rem));
 }
 @media (min-width: 640px) { .hero-stat-card { display: flex; } }
-.hero-stat-card .ico { width: 2.75rem; height: 2.75rem; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-lg); }
-.hero-stat-card .num { font-size: 1.25rem; font-weight: 800; color: var(--neutral-dark); }
+.hero-stat-card .ico { width: 2.75rem; height: 2.75rem; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-lg); flex-shrink: 0; }
+.hero-stat-card .num { font-size: 1.25rem; font-weight: 800; color: var(--neutral-dark); white-space: nowrap; }
 .hero-stat-card .lbl { font-size: 0.72rem; font-weight: 500; color: var(--neutral-light); }
+
+/* 98% Patient Satisfaction — top-left of the visual */
+.hero-stat-rating { left: clamp(-1rem, -2.5%, -0.4rem); top: clamp(1rem, 12%, 2.5rem); }
+/* 6+ Specialist Doctors — right side, always clear of the glass caption */
+.hero-stat-doctors { right: clamp(-1rem, -2.5%, -0.4rem); bottom: 8rem; }
+/* Tablet (single-column hero): keep the cards clear of the caption. */
+@media (min-width: 640px) and (max-width: 1023px) {
+  .hero-stat-rating { top: clamp(1rem, 8%, 2rem); }
+  .hero-stat-doctors { bottom: 8.5rem; }
+}
+/* Mobile: the cards join the normal flow under the hero visual instead of
+   overlapping it — nothing gets covered and nothing overflows. */
+@media (max-width: 639px) {
+  .hero-media { display: flex; flex-direction: column; gap: 0.75rem; }
+  .hero-stat-card { position: static; display: flex; width: 100%; max-width: 100%; }
+  .hero-stat-rating, .hero-stat-doctors { left: auto; right: auto; top: auto; bottom: auto; }
+}
 
 .scroll-cue { position: absolute; bottom: 1.25rem; left: 50%; transform: translateX(-50%); display: none; flex-direction: column; align-items: center; gap: 0.5rem; color: var(--neutral-light); z-index: 5; }
 @media (min-width: 1024px) { .scroll-cue { display: flex; } }
@@ -978,8 +1081,8 @@ table.data tbody tr:last-child td { border-bottom: none; }
 table.data tbody tr:hover td { background: var(--surface-alt); }
 
 /* Toast */
-.toast-wrap { position: fixed; top: 1.25rem; right: 1.25rem; z-index: 200; display: flex; flex-direction: column; gap: 0.6rem; }
-.toast { display: flex; align-items: flex-start; gap: 0.75rem; min-width: 18rem; max-width: 22rem; background: #fff; border-radius: var(--radius-xl); padding: 0.9rem 1rem; box-shadow: var(--shadow-elevated); border: 1px solid var(--border); animation: fadeIn 0.3s ease; }
+.toast-wrap { position: fixed; top: 1.25rem; right: 1.25rem; z-index: var(--z-toast); display: flex; flex-direction: column; gap: 0.6rem; }
+.toast { display: flex; align-items: flex-start; gap: 0.75rem; min-width: 18rem; max-width: min(22rem, calc(100vw - 2rem)); background: #fff; border-radius: var(--radius-xl); padding: 0.9rem 1rem; box-shadow: var(--shadow-elevated); border: 1px solid var(--border); animation: fadeIn 0.3s ease; }
 .toast.success { border-left: 4px solid var(--success); }
 .toast.error { border-left: 4px solid var(--error); }
 .toast.info { border-left: 4px solid var(--info); }
@@ -988,7 +1091,7 @@ table.data tbody tr:hover td { background: var(--surface-alt); }
 .toast .t-title { font-weight: 600; }
 
 /* Modal / lightbox */
-.modal-overlay { position: fixed; inset: 0; z-index: 150; background: rgba(26,26,46,0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 1rem; }
+.modal-overlay { position: fixed; inset: 0; z-index: var(--z-modal); background: rgba(26,26,46,0.6); backdrop-filter: blur(4px); display: none; align-items: center; justify-content: center; padding: 1rem; }
 .modal-overlay.open { display: flex; }
 .modal { background: #fff; border-radius: var(--radius-2xl); max-width: 34rem; width: 100%; padding: 2rem; box-shadow: var(--shadow-elevated); animation: fadeInScale 0.25s ease-out; position: relative; }
 .modal .m-close { position: absolute; top: 1rem; right: 1rem; }

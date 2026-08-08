@@ -241,11 +241,11 @@
   z-index: 2;
 }
 
-/* ── WhatsApp Floating Button ───────────────────────────────────────────── */
+/* ── WhatsApp Floating Button ─────────────────────────────────────────────
+   Lives inside .floating-actions (bottom-right stack) — no fixed offsets
+   here, the stack owns the positioning. */
 .whatsapp-float {
-  position: fixed;
-  bottom: 5.5rem;
-  right: 1.5rem;
+  position: relative;
   width: 3.5rem;
   height: 3.5rem;
   background: #25D366;
@@ -255,7 +255,6 @@
   align-items: center;
   justify-content: center;
   box-shadow: 0 6px 20px rgba(37, 211, 102, 0.5);
-  z-index: 90;
   transition: all .3s ease;
 }
 .whatsapp-float:hover {
@@ -277,25 +276,24 @@
   100% { transform: scale(1.6); opacity: 0; }
 }
 
-/* ── Sticky Appointment Button ──────────────────────────────────────────── */
+/* ── Sticky Appointment Button ────────────────────────────────────────────
+   Lives inside .floating-actions (bottom-right stack) — it is always a
+   compact pill (slightly smaller on phones) and never collides with the
+   dental chat launcher below it. */
 .sticky-appointment {
-  position: fixed;
-  bottom: 1rem;
-  right: 1.5rem;
+  position: relative;
   background: var(--primary);
   color: #fff;
   padding: 0.85rem 1.25rem;
   border-radius: 999px;
-  display: none;
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
   font-weight: 600;
   font-size: 0.9rem;
   box-shadow: 0 6px 20px rgba(15, 118, 110, 0.4);
-  z-index: 90;
   transition: all .3s ease;
 }
-@media (min-width: 768px) { .sticky-appointment { display: inline-flex; } }
 .sticky-appointment:hover {
   background: var(--primary-700);
   transform: translateY(-2px);
@@ -354,9 +352,9 @@
 
 /* ── Mobile adjustments ──────────────────────────────────────────────────── */
 @media (max-width: 640px) {
-  .whatsapp-float { width: 3rem; height: 3rem; bottom: 5rem; right: 1rem; }
+  .whatsapp-float { width: 3rem; height: 3rem; }
   .whatsapp-float svg { width: 24px; height: 24px; }
-  .sticky-appointment { right: 1rem; bottom: 0.75rem; padding: 0.75rem 1rem; font-size: 0.85rem; }
+  .sticky-appointment { padding: 0.7rem 1rem; font-size: 0.82rem; }
   .emergency-band { padding: 2rem 1.5rem; }
   .emergency-content { flex-direction: column; text-align: center; }
 }

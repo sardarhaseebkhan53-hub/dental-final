@@ -1,6 +1,9 @@
 /* Junaid Dental Care — shared site behaviour */
 window.SD = window.SD || {};
 (function (SD) {
+  /* requestAnimationFrame with a safe fallback (very old WebViews / jsdom). */
+  const raf = (window.requestAnimationFrame || ((cb) => setTimeout(cb, 16))).bind(window);
+
   /* ── Static site data (mirrors server constants) ───────────────────────── */
   SD.CLINIC = {
     name: "Junaid Dental Care",
@@ -455,10 +458,10 @@ window.SD = window.SD || {};
       const p = Math.min((now - start) / dur, 1);
       const val = Math.floor(target * (1 - Math.pow(1 - p, 3)));
       el.textContent = val + suffix;
-      if (p < 1) requestAnimationFrame(tick);
+      if (p < 1) raf(tick);
       else el.textContent = target + suffix;
     }
-    requestAnimationFrame(tick);
+    raf(tick);
   };
 
   SD.initCounters = function () {
@@ -474,6 +477,18 @@ window.SD = window.SD || {};
   SD.initExtras = function () {
     if (!document.body) return;
 
+    /* Floating-actions stack: one shared bottom-right container. The home
+       page already ships it in the HTML (WhatsApp + Book Appointment); every
+       other page gets one here. Scroll-to-top is prepended at the TOP of the
+       stack; the dental chat widget anchors to the corner below it. */
+    let actions = document.getElementById("floatingActions");
+    if (!actions) {
+      actions = document.createElement("div");
+      actions.id = "floatingActions";
+      actions.className = "floating-actions";
+      document.body.appendChild(actions);
+    }
+
     const bar = document.createElement("div");
     bar.className = "scroll-progress";
     bar.setAttribute("aria-hidden", "true");
@@ -481,16 +496,16 @@ window.SD = window.SD || {};
 
     const btn = document.createElement("button");
     btn.className = "back-to-top";
-    btn.setAttribute("aria-label", "Back to top");
+    btn.setAttribute("aria-label", "Scroll to top");
     btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';
-    document.body.appendChild(btn);
     btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+    actions.prepend(btn);
 
     let ticking = false;
     const onScroll = () => {
       if (ticking) return;
       ticking = true;
-      requestAnimationFrame(() => {
+      raf(() => {
         const max = document.documentElement.scrollHeight - window.innerHeight;
         const pct = max > 0 ? (window.scrollY / max) * 100 : 0;
         bar.style.width = pct + "%";
