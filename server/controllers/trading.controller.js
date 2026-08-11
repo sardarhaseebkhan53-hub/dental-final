@@ -12,6 +12,8 @@ const { getPortfolio } = require("../trading/portfolio");
 const { calculatePositionSize, getRiskOverview } = require("../trading/riskCenter");
 const { createOrderPreview, executeOrder, getExecutedOrders } = require("../trading/orderEngine");
 const { runBacktest } = require("../trading/backtester");
+const { checkSystemHealth } = require("../trading/health");
+const { getSystemControls, updateSystemControls, getAuditLogs } = require("../trading/controls");
 
 const getMarketState = (req, res) => {
   const symbol = req.query.symbol;
@@ -170,6 +172,26 @@ const updateTickHandler = (req, res) => {
   return res.json({ success: true, data: updated });
 };
 
+const getHealthHandler = (req, res) => {
+  const health = checkSystemHealth();
+  return res.json({ success: true, data: health });
+};
+
+const getControlsHandler = (req, res) => {
+  const controls = getSystemControls();
+  return res.json({ success: true, data: controls });
+};
+
+const updateControlsHandler = (req, res) => {
+  const result = updateSystemControls(req.body, req.user?.email || "admin");
+  return res.json({ success: true, data: result });
+};
+
+const getAuditLogsHandler = (req, res) => {
+  const logs = getAuditLogs();
+  return res.json({ success: true, data: logs });
+};
+
 module.exports = {
   getMarketState,
   getSignals,
@@ -191,4 +213,8 @@ module.exports = {
   runBacktestHandler,
   getRegimeDashboard,
   updateTickHandler,
+  getHealthHandler,
+  getControlsHandler,
+  updateControlsHandler,
+  getAuditLogsHandler,
 };

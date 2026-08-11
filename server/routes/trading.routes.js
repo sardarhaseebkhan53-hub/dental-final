@@ -41,6 +41,12 @@ router.get("/orders", controller.getExecutedOrdersHandler);
 // Backtesting
 router.post("/backtest", controller.runBacktestHandler);
 
+// Production Health & Operational Controls
+router.get("/health", controller.getHealthHandler);
+router.get("/controls", controller.getControlsHandler);
+router.post("/controls/update", controller.updateControlsHandler);
+router.get("/audit-logs", controller.getAuditLogsHandler);
+
 // Demo Price Tick Update
 router.post("/tick", controller.updateTickHandler);
 

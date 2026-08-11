@@ -4,7 +4,24 @@
  * Never invents fake evidence.
  */
 
+const { getSystemControls } = require("./controls");
+
 function generateAIExplanation(data) {
+  const controls = getSystemControls();
+  if (!controls.aiEnabled) {
+    return {
+      whyThisSignal: {
+        trend: "NOT AVAILABLE",
+        momentum: "NOT AVAILABLE",
+        volume: "NOT AVAILABLE",
+        higherTimeframe: "NOT AVAILABLE",
+        volatility: "NOT AVAILABLE",
+        marketStructure: "NOT AVAILABLE",
+        aiAssessment: "AI UNAVAILABLE: AI analysis service is currently offline or paused by controls.",
+      },
+    };
+  }
+
   const { asset, timeframe, direction, metrics, regime, mtf } = data;
 
   const trendText = metrics.price > metrics.sma50

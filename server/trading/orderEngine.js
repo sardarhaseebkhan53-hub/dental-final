@@ -5,6 +5,7 @@
 
 const marketState = require("./marketState");
 const { getPortfolio } = require("./portfolio");
+const { getSystemControls } = require("./controls");
 
 const executedOrders = [];
 
@@ -12,6 +13,11 @@ const executedOrders = [];
  * Stage 1: Generate Order Confirmation Preview
  */
 function createOrderPreview(params) {
+  const controls = getSystemControls();
+  if (!controls.ordersEnabled) {
+    throw new Error("ORDER EXECUTION DISABLED: Live order execution is currently paused by administrator controls.");
+  }
+
   const {
     asset,
     direction, // LONG / BUY or SHORT / SELL
@@ -75,6 +81,11 @@ function createOrderPreview(params) {
  * Stage 2: Confirm and Execute Order
  */
 function executeOrder(confirmationToken, previewData, userConfirmed = false) {
+  const controls = getSystemControls();
+  if (!controls.ordersEnabled) {
+    throw new Error("ORDER EXECUTION DISABLED: Live order execution is currently paused by administrator controls.");
+  }
+
   if (!userConfirmed) {
     throw new Error("ORDER CANCELLED: Explicit user confirmation required to execute order.");
   }

@@ -7,6 +7,7 @@ const { calculateRSI, calculateMACD, calculateSMA, calculateEMA, calculateATR, f
 const { detectMarketRegime } = require("./regime");
 const { analyzeMTF } = require("./mtf");
 const { generateAIExplanation } = require("./aiExplanation");
+const { getSystemControls } = require("./controls");
 
 // In-memory active and historical signal store
 const activeSignalsMap = new Map(); // asset_timeframe -> signal
@@ -85,6 +86,21 @@ function calculateSignalScore(params) {
  */
 function evaluateSignal(marketData) {
   const { asset, timeframe, candlesMap, dataFreshness, lastUpdate } = marketData;
+
+  // Check Operational Safety Controls
+  const controls = getSystemControls();
+  if (!controls.signalsEnabled) {
+    return createSignalCard({
+      asset,
+      timeframe,
+      currentPrice: marketData.price || "NOT AVAILABLE",
+      signal: "WAIT",
+      confidence: 0,
+      qualityCategory: "NO CLEAR SETUP",
+      dataFreshness: dataFreshness || "LIVE",
+      reason: "Signal generation has been paused by administrator operational controls.",
+    });
+  }
 
   // Check data freshness - reject if stale (>60s) or offline
   const now = Date.now();
