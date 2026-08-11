@@ -12,6 +12,7 @@ const publicRoutes = require("./routes/public.routes");
 const adminRoutes = require("./routes/admin.routes");
 const uploadRoutes = require("./routes/upload.routes");
 const chatbotRoutes = require("./routes/chatbot.routes");
+const tradingRoutes = require("./routes/trading.routes");
 
 const app = express();
 app.disable("x-powered-by");
@@ -89,6 +90,7 @@ app.use("/api/public", publicRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/chatbot", chatbotRoutes);
+app.use("/api/trading", tradingRoutes);
 
 app.get("/api/health", (req, res) => res.json({ success: true, message: "ok" }));
 
