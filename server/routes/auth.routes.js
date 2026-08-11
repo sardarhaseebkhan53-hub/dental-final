@@ -68,4 +68,7 @@ router.post(
   c.resetPassword
 );
 
+// /api/auth/delete-account
+router.post("/delete-account", requireAuth, c.deleteAccount);
+
 module.exports = router;

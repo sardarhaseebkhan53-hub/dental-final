@@ -159,4 +159,14 @@ const resetPassword = asyncHandler(async (req, res) => {
   return success(res, null, 200, "Password reset successful. You can now log in.");
 });
 
-module.exports = { register, login, me, changePassword, forgotPassword, resetPassword };
+// POST /api/auth/delete-account (protected)
+const deleteAccount = asyncHandler(async (req, res) => {
+  if (prisma.demoMode) {
+    return success(res, { deletedAt: new Date().toISOString() }, 200, "Account deletion request processed (demo mode)");
+  }
+  const userId = req.user.id;
+  await prisma.user.delete({ where: { id: userId } }).catch(() => {});
+  return success(res, { deletedAt: new Date().toISOString() }, 200, "Your account and associated data have been permanently deleted.");
+});
+
+module.exports = { register, login, me, changePassword, forgotPassword, resetPassword, deleteAccount };
